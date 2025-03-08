@@ -11,6 +11,8 @@ services:
       - storage
     env_file:
       - .env
+    networks:
+      - bridge
     deploy:
       mode: replicated
       replicas: 1
@@ -29,6 +31,8 @@ services:
       - cache
     env_file:
       - .env
+    networks:
+      - bridge
     deploy:
       placement:
         constraints:
@@ -53,6 +57,8 @@ services:
       - storage:/storage
     env_file:
       - .env
+    networks:
+      - bridge
     deploy:
       mode: global
       placement:
@@ -70,11 +76,65 @@ services:
     image: ${REGISTRY_PATH}/torgate:latest
     container_name: torgate
     depends_on:
-      - frontend
-    environment:
-      TORGATE_ENDPOINT: "frontend:80"
+      frontend:
+        condition: service_started
+        restart: false
     env_file:
       - .env
+    networks:
+      - bridge
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.nc.role == front
+      update_config:
+        parallelism: 1
+        delay: 2s
+        monitor: 2s
+        
+  i2pgate:
+    build: ./i2pgate
+    image: ${REGISTRY_PATH}/i2pgate:latest
+    container_name: i2pgate
+    depends_on:
+      frontend:
+        condition: service_started
+        restart: false
+    env_file:
+      - .env
+    networks:
+      - bridge
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.nc.role == front
+      update_config:
+        parallelism: 1
+        delay: 2s
+        monitor: 2s
+        
+  yggdrasil:
+    build: ./yggdrasil
+    image: ${REGISTRY_PATH}/yggdrasil:latest
+    container_name: yggdrasil
+    depends_on:
+      frontend:
+        condition: service_started
+        restart: false
+    env_file:
+      - .env
+    networks:
+      - bridge
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    sysctls:
+      - "net.ipv6.conf.all.disable_ipv6=0"
     deploy:
       mode: replicated
       replicas: 1
@@ -95,19 +155,25 @@ services:
       - db_data:/var/lib/postgresql/data
     env_file:
       - .env
+    networks:
+      - bridge
     deploy:
       placement:
         constraints:
           - node.labels.nc.role == main
 
   cache:
-    image: redis
+    image: redis:7-alpine
     container_name: cache
+    networks:
+      - bridge
     deploy:
       placement:
           constraints:
             - node.labels.nc.role == main
     
+networks:
+  bridge:
 
 volumes:
   db_data:

@@ -59,3 +59,8 @@ Example is located in `examples/` directory
 ```
 $ kubectl apply -f examples/lb.yaml
 ```
+
+#### 8. (Optional) Get yggdrasil node address (if enabled)
+```
+$ kubectl exec -n nullchan -t deployments/yggdrasil -- /docker-entrypoint.sh getaddr
+```

@@ -23,14 +23,21 @@ else
     echo "${TORGATE_PUBLIC_KEY}" | base64 -d >> /var/lib/tor/hidden_service/hs_ed25519_public_key
 fi
 
-if [ -z "${TORGATE_ENDPOINT}" ]; then
-    echo "TORGATE_ENDPOINT environment var is undefined, torgate will be disabled";
+if [ -z "${GATE_ENDPOINT_HOST}" ]; then
+    echo "GATE_ENDPOINT_HOST environment var is undefined, torgate will be disabled";
     exit 0;
 else
-    sed -i 's/\__TORGATE_ENDPOINT__/'"${TORGATE_ENDPOINT}"'/' /etc/tor/torrc
+    sed -i 's/\__GATE_ENDPOINT_HOST__/'"${GATE_ENDPOINT_HOST}"'/' /etc/tor/torrc
+fi
+
+if [ -z "${GATE_ENDPOINT_PORT}" ]; then
+    echo "GATE_ENDPOINT_PORT environment var is undefined, torgate will be disabled";
+    exit 0;
+else
+    sed -i 's/\__GATE_ENDPOINT_PORT__/'"${GATE_ENDPOINT_PORT}"'/' /etc/tor/torrc
 fi
 
 chmod -R 600 /var/lib/tor/hidden_service
-echo "Torgate started: ${TORGATE_HOSTNAME} -> ${TORGATE_ENDPOINT}"
+echo "Torgate started: ${TORGATE_HOSTNAME} -> ${GATE_ENDPOINT_HOST}:${GATE_ENDPOINT_PORT}"
 
 tor

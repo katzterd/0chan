@@ -22,20 +22,10 @@ items:
           image: {{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: TORGATE_HOSTNAME
+          - name: I2PGATE_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.torgateHostname }}
-                name: {{ .Values.nullSecrets.name }}
-          - name: TORGATE_PUBLIC_KEY
-            valueFrom:
-              secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.torgatePublicKey }}
-                name: {{ .Values.nullSecrets.name }}
-          - name: TORGATE_PRIVATE_KEY
-            valueFrom:
-              secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.torgatePrivateKey }}
+                key: {{ .Values.nullSecrets.envName.i2pgatePrivateKey }}
                 name: {{ .Values.nullSecrets.name }}
           - name: GATE_ENDPOINT_HOST
             valueFrom:

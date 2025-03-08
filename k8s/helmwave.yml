@@ -51,3 +51,19 @@ releases:
     - src: helm/values.yaml
     depends_on:
       - frontend
+
+  - name: i2pgate
+    <<: *options
+    chart: helm/charts/i2pgate
+    values:
+    - src: helm/values.yaml
+    depends_on:
+      - frontend
+
+  - name: yggdrasilgate
+    <<: *options
+    chart: helm/charts/yggdrasil
+    values:
+    - src: helm/values.yaml
+    depends_on:
+      - frontend
