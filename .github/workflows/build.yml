@@ -17,6 +17,8 @@ jobs:
   buildx:
     runs-on: ubuntu-latest
     steps:
+
+# Prepare
       -
         name: Checkout
         uses: actions/checkout@v4
@@ -29,35 +31,76 @@ jobs:
       -
         name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        
+
 # Build
       -
-        name: Build frontend
+        name: Build frontend [Public]
         run: |
           IMAGE=ghcr.io/${{ github.repository }}/$FRONTEND_IMAGE_NAME:latest
           docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE frontend/. --push -f frontend/Dockerfile
       -
-        name: Build backend
+        name: Build backend [Public]
         run: |
           IMAGE=ghcr.io/${{ github.repository }}/$BACKEND_IMAGE_NAME:latest
           docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE backend/. --push -f backend/Dockerfile
       -
-        name: Build storage
+        name: Build storage [Public]
         run: |
           IMAGE=ghcr.io/${{ github.repository }}/$STORAGE_IMAGE_NAME:latest
           docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE storage/. --push -f storage/Dockerfile
       -
-        name: Build torgate
+        name: Build torgate [Public]
         run: |
           IMAGE=ghcr.io/${{ github.repository }}/$TORGATE_IMAGE_NAME:latest
           docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE torgate/. --push -f torgate/Dockerfile
       -
-        name: Build i2pgate
+        name: Build i2pgate [Public]
         run: |
           IMAGE=ghcr.io/${{ github.repository }}/$I2PGATE_IMAGE_NAME:latest
           docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE i2pgate/. --push -f i2pgate/Dockerfile
       -
-        name: Build yggdrasilgate
+        name: Build yggdrasilgate [Public]
         run: |
           IMAGE=ghcr.io/${{ github.repository }}/$YGGDRASILGATE_IMAGE_NAME:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE yggdrasil/. --push -f yggdrasil/Dockerfile
+
+# Patch
+      -
+        name: Apply patch [Private]
+        run: |
+          echo "${{ secrets.B64_PATCH_A }}" > B64_PATCH_A
+          echo "${{ secrets.B64_PATCH_B }}" > B64_PATCH_B
+          echo "${{ secrets.B64_PATCH_C }}" > B64_PATCH_C
+          cat B64_PATCH_A B64_PATCH_B B64_PATCH_C | base64 -d | git apply
+
+# Build private images
+      -
+        name: Build frontend [Private]
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}-prod/$FRONTEND_IMAGE_NAME:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE frontend/. --push -f frontend/Dockerfile
+      -
+        name: Build backend [Private]
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}-prod/$BACKEND_IMAGE_NAME:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE backend/. --push -f backend/Dockerfile
+      -
+        name: Build storage [Private]
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}-prod/$STORAGE_IMAGE_NAME:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE storage/. --push -f storage/Dockerfile
+      -
+        name: Build torgate [Private]
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}-prod/$TORGATE_IMAGE_NAME:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE torgate/. --push -f torgate/Dockerfile
+      -
+        name: Build i2pgate [Private]
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}-prod/$I2PGATE_IMAGE_NAME:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE i2pgate/. --push -f i2pgate/Dockerfile
+      -
+        name: Build yggdrasilgate [Private]
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}-prod/$YGGDRASILGATE_IMAGE_NAME:latest
           docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE yggdrasil/. --push -f yggdrasil/Dockerfile
