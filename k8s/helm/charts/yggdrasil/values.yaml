@@ -1,0 +1,6 @@
+replicaCount: 1
+
+image:
+  name: yggdrasil
+  tag: "latest"
+  pullPolicy: Always

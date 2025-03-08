@@ -1,4 +1,4 @@
-name: ghcr ci
+name: CI
 
 on:
   push:
@@ -10,6 +10,8 @@ env:
   BACKEND_IMAGE_NAME: backend
   STORAGE_IMAGE_NAME: storage
   TORGATE_IMAGE_NAME: torgate
+  I2PGATE_IMAGE_NAME: i2pgate
+  YGGDRASILGATE_IMAGE_NAME: yggdrasil
 
 jobs:
   buildx:
@@ -49,3 +51,13 @@ jobs:
         run: |
           IMAGE=ghcr.io/${{ github.repository }}/$TORGATE_IMAGE_NAME:latest
           docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE torgate/. --push -f torgate/Dockerfile
+      -
+        name: Build i2pgate
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}/$I2PGATE_IMAGE_NAME:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE i2pgate/. --push -f i2pgate/Dockerfile
+      -
+        name: Build yggdrasilgate
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}/$YGGDRASILGATE_IMAGE_NAME:latest
+          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE yggdrasil/. --push -f yggdrasil/Dockerfile

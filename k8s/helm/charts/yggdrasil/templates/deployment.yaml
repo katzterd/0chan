@@ -17,25 +17,21 @@ items:
           app: {{ .Chart.Name }}
       spec:
         restartPolicy: {{ .Values.restartPolicy }} 
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+          sysctls:
+          - name: net.ipv6.conf.all.disable_ipv6
+            value: "0"
         containers:
         - name: {{ .Values.image.name }}
           image: {{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-          - name: TORGATE_HOSTNAME
+          - name: YGGDRASILGATE_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.torgateHostname }}
-                name: {{ .Values.nullSecrets.name }}
-          - name: TORGATE_PUBLIC_KEY
-            valueFrom:
-              secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.torgatePublicKey }}
-                name: {{ .Values.nullSecrets.name }}
-          - name: TORGATE_PRIVATE_KEY
-            valueFrom:
-              secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.torgatePrivateKey }}
+                key: {{ .Values.nullSecrets.envName.yggdrasilgatePrivateKey }}
                 name: {{ .Values.nullSecrets.name }}
           - name: GATE_ENDPOINT_HOST
             valueFrom:
@@ -47,6 +43,13 @@ items:
               secretKeyRef:
                 key: {{ .Values.nullSecrets.envName.gateEndpointPort }}
                 name: {{ .Values.nullSecrets.name }}
+          volumeMounts:
+          - mountPath: /dev/net/tun
+            name: tun
+        volumes:
+        - name: tun
+          hostPath:
+            path: /dev/net/tun
 
 kind: List
 metadata: {}

@@ -11,12 +11,16 @@ nullSecrets:
     postgresDb: POSTGRES_DB
     postgresUser: POSTGRES_USER
     postgresPasswd: POSTGRES_PASSWORD
+    gateEndpointHost: GATE_ENDPOINT_HOST
+    gateEndpointPort: GATE_ENDPOINT_PORT
     torgateHostname: TORGATE_HOSTNAME
     torgatePublicKey: TORGATE_PUBLIC_KEY
     torgatePrivateKey: TORGATE_PRIVATE_KEY
+    i2pgatePrivateKey: I2PGATE_PRIVATE_KEY
+    yggdrasilgatePrivateKey: YGGDRASILGATE_PRIVATE_KEY
     
 image:
-  repository: ghcr.io/rsddsdr/0chan
+  repository: ghcr.io/katzterd/0chan
     
 storageClass:
   name: "0chan-default-sc"

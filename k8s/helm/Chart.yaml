@@ -21,6 +21,12 @@ dependencies:
   - name: torgate
     repository: file://charts/torgate
     version: ~0
+  - name: i2pgate
+    repository: file://charts/i2pgate
+    version: ~0
+  - name: yggdrasil
+    repository: file://charts/yggdrasil
+    version: ~0
 
 type: application
 version: 0.1.0

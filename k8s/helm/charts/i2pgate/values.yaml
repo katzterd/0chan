@@ -1,0 +1,6 @@
+replicaCount: 1
+
+image:
+  name: i2pgate
+  tag: "latest"
+  pullPolicy: Always
