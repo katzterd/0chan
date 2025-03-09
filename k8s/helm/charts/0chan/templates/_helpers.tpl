@@ -24,10 +24,9 @@ Default secrets name override
 Image pull secrets
 */}}
 {{- define "ImagePullSecret" -}}
-{{- if .Values.imagePullSecretName }}
+{{- if .Values.imagePullSecretName -}}
 imagePullSecrets:
-        - name: {{- .Values.imagePullSecretName }}
-{{- else }}
+- name: {{ .Values.imagePullSecretName }}
 {{- end }}
 {{- end }}
 

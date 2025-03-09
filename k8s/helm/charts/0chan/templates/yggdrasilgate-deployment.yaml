@@ -16,18 +16,20 @@ items:
         labels:
           app: {{ .Values.svc.yggdrasilgate.name }}
       spec:
-        restartPolicy: {{ .Values.restartPolicy }}
-        {{ include "ImagePullSecret" . }}
         securityContext:
-          capabilities:
-            add: ["NET_ADMIN"]
           sysctls:
           - name: net.ipv6.conf.all.disable_ipv6
             value: "0"
+        restartPolicy: {{ .Values.restartPolicy }}
+        {{- include "ImagePullSecret" . | nindent 8 }}
         containers:
         - name: {{ .Values.svc.yggdrasilgate.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.yggdrasilgate.image.name }}:"{{ .Values.svc.yggdrasilgate.image.tag }}"
           imagePullPolicy: {{ .Values.svc.yggdrasilgate.image.pullPolicy }}
+          securityContext:
+            capabilities:
+              add: 
+              - NET_ADMIN
           env:
           - name: YGGDRASILGATE_PRIVATE_KEY
             valueFrom:

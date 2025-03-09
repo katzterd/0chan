@@ -17,7 +17,7 @@ items:
           app: {{ .Values.svc.torgate.name }}
       spec:
         restartPolicy: {{ .Values.restartPolicy }}
-        {{ include "ImagePullSecret" . }}
+        {{- include "ImagePullSecret" . | nindent 8 }}
         containers:
         - name: {{ .Values.svc.torgate.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.torgate.image.name }}:"{{ .Values.svc.torgate.image.tag }}"

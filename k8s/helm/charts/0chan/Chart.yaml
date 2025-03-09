@@ -1,5 +1,5 @@
 apiVersion: v2
-name: nullchan
+name: 0chan
 version: 0.1.0
 appVersion: "1.0.0"
 description: 0chan k8s helm chart.

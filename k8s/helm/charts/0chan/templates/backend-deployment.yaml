@@ -22,7 +22,7 @@ items:
       spec:
         hostname: {{ .Values.svc.backend.name }}
         restartPolicy: {{ .Values.restartPolicy }}
-        {{ include "ImagePullSecret" . }}
+        {{- include "ImagePullSecret" . | nindent 8 }}
         containers:
         - name: {{ .Values.svc.backend.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.backend.image.name }}:"{{ .Values.svc.backend.image.tag }}"

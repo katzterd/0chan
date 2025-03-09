@@ -20,7 +20,7 @@ items:
       spec:
         hostname: {{ .Values.svc.storage.name }}
         restartPolicy: {{ .Values.restartPolicy }}
-        {{ include "ImagePullSecret" . }}
+        {{- include "ImagePullSecret" . | nindent 8 }}
         terminationGracePeriodSeconds: 30
         containers:
         - name: {{ .Values.svc.storage.image.name }}
