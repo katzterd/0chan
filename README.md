@@ -1,5 +1,5 @@
 # 0chan Helm Chart
-![helm](https://img.shields.io/github/actions/workflow/status/katzterd/0chan/helm_build.yml?label=helm&logo=helm&style=for-the-badge)
+![helm](https://img.shields.io/github/actions/workflow/status/katzterd/0chan/helm-build.yml?label=helm&logo=helm&style=for-the-badge)
 
 ## Get Repository
 
