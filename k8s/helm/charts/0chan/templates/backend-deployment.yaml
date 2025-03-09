@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+items:
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: {{ .Values.svc.backend.name }}
+    namespace: {{ .Release.Namespace }}
+  spec:
+    replicas: {{ .Values.svc.backend.image.replicas }}
+    selector:
+      matchLabels:
+        app: {{ .Values.svc.backend.name }}
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+    template:
+      metadata:
+        labels:
+          app: {{ .Values.svc.backend.name }}
+      spec:
+        hostname: {{ .Values.svc.backend.name }}
+        restartPolicy: {{ .Values.restartPolicy }}
+        {{ include "ImagePullSecret" . }}
+        containers:
+        - name: {{ .Values.svc.backend.image.name }}
+          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.backend.image.name }}:"{{ .Values.svc.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.svc.backend.image.pullPolicy }}
+          ports:
+          - containerPort: 9000
+          env:
+          - name: ADMIN_LOGIN
+            valueFrom:
+              secretKeyRef:
+                key: ADMIN_LOGIN
+                name: {{ include "SecretsName" . }}
+                optional: true
+          - name: ADMIN_PASSWD
+            valueFrom:
+              secretKeyRef:
+                key: ADMIN_PASSWD
+                name: {{ include "SecretsName" . }}
+                optional: true
+          - name: SALT
+            valueFrom:
+              secretKeyRef:
+                key: SALT
+                name: {{ include "SecretsName" . }}
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                key: POSTGRES_DB
+                name: {{ include "SecretsName" . }}
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                key: POSTGRES_USER
+                name: {{ include "SecretsName" . }}
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: POSTGRES_PASSWORD
+                name: {{ include "SecretsName" . }}
+              
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: {{ .Values.svc.backend.name }}
+    namespace: {{ .Release.Namespace }}
+  spec:
+    selector:
+      app: {{ .Values.svc.backend.name }}
+    clusterIP: None
+
+kind: List
+metadata: {}

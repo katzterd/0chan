@@ -4,31 +4,31 @@ items:
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
-    name: {{ .Chart.Name }}
-    namespace: {{ .Values.namespace }}
+    name: {{ .Values.svc.db.name }}
+    namespace: {{ .Release.Namespace }}
   spec:
-    replicas: {{ .Values.replicaCount }}
-    serviceName: "{{ .Chart.Name }}"
+    replicas: {{ .Values.svc.db.image.replicas }}
+    serviceName: "{{ .Values.svc.db.name }}"
     minReadySeconds: 10
     selector:
       matchLabels:
-        app: {{ .Chart.Name }}
+        app: {{ .Values.svc.db.name }}
     template:
       metadata:
         labels:
-          app: {{ .Chart.Name }}
+          app: {{ .Values.svc.db.name }}
           part-of: lb
       spec:
-        hostname: {{ .Chart.Name }}
+        hostname: {{ .Values.svc.db.name }}
         restartPolicy: {{ .Values.restartPolicy }} 
         terminationGracePeriodSeconds: 30
         securityContext:
           runAsUser: 70
           fsGroup: 70
         containers:
-        - name: {{ .Values.image.name }}
-          image: {{ .Values.image.name }}:{{ .Values.image.tag }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .Values.svc.db.image.name }}
+          image: {{ .Values.svc.db.image.name }}:"{{ .Values.svc.db.image.tag }}"
+          imagePullPolicy: {{ .Values.svc.db.image.pullPolicy }}
           ports:
           - containerPort: 5432
             protocol: TCP
@@ -38,40 +38,40 @@ items:
           - name: POSTGRES_DB
             valueFrom:
               secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.postgresDb }}
-                name: {{ .Values.nullSecrets.name }}
+                key: POSTGRES_DB
+                name: {{ include "SecretsName" . }}
           - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.postgresUser }}
-                name: {{ .Values.nullSecrets.name }}
+                key: POSTGRES_USER
+                name: {{ include "SecretsName" . }}
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
-                key: {{ .Values.nullSecrets.envName.postgresPasswd }}
-                name: {{ .Values.nullSecrets.name }}
+                key: POSTGRES_PASSWORD
+                name: {{ include "SecretsName" . }}
           volumeMounts:
-          - name: {{ .Chart.Name }}-pv
+          - name: {{ .Values.svc.db.name }}-pv
             mountPath: /var/lib/postgresql/data
     volumeClaimTemplates:
     - metadata:
-        name: {{ .Chart.Name }}-pv
+        name: {{ .Release.Name }}-{{ .Values.svc.db.name }}-pv
       spec:
         accessModes: [ {{ .Values.storageClass.accessMode }} ]
-        storageClassName: {{ .Values.storageClass.name }}
+        storageClassName: {{ include "StorageClassName" . }}
         resources:
           requests:
-            storage: {{ .Values.storageClass.pods.db.requestSpace }}
+            storage: {{ include "DbSpace" . }}
         volumeMode: Filesystem
             
 - apiVersion: v1
   kind: Service
   metadata:
-    name: {{ .Chart.Name }}
-    namespace: {{ .Values.namespace }}
+    name: {{ .Values.svc.db.name }}
+    namespace: {{ .Release.Namespace }}
   spec:
     selector:
-      app: {{ .Chart.Name }}
+      app: {{ .Values.svc.db.name }}
     clusterIP: None
 
 kind: List

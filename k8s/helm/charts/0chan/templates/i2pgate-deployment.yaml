@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+items:
+
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: {{ .Values.svc.i2pgate.name }}
+    namespace: {{ .Release.Namespace }}
+  spec:
+    replicas: {{ .Values.svc.i2pgate.image.replicas }}
+    selector:
+      matchLabels:
+        app: {{ .Values.svc.i2pgate.name }}
+    template:
+      metadata:
+        labels:
+          app: {{ .Values.svc.i2pgate.name }}
+      spec:
+        restartPolicy: {{ .Values.restartPolicy }}
+        {{ include "ImagePullSecret" . }}
+        containers:
+        - name: {{ .Values.svc.i2pgate.image.name }}
+          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.i2pgate.image.name }}:"{{ .Values.svc.i2pgate.image.tag }}"
+          imagePullPolicy: {{ .Values.svc.i2pgate.image.pullPolicy }}
+          env:
+          - name: I2PGATE_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                key: I2PGATE_PRIVATE_KEY
+                name: {{ include "SecretsName" . }}
+          - name: GATE_ENDPOINT_HOST
+            valueFrom:
+              secretKeyRef:
+                key: GATE_ENDPOINT_HOST
+                name: {{ include "SecretsName" . }}
+          - name: GATE_ENDPOINT_PORT
+            valueFrom:
+              secretKeyRef:
+                key: GATE_ENDPOINT_PORT
+                name: {{ include "SecretsName" . }}
+
+kind: List
+metadata: {}

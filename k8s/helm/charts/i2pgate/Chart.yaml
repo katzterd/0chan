@@ -1,6 +1,0 @@
-apiVersion: v2
-name: i2pgate
-description: 0chan i2pgate subchart
-type: application
-version: 0.1.0
-appVersion: "1.0.0"

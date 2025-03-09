@@ -1,0 +1,71 @@
+defaultSecretsName: nullchan-secrets
+defaultRegistry: ghcr.io/katzterd/0chan
+    
+storageClass:
+  defaultName: "0chan-default-sc"
+  accessMode: "ReadWriteOnce"
+  pods:
+    storage:
+      defaultRequestSpace: 25Gi
+    db:
+      defaultRequestSpace: 10Gi
+
+restartPolicy: Always
+
+svc:
+  frontend:
+    name: frontend
+    image:
+      name: frontend
+      tag: latest
+      pullPolicy: Always
+      replicas: 2
+  backend:
+    name: backend
+    image:
+      name: backend
+      tag: latest
+      pullPolicy: Always
+      replicas: 1
+  storage:
+    name: storage
+    image:
+      name: storage
+      tag: latest
+      pullPolicy: Always
+      replicas: 1
+  torgate:
+    name: torgate
+    image:
+      name: torgate
+      tag: latest
+      pullPolicy: Always
+      replicas: 1
+  i2pgate:
+    name: i2pgate
+    image:
+      name: i2pgate
+      tag: latest
+      pullPolicy: Always
+      replicas: 1
+  yggdrasilgate:
+    name: yggdrasilgate
+    image:
+      name: yggdrasil
+      tag: latest
+      pullPolicy: Always
+      replicas: 1
+  db:
+    name: db
+    image:
+      name: postgres
+      tag: 17-alpine
+      pullPolicy: IfNotPresent
+      replicas: 1
+  cache:
+    name: cache
+    image:
+      name: redis
+      tag: 7-alpine
+      pullPolicy: IfNotPresent
+      replicas: 1

@@ -1,6 +1,0 @@
-replicaCount: 2
-
-image:
-  name: frontend
-  tag: "latest"
-  pullPolicy: Always
