@@ -23,6 +23,16 @@ items:
         hostname: {{ .Values.svc.backend.name }}
         restartPolicy: {{ .Values.restartPolicy }}
         {{- include "ImagePullSecret" . | nindent 8 }}
+        initContainers:
+        - name: wait-db
+          image: postgres
+          command:
+          - sh
+          - -ec
+          - |
+            until pg_isready -h {{ .Values.svc.db.name }} -p 5432 -U postgres; do
+              sleep 1
+            done
         containers:
         - name: {{ .Values.svc.backend.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.backend.image.name }}:{{ .Values.svc.backend.image.tag }}
@@ -75,4 +85,4 @@ items:
 
 kind: List
 metadata:
-  name: "list"
+  name: "backend-list"

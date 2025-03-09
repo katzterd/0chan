@@ -20,7 +20,7 @@ items:
           part-of: lb
       spec:
         hostname: {{ .Values.svc.db.name }}
-        restartPolicy: {{ .Values.restartPolicy }} 
+        restartPolicy: {{ .Values.restartPolicy }}
         terminationGracePeriodSeconds: 30
         securityContext:
           runAsUser: 70
@@ -55,7 +55,7 @@ items:
             mountPath: /var/lib/postgresql/data
     volumeClaimTemplates:
     - metadata:
-        name: {{ .Release.Name }}-{{ .Values.svc.db.name }}-pv
+        name: {{ .Values.svc.db.name }}-pv
       spec:
         accessModes: [ {{ .Values.storageClass.accessMode }} ]
         storageClassName: {{ include "StorageClassName" . }}
@@ -76,4 +76,4 @@ items:
 
 kind: List
 metadata:
-  name: "list"
+  name: "db-list"

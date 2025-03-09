@@ -8,5 +8,6 @@ on:
 jobs:
   call-docker-build:
     uses: ./.github/workflows/docker-build.yml
+    secrets: inherit
   call-helm-build:
     uses: ./.github/workflows/helm-build.yml
