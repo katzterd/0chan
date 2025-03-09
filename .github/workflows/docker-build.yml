@@ -1,9 +1,6 @@
-name: CI
+name: Docker build
 
-on:
-  push:
-    tags:
-      - "v*"
+on: workflow_call
 
 env:
   FRONTEND_IMAGE_NAME: frontend
@@ -14,7 +11,7 @@ env:
   YGGDRASILGATE_IMAGE_NAME: yggdrasil
 
 jobs:
-  buildx:
+  buildDockerfile:
     runs-on: ubuntu-latest
     steps:
 

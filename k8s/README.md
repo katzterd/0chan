@@ -43,7 +43,7 @@ kubectl apply -f examples/sc/<provisioner-name>-sc.yaml
 
 #### 5. Deploy
 ```console
-helm repo add 0chan https://katzterd.github.io/k8s/helm
+helm repo add 0chan https://katzterd.github.io/0chan
 helm repo update
 helm install <my-release> -n <namespace> 0chan/0chan
 ```
