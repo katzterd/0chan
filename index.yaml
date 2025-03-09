@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  nullchan:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2025-03-09T13:10:21.902931664Z"
+    description: 0chan k8s helm chart.
+    digest: 1c0310fb8654c7e0d7bb97772871b57c94b6b8dda022511aa22cc082bf806265
+    home: https://github.com/katzterd/0chan
+    name: nullchan
+    sources:
+    - https://github.com/katzterd/0chan
+    - https://github.com/katzterd/0chan/tree/main/k8s/helm
+    type: application
+    urls:
+    - https://github.com/katzterd/0chan/releases/download/nullchan-0.1.0/nullchan-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-03-09T13:10:21.902941592Z"
