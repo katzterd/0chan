@@ -4,7 +4,7 @@
 ## Get Repository
 
 ```console
-helm repo add 0chan https://katzterd.github.io/k8s/helm
+helm repo add 0chan https://katzterd.github.io/0chan
 helm repo update
 ```
 
