@@ -1,0 +1,12 @@
+apiVersion: v2
+name: nullchan
+version: 0.1.0
+appVersion: "1.0.0"
+description: 0chan k8s helm chart.
+home: https://github.com/katzterd/0chan
+sources:
+  - https://github.com/katzterd/0chan
+  - https://github.com/katzterd/0chan/tree/main/k8s/helm
+
+type: application
+

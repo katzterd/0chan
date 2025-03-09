@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+items:
+
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: {{ .Values.svc.storage.name }}
+    namespace: {{ .Release.Namespace }}
+  spec:
+    replicas: {{ .Values.svc.storage.image.replicas }}
+    serviceName: "{{ .Values.svc.storage.name }}"
+    minReadySeconds: 10
+    selector:
+      matchLabels:
+        app: {{ .Values.svc.storage.name }}
+    template:
+      metadata:
+        labels:
+          app: {{ .Values.svc.storage.name }}
+      spec:
+        hostname: {{ .Values.svc.storage.name }}
+        restartPolicy: {{ .Values.restartPolicy }}
+        {{ include "ImagePullSecret" . }}
+        terminationGracePeriodSeconds: 30
+        containers:
+        - name: {{ .Values.svc.storage.image.name }}
+          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.storage.image.name }}:"{{ .Values.svc.storage.image.tag }}"
+          imagePullPolicy: {{ .Values.svc.storage.image.pullPolicy }}
+          ports:
+          - containerPort: 81
+          env:
+          - name: HOSTNAME
+            value: "storage"
+          - name: DISCOVER
+            value: "storage"
+          - name: STORAGE_ID
+            valueFrom:
+              secretKeyRef:
+                key: STORAGE_ID
+                name: {{ include "SecretsName" . }}
+          - name: SALT
+            valueFrom:
+              secretKeyRef:
+                key: SALT
+                name: {{ include "SecretsName" . }}
+          volumeMounts:
+          - name: {{ .Values.svc.storage.name }}-pv
+            mountPath: /storage
+    volumeClaimTemplates:
+    - metadata:
+        name: {{ .Release.Name }}-{{ .Values.svc.storage.name }}-pv
+      spec:
+        accessModes: [ {{ .Values.storageClass.accessMode }} ]
+        storageClassName: {{ include "StorageClassName" . }}
+        resources:
+          requests:
+            storage: {{ include "StorageSpace" . }}
+        volumeMode: Filesystem
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: {{ .Values.svc.storage.name }}
+    namespace: {{ .Release.Namespace }}
+  spec:
+    selector:
+      app: {{ .Values.svc.storage.name }}
+    clusterIP: None
+
+kind: List
+metadata: {}

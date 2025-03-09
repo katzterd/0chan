@@ -1,6 +1,0 @@
-replicaCount: 1
-
-image:
-  name: redis
-  tag: "7-alpine"
-  pullPolicy: IfNotPresent
