@@ -16,12 +16,18 @@ items:
         labels:
           app: {{ .Values.svc.yggdrasilgate.name }}
       spec:
-        securityContext:
-          sysctls:
-          - name: net.ipv6.conf.all.disable_ipv6
-            value: "0"
         restartPolicy: {{ .Values.restartPolicy }}
         {{- include "ImagePullSecret" . | nindent 8 }}
+        initContainers:
+        - name: yggdrasilgate-wait-frontend
+          image: alpine/curl
+          command:
+          - sh
+          - -c
+          - |
+            until curl -s -o /dev/null http://{{ .Values.svc.frontend.name }}:80; do
+              sleep 1
+            done
         containers:
         - name: {{ .Values.svc.yggdrasilgate.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.yggdrasilgate.image.name }}:{{ .Values.svc.yggdrasilgate.image.tag }}
@@ -56,4 +62,4 @@ items:
 
 kind: List
 metadata:
-  name: "list"
+  name: "yggdrasilgate-list"

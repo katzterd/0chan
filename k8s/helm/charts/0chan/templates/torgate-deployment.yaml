@@ -18,6 +18,16 @@ items:
       spec:
         restartPolicy: {{ .Values.restartPolicy }}
         {{- include "ImagePullSecret" . | nindent 8 }}
+        initContainers:
+        - name: torgate-wait-frontend
+          image: alpine/curl
+          command:
+          - sh
+          - -c
+          - |
+            until curl -s -o /dev/null http://{{ .Values.svc.frontend.name }}:80; do
+              sleep 1
+            done
         containers:
         - name: {{ .Values.svc.torgate.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.torgate.image.name }}:{{ .Values.svc.torgate.image.tag }}
@@ -51,4 +61,4 @@ items:
 
 kind: List
 metadata:
-  name: "list"
+  name: "torgate-list"

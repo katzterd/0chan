@@ -48,7 +48,7 @@ items:
             mountPath: /storage
     volumeClaimTemplates:
     - metadata:
-        name: {{ .Release.Name }}-{{ .Values.svc.storage.name }}-pv
+        name: {{ .Values.svc.storage.name }}-pv
       spec:
         accessModes: [ {{ .Values.storageClass.accessMode }} ]
         storageClassName: {{ include "StorageClassName" . }}
@@ -69,4 +69,4 @@ items:
 
 kind: List
 metadata:
-  name: "list"
+  name: "storage-list"

@@ -19,7 +19,7 @@ items:
           app: {{ .Values.svc.cache.name }}
       spec:
         hostname: {{ .Values.svc.cache.name }}
-        restartPolicy: {{ .Values.restartPolicy }} 
+        restartPolicy: {{ .Values.restartPolicy }}
         containers:
         - name: {{ .Values.svc.cache.image.name }}
           image: {{ .Values.svc.cache.image.name }}:{{ .Values.svc.cache.image.tag }}
@@ -39,4 +39,4 @@ items:
 
 kind: List
 metadata:
-  name: "list"
+  name: "cache-list"

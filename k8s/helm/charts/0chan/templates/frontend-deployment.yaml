@@ -22,8 +22,19 @@ items:
           part-of: lb
       spec:
         hostname: {{ .Values.svc.frontend.name }}
-        restartPolicy: {{ .Values.restartPolicy }} 
+        restartPolicy: {{ .Values.restartPolicy }}
         {{- include "ImagePullSecret" . | nindent 8 }}
+        initContainers:
+        - name: wait-backend-and-storage
+          image: alpine/curl
+          command:
+          - sh
+          - -c
+          - |
+            until curl -o /dev/null http://{{ .Values.svc.backend.name }}:9000 2>&1 | grep -q "Recv failure: Connection reset by peer" && \
+              curl -s -o /dev/null http://{{ .Values.svc.storage.name }}:81; do
+              sleep 1
+            done
         containers:
         - name: {{ .Values.svc.frontend.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.frontend.image.name }}:{{ .Values.svc.frontend.image.tag }}
@@ -44,4 +55,4 @@ items:
 
 kind: List
 metadata:
-  name: "list"
+  name: "frontend-list"
