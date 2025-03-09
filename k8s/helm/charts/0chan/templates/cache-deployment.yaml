@@ -22,7 +22,7 @@ items:
         restartPolicy: {{ .Values.restartPolicy }} 
         containers:
         - name: {{ .Values.svc.cache.image.name }}
-          image: {{ .Values.svc.cache.image.name }}:"{{ .Values.svc.cache.image.tag }}"
+          image: {{ .Values.svc.cache.image.name }}:{{ .Values.svc.cache.image.tag }}
           imagePullPolicy: {{ .Values.svc.cache.image.pullPolicy }}
           ports:
           - containerPort: 6379
@@ -38,4 +38,5 @@ items:
     clusterIP: None
 
 kind: List
-metadata: {}
+metadata:
+  name: "list"

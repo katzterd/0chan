@@ -24,7 +24,7 @@ items:
         {{- include "ImagePullSecret" . | nindent 8 }}
         containers:
         - name: {{ .Values.svc.yggdrasilgate.image.name }}
-          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.yggdrasilgate.image.name }}:"{{ .Values.svc.yggdrasilgate.image.tag }}"
+          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.yggdrasilgate.image.name }}:{{ .Values.svc.yggdrasilgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.yggdrasilgate.image.pullPolicy }}
           securityContext:
             capabilities:
@@ -55,4 +55,5 @@ items:
             path: /dev/net/tun
 
 kind: List
-metadata: {}
+metadata:
+  name: "list"

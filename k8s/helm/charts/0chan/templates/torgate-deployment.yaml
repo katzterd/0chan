@@ -20,7 +20,7 @@ items:
         {{- include "ImagePullSecret" . | nindent 8 }}
         containers:
         - name: {{ .Values.svc.torgate.image.name }}
-          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.torgate.image.name }}:"{{ .Values.svc.torgate.image.tag }}"
+          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.torgate.image.name }}:{{ .Values.svc.torgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.torgate.image.pullPolicy }}
           env:
           - name: TORGATE_HOSTNAME
@@ -50,4 +50,5 @@ items:
                 name: {{ include "SecretsName" . }}
 
 kind: List
-metadata: {}
+metadata:
+  name: "list"

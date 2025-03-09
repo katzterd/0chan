@@ -25,7 +25,7 @@ items:
         {{- include "ImagePullSecret" . | nindent 8 }}
         containers:
         - name: {{ .Values.svc.backend.image.name }}
-          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.backend.image.name }}:"{{ .Values.svc.backend.image.tag }}"
+          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.backend.image.name }}:{{ .Values.svc.backend.image.tag }}
           imagePullPolicy: {{ .Values.svc.backend.image.pullPolicy }}
           ports:
           - containerPort: 9000
@@ -74,4 +74,5 @@ items:
     clusterIP: None
 
 kind: List
-metadata: {}
+metadata:
+  name: "list"

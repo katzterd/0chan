@@ -27,7 +27,7 @@ items:
           fsGroup: 70
         containers:
         - name: {{ .Values.svc.db.image.name }}
-          image: {{ .Values.svc.db.image.name }}:"{{ .Values.svc.db.image.tag }}"
+          image: {{ .Values.svc.db.image.name }}:{{ .Values.svc.db.image.tag }}
           imagePullPolicy: {{ .Values.svc.db.image.pullPolicy }}
           ports:
           - containerPort: 5432
@@ -75,4 +75,5 @@ items:
     clusterIP: None
 
 kind: List
-metadata: {}
+metadata:
+  name: "list"

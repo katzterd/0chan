@@ -24,7 +24,7 @@ items:
         terminationGracePeriodSeconds: 30
         containers:
         - name: {{ .Values.svc.storage.image.name }}
-          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.storage.image.name }}:"{{ .Values.svc.storage.image.tag }}"
+          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.storage.image.name }}:{{ .Values.svc.storage.image.tag }}
           imagePullPolicy: {{ .Values.svc.storage.image.pullPolicy }}
           ports:
           - containerPort: 81
@@ -68,4 +68,5 @@ items:
     clusterIP: None
 
 kind: List
-metadata: {}
+metadata:
+  name: "list"

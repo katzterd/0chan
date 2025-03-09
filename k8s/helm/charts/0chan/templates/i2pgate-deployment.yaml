@@ -20,7 +20,7 @@ items:
         {{- include "ImagePullSecret" . | nindent 8 }}
         containers:
         - name: {{ .Values.svc.i2pgate.image.name }}
-          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.i2pgate.image.name }}:"{{ .Values.svc.i2pgate.image.tag }}"
+          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.i2pgate.image.name }}:{{ .Values.svc.i2pgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.i2pgate.image.pullPolicy }}
           env:
           - name: I2PGATE_PRIVATE_KEY
@@ -40,4 +40,5 @@ items:
                 name: {{ include "SecretsName" . }}
 
 kind: List
-metadata: {}
+metadata:
+  name: "list"
