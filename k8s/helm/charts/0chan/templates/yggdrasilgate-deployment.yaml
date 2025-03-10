@@ -1,3 +1,4 @@
+{{- if eq .Values.svc.yggdrasilgate.enable true }}
 apiVersion: apps/v1
 items:
 
@@ -63,3 +64,4 @@ items:
 kind: List
 metadata:
   name: "yggdrasilgate-list"
+{{- end }}

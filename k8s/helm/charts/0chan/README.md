@@ -22,14 +22,17 @@ helm delete -n <namespace> <my-release>
 
 ## Configuration
 
-| Parameter                                 | Description                                   | Default Value                                           |
-|-------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
-|`registry`                                 | Override Container registry                   | `ghcr.io/katzterd/0chan`                                |
-|`secretsName`                              | Override secrets name                         | `nullchan-secrets`                                      |
-|`storageClass.name`                        | Override storage class name                   | `0chan-default-sc`                                      |
-|`dbSpace`                                  | Size of database free space (in Gi)           | `10Gi`                                                  |
-|`StorageSpace`                             | Size of storage free space (in Gi)            | `25Gi`                                                  |
-|`imagePullSecretName`                      | For pulling from private registry             | None                                                    |
+| Parameter                                  | Description                                   | Default Value                                           |
+|--------------------------------------------|-----------------------------------------------|---------------------------------------------------------|
+| `svc.torgate.enable`                       | "true" to enable torgate                      | None (Disabled)                                         |
+| `svc.i2pgate.enable`                       | "true" to enable i2pgate                      | None (Disabled)                                         |
+| `svc.yggdrasilgate.enable`                 | "true" to enable yggdrasilgate                | None (Disabled)                                         |
+| `registry`                                 | Override Container registry                   | `ghcr.io/katzterd/0chan`                                |
+| `secretsName`                              | Override secrets name                         | `nullchan-secrets`                                      |
+| `storageClass.name`                        | Override storage class name                   | `0chan-default-sc`                                      |
+| `dbSpace`                                  | Size of database free space (in Gi)           | `10Gi`                                                  |
+| `storageSpace`                             | Size of storage free space (in Gi)            | `25Gi`                                                  |
+| `imagePullSecretName`                      | For pulling from private registry             | None                                                    |
 
 
 ### Pulling from private registry
