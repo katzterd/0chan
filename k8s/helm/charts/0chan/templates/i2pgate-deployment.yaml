@@ -1,3 +1,4 @@
+{{- if eq .Values.svc.i2pgate.enable true }}
 apiVersion: apps/v1
 items:
 
@@ -52,3 +53,4 @@ items:
 kind: List
 metadata:
   name: "i2pgate-list"
+{{- end }}

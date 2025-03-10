@@ -1,3 +1,4 @@
+{{- if eq .Values.svc.torgate.enable true }}
 apiVersion: apps/v1
 items:
 
@@ -62,3 +63,4 @@ items:
 kind: List
 metadata:
   name: "torgate-list"
+{{- end }}
