@@ -19,7 +19,7 @@ svc:
       name: frontend
       tag: latest
       pullPolicy: Always
-      replicas: 2
+      replicas: 1
   backend:
     name: backend
     image:
