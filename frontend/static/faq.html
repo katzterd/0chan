@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<style>
+:root {
+  color-scheme: light dark;
+--bg-dark-theme-background: #303640;
+--bg-dark-theme-content: #393f4a;
+--bg-light-theme-background: #eeeeee;
+--bg-light-theme-content: #fefefe;
+--c-dark-theme-font: #ccc;
+--c-light-theme-font: #333333;
+--box-light-theme-shadow: #cccccc;
+--box-dark-theme-shadow: #2c323a;
+--box-light-theme-border: #cccccc;
+--box-dark-theme-border: #252a32;
+}
+html body {
+    background-color: light-dark(var(--bg-light-theme-background), var(--bg-dark-theme-background));
+    font-family: "Trebuchet MS", sans-serif;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    color: light-dark(var(--c-light-theme-font), var(--c-dark-theme-font));
+}
+a, span.a {
+    color: #16a085;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: color 0.2s linear !important;
+}
+a:hover {
+  color: #1abc9c;
+}
+.faq {
+    display: inline-block;
+    margin: 5px;
+    padding: 0px 10px;
+    border: 1px solid light-dark(var(--box-light-theme-border), var(--box-dark-theme-border));
+    border-radius: 2px;
+    background: light-dark(var(--bg-light-theme-content), var(--bg-dark-theme-content));
+    box-shadow: 0 1px 4px light-dark(var(--box-light-theme-shadow), var(--box-dark-theme-shadow));
+    white-space: normal;
+    width: 100%;
+}
+.tc {
+    width: 800px;
+    height: auto;
+    margin: 0 auto;
+}
+table, th, td {
+  border: 1px solid light-dark(var(--box-light-theme-border), var(--box-dark-theme-border));
+}
+.note {
+  border-bottom: 1px dashed #333333;
+  cursor: help;
+}
+b {
+    font-weight: bold;
+}
+i {
+    font-style: italic;
+}
+u {
+    text-decoration: underline;
+}
+del {
+    text-decoration: line-through;
+}
+mark {
+    color: #cccccc;
+    background: #cccccc;
+    padding: 2px;
+    transition: color .2s, background .2s;
+}
+mark:hover {
+    color: inherit;
+    background: rgba(204, 204, 204, 0.25);
+}
+code, pre {
+    font-family: Consolas, Monaco, "Courier New", monospace;
+    font-size: 90%;
+}
+code {
+    padding: 2px 4px;
+    color: light-dark(var(--c-light-theme-font), var(--c-dark-theme-font));
+    background-color: #f9f2f4;
+    border-radius: 2px;
+    white-space: normal;
+    background: none;
+}
+pre {
+    display: block;
+    padding: 8px;
+    margin: 2px;
+    font-size: 13px;
+    line-height: 1.42857;
+    color: light-dark(var(--c-light-theme-font), var(--c-dark-theme-font));
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: light-dark(var(--bg-light-theme-content), var(--bg-dark-theme-content));
+    border: 1px solid light-dark(var(--box-light-theme-border), var(--box-dark-theme-border));
+    border-radius: 2px;
+}
+blockquote, .quote {
+    display: inline-block;
+    border: 0;
+    padding: 0;
+    color: #6f9c6f;
+    font-style: italic;
+    font-size: inherit;
+    margin: 0;
+}
+</style>
+<div class="tc">
+<div class="faq">
+<h1>FAQ</h1>
+<h2>Зеркала</h2>
+<table>
+  <tbody>
+  <tr>
+    <td>Tor</td>
+    <td><a href="http://ochkocuka75kjdsqxwopbvbwr677t4udud2jdydejxerhjhey6sbpkid.onion/">ochkocuka75kjdsqxwopbvbwr677t4udud2jdydejxerhjhey6sbpkid.onion</a></td>
+  </tr>
+  <tr>
+    <td>I2P (addresshelper)</td>
+    <td><a href="http://ochko.i2p/?i2paddresshelper=gA22a05EYcr0Jj51XvnogGDMJRa0AZhPR4f2AzLzmY7xrVlXWitIRqoxW1cxFCLwQKWvTqyzp19A1n2LmLw5iVkn3x0kBubENDcSwNeAOnMbec6wFASHeU1RUduoVdG-H9qMjFbQF2pl4MOD-Ye0jDRIZxYvvBn9Ep1gb8g6Z-4FpkLHqNPIkoBwIhZEeAe5UlpV1frEmqknRBl25p0dD5Oq4NGn57HiTLCzVP7H09qusQjIb2-LnT6A91yhyIFWWBMUunf8dBn9llfZ6Km1bySFpBDdcdlx2J5J3jmtGLSaBNbJYqL6aPDllSBvabOPKj~0IRkdQZEBznTCZoMDgCoHxyrV-RBJq9hhXJ5eGUjKSlONr9bcS63Jzxzf2N8cKgfHKtX5EEmr2GFcnl4ZSMpKU42v1txLrcnPHN~Y3xwHGpBo1fkQSavYYVyeXhlIykpTja~W3Eutyc8c39jfHB~qkzT1cO5tnb0U1VUy4PZSalR5F41HK~1nRpzq7XBLBQAEAAcAAA==">ochko.i2p</a></td>
+  </tr>
+  <tr>
+    <td>I2P (b32)</td>
+    <td><a href="http://ochkothkzrdgg4iwmpl3fvsf7soeu4bbbs3rfb5eck5d3mr6ggxq.b32.i2p/">ochkothkzrdgg4iwmpl3fvsf7soeu4bbbs3rfb5eck5d3mr6ggxq.b32.i2p</a></td>
+  </tr>
+  <tr>
+    <td>Yggdrasil</td>
+    <td><a href="http://[20a:4fdf:8bad:369d:3b5b:791d:392b:a53]/">[20a:4fdf:8bad:369d:3b5b:791d:392b:a53]</a></td>
+  </tr>
+  <tr>
+    <td>Yggdrasil (<a href="https://github.com/Revertron/Alfis">Alfis</a>)</td>
+    <td><a href="http://ochko.ygg/">ochko.ygg</a></td>
+  </tr>
+  </tbody>
+</table>
+
+<h2>Разметка</h2>
+<table>
+  <tbody><tr>
+    <td>**bold**</td>
+    <td><b>bold</b></td>
+  </tr>
+  <tr>
+    <td>*italic*</td>
+    <td><i>italic</i></td>
+  </tr>
+  <tr>
+    <td>^^underscore^^ либо __underscore__</td>
+    <td><u>underscore</u></td>
+  </tr>
+  <tr>
+    <td>~~strikethrough~~ либо --strikethrough--</td>
+    <td><del>strikethrough</del></td>
+  </tr>
+  <tr>
+    <td>%%spoiler%%</td>
+    <td><mark>spoiler</mark></td>
+  </tr>
+  <tr>
+    <td>`inline code`</td>
+    <td><code>inline code</code></td>
+  </tr>
+  <tr>
+    <td>```code block```</td>
+    <td><pre>code block</pre></td>
+  </tr>
+  <tr>
+    <td>&gt;newline quote</td>
+    <td><blockquote>&gt; newline quote</blockquote></td>
+  </tr>
+  <tr>
+    <td>&gt;&gt;inline quote&lt;&lt;</td>
+    <td><blockquote>"inline quote"</blockquote></td>
+  </tr>
+</tbody></table>
+<h2>API</h2>
+<p>Краткий обзор API от 2017 года: <a href="https://pastebin.com/eefYQy3F">pastebin</a> (<a href="https://archive.fo/CSfqO">копия</a>), URL и ID сессии следует заменить на актуальные.</p>
+<h2>Исходный код</h2>
+<p>Доступен на <a href="https://github.com/katzterd/0chan">Github</a>.
+ FAQ в исходный код не входит и представляет собой 
+отдельный HTML-файл без внешних компонентов, отсутствующих в движке.</p>
+<h2>Основные доски</h2>
+<p><a href="../sudo/">/sudo/</a> - доска для административных вопросов.</p>
+<p><a href="../b/">/b/</a> - Бред.</p>
+<p><a href="../test/">/test/</a> - скрытыя доска для проверки работоспособности и функционала движка.</p>
+<br>
+</div>
+</div>
+
+
+
+</body></html>
