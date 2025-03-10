@@ -38,7 +38,7 @@ jobs:
           file: frontend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/$FRONTEND_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}/${{ env.FRONTEND_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -49,7 +49,7 @@ jobs:
           file: backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/$BACKEND_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}/${{ env.BACKEND_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -60,7 +60,7 @@ jobs:
           file: storage/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/$STORAGE_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}/${{ env.STORAGE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -71,7 +71,7 @@ jobs:
           file: torgate/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/$TORGATE_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}/${{ env.TORGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -82,7 +82,7 @@ jobs:
           file: i2pgate/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/$I2PGATE_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}/${{ env.I2PGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -93,7 +93,7 @@ jobs:
           file: yggdrasil/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/$YGGDRASILGATE_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}/${{ env.YGGDRASILGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -115,7 +115,7 @@ jobs:
           file: frontend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}-prod/$FRONTEND_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.FRONTEND_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -126,7 +126,7 @@ jobs:
           file: backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}-prod/$BACKEND_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.BACKEND_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -137,7 +137,7 @@ jobs:
           file: storage/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}-prod/$STORAGE_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.STORAGE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -148,7 +148,7 @@ jobs:
           file: torgate/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}-prod/$TORGATE_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.TORGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -159,7 +159,7 @@ jobs:
           file: i2pgate/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}-prod/$I2PGATE_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.I2PGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
@@ -170,6 +170,6 @@ jobs:
           file: yggdrasil/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}-prod/$YGGDRASILGATE_IMAGE_NAME:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.YGGDRASILGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
