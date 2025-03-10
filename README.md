@@ -6,8 +6,7 @@
 ╚██████╔╝╚██████╗██║  ██║██║  ██╗╚██████╔╝
  ╚═════╝  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝  
 ```
-![docker](https://img.shields.io/github/actions/workflow/status/katzterd/0chan/docker-build.yml?label=docker&logo=docker&style=for-the-badge)
-![helm](https://img.shields.io/github/actions/workflow/status/katzterd/0chan/helm-build.yml?label=helm&logo=helm&style=for-the-badge)
+![CI](https://img.shields.io/github/actions/workflow/status/katzterd/0chan/ci.yml?label=CI&logo=github&style=for-the-badge)
 
 ## Installation
 
