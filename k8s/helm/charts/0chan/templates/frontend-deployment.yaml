@@ -42,6 +42,13 @@ items:
           ports:
           - containerPort: 80
             protocol: TCP
+          env:
+          - name: TORGATE_HOSTNAME
+            valueFrom:
+              secretKeyRef:
+                key: TORGATE_HOSTNAME
+                name: {{ include "SecretsName" . }}
+                optional: true
 
 - apiVersion: v1
   kind: Service
