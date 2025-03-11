@@ -11,7 +11,7 @@ env:
   YGGDRASILGATE_IMAGE_NAME: yggdrasil
 
 jobs:
-  buildDockerfile:
+  buildDocker:
     runs-on: ubuntu-latest
     steps:
 
@@ -32,34 +32,70 @@ jobs:
 # Build
       -
         name: Build frontend [Public]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}/$FRONTEND_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE frontend/. --push -f frontend/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: frontend/.
+          file: frontend/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ env.FRONTEND_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build backend [Public]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}/$BACKEND_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE backend/. --push -f backend/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: backend/.
+          file: backend/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ env.BACKEND_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build storage [Public]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}/$STORAGE_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE storage/. --push -f storage/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: storage/.
+          file: storage/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ env.STORAGE_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build torgate [Public]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}/$TORGATE_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE torgate/. --push -f torgate/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: torgate/.
+          file: torgate/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ env.TORGATE_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build i2pgate [Public]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}/$I2PGATE_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE i2pgate/. --push -f i2pgate/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: i2pgate/.
+          file: i2pgate/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ env.I2PGATE_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build yggdrasilgate [Public]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}/$YGGDRASILGATE_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE yggdrasil/. --push -f yggdrasil/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: yggdrasil/.
+          file: yggdrasil/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}/${{ env.YGGDRASILGATE_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
 # Patch
       -
@@ -73,31 +109,67 @@ jobs:
 # Build private images
       -
         name: Build frontend [Private]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}-prod/$FRONTEND_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE frontend/. --push -f frontend/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: frontend/.
+          file: frontend/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.FRONTEND_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build backend [Private]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}-prod/$BACKEND_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE backend/. --push -f backend/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: backend/.
+          file: backend/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.BACKEND_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build storage [Private]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}-prod/$STORAGE_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE storage/. --push -f storage/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: storage/.
+          file: storage/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.STORAGE_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build torgate [Private]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}-prod/$TORGATE_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE torgate/. --push -f torgate/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: torgate/.
+          file: torgate/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.TORGATE_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build i2pgate [Private]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}-prod/$I2PGATE_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE i2pgate/. --push -f i2pgate/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: i2pgate/.
+          file: i2pgate/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.I2PGATE_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
       -
         name: Build yggdrasilgate [Private]
-        run: |
-          IMAGE=ghcr.io/${{ github.repository }}-prod/$YGGDRASILGATE_IMAGE_NAME:latest
-          docker buildx build --platform linux/amd64,linux/arm64 -t $IMAGE yggdrasil/. --push -f yggdrasil/Dockerfile
+        uses: docker/build-push-action@v5
+        with:
+          context: yggdrasil/.
+          file: yggdrasil/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.YGGDRASILGATE_IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
