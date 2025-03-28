@@ -58,6 +58,10 @@ items:
   spec:
     selector:
       app: {{ .Values.svc.frontend.name }}
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
     clusterIP: None
 
 kind: List

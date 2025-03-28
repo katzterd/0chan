@@ -11,7 +11,7 @@ helm repo update
 ## Install chart
 
 ```console
-helm install <my-release> -n <namespace> (--set <key1=val1,key2=val2,...>) 0chan/0chan
+helm install <my-release> (--set <key1=val1,key2=val2,...>) 0chan/0chan -n <namespace> --create-namespace
 ```
 
 ## Uninstall chart
@@ -28,8 +28,8 @@ helm delete -n <namespace> <my-release>
 | `svc.i2pgate.enable`                       | "true" to enable i2pgate                      | None (Disabled)                                         |
 | `svc.yggdrasilgate.enable`                 | "true" to enable yggdrasilgate                | None (Disabled)                                         |
 | `registry`                                 | Override Container registry                   | `ghcr.io/katzterd/0chan`                                |
-| `secretsName`                              | Override secrets name                         | `nullchan-secrets`                                      |
-| `storageClass.name`                        | Override storage class name                   | `0chan-default-sc`                                      |
+| `secretsName`                              | Override secrets name                         | `0chan-secrets`                                      |
+| `storageClass.name`                        | Override storage class name                   | `0chan-sc`                                      |
 | `dbSpace`                                  | Size of database free space (in Gi)           | `10Gi`                                                  |
 | `storageSpace`                             | Size of storage free space (in Gi)            | `25Gi`                                                  |
 | `imagePullSecretName`                      | For pulling from private registry             | None                                                    |
@@ -40,4 +40,9 @@ helm delete -n <namespace> <my-release>
 kubectl create -n <namespace> secret generic <imagePullSecretName> \ 
     --from-file=.dockerconfigjson=/path/to/.docker/config.json \
     --type=kubernetes.io/dockerconfigjson
+```
+
+## Get yggdrasil node address (if enabled)
+```console
+kubectl exec -n <namespace> -t deployments/yggdrasil -- /docker-entrypoint.sh getaddr
 ```

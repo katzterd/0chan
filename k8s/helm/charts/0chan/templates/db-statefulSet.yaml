@@ -72,6 +72,10 @@ items:
   spec:
     selector:
       app: {{ .Values.svc.db.name }}
+    ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
     clusterIP: None
 
 kind: List
