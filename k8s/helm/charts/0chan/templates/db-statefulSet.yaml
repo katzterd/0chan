@@ -4,7 +4,7 @@ items:
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
-    name: {{ .Values.svc.db.name }}
+    name: {{ .Release.Name }}-{{ .Values.svc.db.name }}
     namespace: {{ .Release.Namespace }}
   spec:
     replicas: {{ .Values.svc.db.image.replicas }}

@@ -28,8 +28,8 @@ helm delete -n <namespace> <my-release>
 | `svc.i2pgate.enable`                       | "true" to enable i2pgate                      | None (Disabled)                                         |
 | `svc.yggdrasilgate.enable`                 | "true" to enable yggdrasilgate                | None (Disabled)                                         |
 | `registry`                                 | Override Container registry                   | `ghcr.io/katzterd/0chan`                                |
-| `secretsName`                              | Override secrets name                         | `0chan-secrets`                                      |
-| `storageClass.name`                        | Override storage class name                   | `0chan-sc`                                      |
+| `secretsName`                              | Override secrets name                         | `0chan-secrets`                                         |
+| `storageClass.name`                        | Override storage class name                   | `0chan-sc`                                              |
 | `dbSpace`                                  | Size of database free space (in Gi)           | `10Gi`                                                  |
 | `storageSpace`                             | Size of storage free space (in Gi)            | `25Gi`                                                  |
 | `imagePullSecretName`                      | For pulling from private registry             | None                                                    |

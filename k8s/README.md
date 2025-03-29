@@ -18,6 +18,7 @@ Then fill fields in `.env` by your text editor with desired values
 
 Simple opaque secrets from `.env`:
 ```console
+kubectl create namespace <namespace>
 kubectl create -n <namespace> secret generic <secretsName> --from-env-file=.env
 ```
 
