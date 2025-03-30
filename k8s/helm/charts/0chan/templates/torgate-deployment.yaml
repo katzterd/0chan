@@ -5,7 +5,7 @@ items:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: {{ .Values.svc.torgate.name }}
+    name: {{ .Release.Name }}-{{ .Values.svc.torgate.name }}
     namespace: {{ .Release.Namespace }}
   spec:
     replicas: {{ .Values.svc.torgate.image.replicas }}

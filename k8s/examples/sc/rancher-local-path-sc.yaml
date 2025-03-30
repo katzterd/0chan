@@ -1,7 +1,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: 0chan-default-sc
+  name: 0chan-sc
 provisioner: rancher.io/local-path
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true

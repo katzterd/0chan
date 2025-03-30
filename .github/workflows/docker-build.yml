@@ -14,8 +14,8 @@ jobs:
   buildDocker:
     runs-on: ubuntu-latest
     steps:
-
-# Prepare
+    
+    # Prepare
       -
         name: Checkout
         uses: actions/checkout@v4
@@ -28,8 +28,8 @@ jobs:
       -
         name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-# Build
+        
+    # Build
       -
         name: Build frontend [Public]
         uses: docker/build-push-action@v5
@@ -96,8 +96,8 @@ jobs:
           tags: ghcr.io/${{ github.repository }}/${{ env.YGGDRASILGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-# Patch
+    
+    # Patch
       -
         name: Apply patch [Private]
         run: |
@@ -105,8 +105,8 @@ jobs:
           echo "${{ secrets.B64_PATCH_B }}" > B64_PATCH_B
           echo "${{ secrets.B64_PATCH_C }}" > B64_PATCH_C
           cat B64_PATCH_A B64_PATCH_B B64_PATCH_C | base64 -d | git apply
-
-# Build private images
+          
+    # Build private images
       -
         name: Build frontend [Private]
         uses: docker/build-push-action@v5
