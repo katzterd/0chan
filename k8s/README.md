@@ -6,22 +6,25 @@
 - [helm](https://helm.sh/docs/intro/install/)
 - [kubeseal](https://sealed-secrets.netlify.app/) (optional)
 
-## Setup
+## Quick start
 
 #### 1. Prepare .env 
 ```console
 cp .env-dist .env
 ```
-Then fill fields in `.env` by your text editor with needed values
+Then fill fields in `.env` by your text editor with desired values
 
-#### 2. Create namespace
+#### 2. Create secrets
+
+Simple opaque secrets from `.env`:
 ```console
-kubectl create ns <namespace>
+kubectl create namespace <namespace>
+kubectl create -n <namespace> secret generic <secretsName> --from-env-file=.env
 ```
 
-#### 3. Create secrets
+##### OR
 
-**(Optional)** Encrypt your secrets with sealed secrets. [Install it first](https://github.com/bitnami-labs/sealed-secrets/releases)
+**(Optional)** Encrypt your secrets with sealed secrets (e.g. for gitops purposes). [Install it first](https://github.com/bitnami-labs/sealed-secrets/releases)
 ```console
 kubeseal --fetch-cert --controller-name=sealed-secrets-controller --controller-namespace=kube-system > pub-sealed-secrets.pem
 kubectl create -n <namespace> secret generic <secretsName> --from-env-file=.env --dry-run=client -o yaml > secrets.yaml
@@ -30,39 +33,30 @@ rm -f secrets.yaml
 kubectl apply -f encrypted_secrets.yaml
 ```
 
-Or you can just create opaque secrets:
-```console
-kubectl create -n <namespace> secret generic <secretsName> --from-env-file=.env
-```
-
-#### 4. Create storage class (or use default one)
+#### 3. (Optional) Create storage class (or use default one)
 Examples is located in `examples/sc` directory
 ```console
 kubectl apply -f examples/sc/<provisioner-name>-sc.yaml
 ```
 
-#### 5. Deploy
+#### 4. Deploy
 ```console
-helm repo add 0chan https://katzterd.github.io/0chan
-helm repo update
-helm install <my-release> -n <namespace> 0chan/0chan
+helm upgrade --install <my-release> 0chan/0chan \
+--repo https://katzterd.github.io/0chan \
+-n <namespace> --create-namespace
 ```
 
-#### 6. Set up db and admin account
+#### 5. Set up db and admin account
 ```console
-kubectl exec -n <namespace> -t deployments/backend -- /src/config/docker-entrypoint.sh createdb createadmin
+kubectl exec -n <namespace> -t deployments/<my-release>-backend -- /src/config/docker-entrypoint.sh createdb createadmin
 ```
 You can simply remove `createadmin` from this line, if you don't need admin account
 
-#### 7. (Optional) Expose to clearnet
-Example is located in `examples/` directory
+#### 6. (Optional) Expose to clearnet
+Examples is located in `examples/loadbalancer` directory
 ```console
-kubectl apply -f examples/lb.yaml
-```
-
-#### 8. (Optional) Get yggdrasil node address (if enabled)
-```console
-kubectl exec -n <namespace> -t deployments/yggdrasil -- /docker-entrypoint.sh getaddr
+kubectl apply -f examples/loadbalancer/expose-frontend.yaml
+kubectl apply -f examples/loadbalancer/expose-db.yaml
 ```
 
 ### Configuration

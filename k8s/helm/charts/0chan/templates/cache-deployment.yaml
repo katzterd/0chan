@@ -4,7 +4,7 @@ items:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: {{ .Values.svc.cache.name }}
+    name: {{ .Release.Name }}-{{ .Values.svc.cache.name }}
     namespace: {{ .Release.Namespace }}
   spec:
     replicas: {{ .Values.svc.cache.image.replicas }}

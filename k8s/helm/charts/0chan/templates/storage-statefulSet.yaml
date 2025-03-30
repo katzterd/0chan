@@ -4,7 +4,7 @@ items:
 - apiVersion: apps/v1
   kind: StatefulSet
   metadata:
-    name: {{ .Values.svc.storage.name }}
+    name: {{ .Release.Name }}-{{ .Values.svc.storage.name }}
     namespace: {{ .Release.Namespace }}
   spec:
     replicas: {{ .Values.svc.storage.image.replicas }}

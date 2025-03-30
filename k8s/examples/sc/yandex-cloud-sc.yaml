@@ -2,7 +2,7 @@ apiVersion: v1
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: 0chan-default-sc
+  name: 0chan-sc
 provisioner: disk-csi-driver.mks.ycloud.io
 volumeBindingMode: WaitForFirstConsumer
 parameters:
