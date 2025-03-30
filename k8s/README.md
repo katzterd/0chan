@@ -48,7 +48,7 @@ helm upgrade --install <my-release> 0chan/0chan \
 
 #### 5. Set up db and admin account
 ```console
-kubectl exec -n <namespace> -t deployments/backend -- /src/config/docker-entrypoint.sh createdb createadmin
+kubectl exec -n <namespace> -t deployments/<my-release>-backend -- /src/config/docker-entrypoint.sh createdb createadmin
 ```
 You can simply remove `createadmin` from this line, if you don't need admin account
 
