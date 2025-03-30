@@ -4,7 +4,7 @@ items:
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    name: {{ .Values.svc.frontend.name }}
+    name: {{ .Release.Name }}-{{ .Values.svc.frontend.name }}
     namespace: {{ .Release.Namespace }}
   spec:
     replicas: {{ .Values.svc.frontend.image.replicas }}
@@ -58,6 +58,10 @@ items:
   spec:
     selector:
       app: {{ .Values.svc.frontend.name }}
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
     clusterIP: None
 
 kind: List

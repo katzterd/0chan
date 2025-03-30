@@ -275,7 +275,7 @@
                         }
                     }
                 }, error => {
-                    this.$bus.emit(BusEvents.ALERT_ERROR, "Чтобы проголосовать авторизируйтесь") ;
+                    this.$bus.emit(BusEvents.ALERT_ERROR, "Авторизуйтесь, чтобы проголосовать") ;
                 });
             },
             replyToPost(post_id) {

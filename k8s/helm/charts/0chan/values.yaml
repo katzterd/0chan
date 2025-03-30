@@ -1,8 +1,8 @@
-defaultSecretsName: nullchan-secrets
+defaultSecretsName: 0chan-secrets
 defaultRegistry: ghcr.io/katzterd/0chan
     
 storageClass:
-  defaultName: "0chan-default-sc"
+  defaultName: "0chan-sc"
   accessMode: "ReadWriteOnce"
   pods:
     storage:
