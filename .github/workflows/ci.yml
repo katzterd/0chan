@@ -1,10 +1,17 @@
 name: CI
 
-on: pull_request
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
 
 jobs:
   call-docker-build:
     uses: ./.github/workflows/docker-build.yml
     secrets: inherit
+    if: github.event.pull_request.merged == true
   call-helm-build:
     uses: ./.github/workflows/helm-build.yml
+    if: github.event.pull_request.merged == true
