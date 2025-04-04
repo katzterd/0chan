@@ -176,6 +176,7 @@ a:hover, span.a:hover {
   background: $color-white;
   box-shadow: 0 1px 4px $color-grey-lt;
   white-space: normal;
+  max-width: calc(100% - 10px);
 }
 
 blockquote, .quote {
