@@ -4,6 +4,9 @@
             <slot name="title"></slot>
         </div>
         <div class="headmenu-buttons headmenu-buttons-right">
+            <button @click="darkThemeSwitcher" title="Переключить тему" type="button" class="btn" :class="{ 'btn-theme-dark': isDark, 'btn-theme-def': !isDark }">
+                <i class="fa fa-adjust"></i>
+            </button>
             <slot name="buttons"></slot>
         </div>
         <div class="headmenu-buttons headmenu-buttons-left">
@@ -18,15 +21,27 @@
     import BusEvent from '../app/BusEvents'
 
     export default {
+        data () {
+            return {
+                isDark: false,
+            }
+        },
         mounted() {
             const title = this.$refs.title.textContent.trim().replace(/ — /g, ' - ').replace(/(\s+)/g, ' ');
             document.title = title;
+            this.isDark = localStorage.getItem(BusEvent.DARK_THEME) === 'true';
+            this.$bus.on(BusEvent.THEME_APPLIED, isDark => {
+                this.isDark = isDark;
+            });
         },
         methods: {
             toggleMobile() {
                 this.$bus.emit(BusEvent.TOGGLE_SIDEBAR, true);
+                },
+            darkThemeSwitcher() {
+                this.$bus.emit(BusEvent.TOGGLE_DARKTHEME, true);
+                },
             },
-        }
     }
 </script>
 
@@ -81,6 +96,16 @@
 
         &-right { right: 3px; }
         &-left  {  left: 3px; }
+    }
+    
+    .btn-theme-dark {
+        background-color: #393f4a;
+        text-decoration: none !important;
+    }
+    
+    .btn-theme-def {
+        background-color: #d9d9d9;
+        text-decoration: none !important;
     }
 
     @media (max-width: $screen-xs-max) {

@@ -375,7 +375,7 @@
 
             textarea {
                 min-height: 2em;
-                min-width: 500px;
+                min-width: 400px;
                 width: 100%;
                 margin: 0;
                 border: 0;
