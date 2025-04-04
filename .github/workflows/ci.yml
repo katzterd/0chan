@@ -10,7 +10,6 @@ on:
 jobs:
   call-docker-build:
     uses: ./.github/workflows/docker-build.yml
-    secrets: inherit
     if: github.event.pull_request.merged == true
   call-helm-build:
     uses: ./.github/workflows/helm-build.yml

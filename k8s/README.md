@@ -59,6 +59,21 @@ kubectl apply -f examples/loadbalancer/expose-frontend.yaml
 kubectl apply -f examples/loadbalancer/expose-db.yaml
 ```
 
+Also, you may can install `nginx-ingress` controller in your cluster to deploy several ochko instances on it:
+```console
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --set controller.service.externalTrafficPolicy=Local \
+  --set-string controller.config.use-forward-headers=true,controller.config.compute-full-forward-for=true \
+  --set controller.replicaCount=<number-of-nodes-iyc>
+```
+
+Examples of ingress manifests is located in `examples/loadbalancer/ingress` directory
+```console
+kubectl apply -f examples/loadbalancer/ingress/ingress.yaml
+```
+
 ### Configuration
 
 See in [./helm/charts/0chan](https://github.com/katzterd/0chan/tree/main/k8s/helm/charts/0chan)

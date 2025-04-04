@@ -1,6 +1,6 @@
-name: Docker build
+name: Docker build (Prod)
 
-on: workflow_call
+on: workflow_dispatch
 
 env:
   FRONTEND_IMAGE_NAME: frontend
@@ -11,7 +11,7 @@ env:
   YGGDRASILGATE_IMAGE_NAME: yggdrasil
 
 jobs:
-  buildDocker:
+  buildDockerProd:
     runs-on: ubuntu-latest
     steps:
     
@@ -28,71 +28,80 @@ jobs:
       -
         name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        
-    # Build
+
+    # Patch
       -
-        name: Build frontend [Public]
+        name: Apply patch [Private]
+        run: |
+          echo "${{ secrets.B64_PATCH_A }}" > B64_PATCH_A
+          echo "${{ secrets.B64_PATCH_B }}" > B64_PATCH_B
+          echo "${{ secrets.B64_PATCH_C }}" > B64_PATCH_C
+          cat B64_PATCH_A B64_PATCH_B B64_PATCH_C | base64 -d | git apply
+          
+    # Build private images
+      -
+        name: Build frontend [Private]
         uses: docker/build-push-action@v5
         with:
           context: frontend/.
           file: frontend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/${{ env.FRONTEND_IMAGE_NAME }}:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.FRONTEND_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
-        name: Build backend [Public]
+        name: Build backend [Private]
         uses: docker/build-push-action@v5
         with:
           context: backend/.
           file: backend/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/${{ env.BACKEND_IMAGE_NAME }}:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.BACKEND_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
-        name: Build storage [Public]
+        name: Build storage [Private]
         uses: docker/build-push-action@v5
         with:
           context: storage/.
           file: storage/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/${{ env.STORAGE_IMAGE_NAME }}:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.STORAGE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
-        name: Build torgate [Public]
+        name: Build torgate [Private]
         uses: docker/build-push-action@v5
         with:
           context: torgate/.
           file: torgate/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/${{ env.TORGATE_IMAGE_NAME }}:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.TORGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
-        name: Build i2pgate [Public]
+        name: Build i2pgate [Private]
         uses: docker/build-push-action@v5
         with:
           context: i2pgate/.
           file: i2pgate/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/${{ env.I2PGATE_IMAGE_NAME }}:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.I2PGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
       -
-        name: Build yggdrasilgate [Public]
+        name: Build yggdrasilgate [Private]
         uses: docker/build-push-action@v5
         with:
           context: yggdrasil/.
           file: yggdrasil/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}/${{ env.YGGDRASILGATE_IMAGE_NAME }}:latest
+          tags: ghcr.io/${{ github.repository }}-prod/${{ env.YGGDRASILGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
