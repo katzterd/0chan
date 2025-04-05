@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: ingress-0chan
   namespace: nullchan
+  annotations:
+    nginx.ingress.kubernetes.io/enable-real-ip: "true"
 spec:
   ingressClassName: nginx
   rules:
