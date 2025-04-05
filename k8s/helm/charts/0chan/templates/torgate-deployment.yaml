@@ -8,6 +8,8 @@ items:
     name: {{ .Release.Name }}-{{ .Values.svc.torgate.name }}
     namespace: {{ .Release.Namespace }}
   spec:
+    strategy:
+      type: Recreate
     replicas: {{ .Values.svc.torgate.image.replicas }}
     selector:
       matchLabels:
