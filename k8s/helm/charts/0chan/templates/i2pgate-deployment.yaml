@@ -8,6 +8,8 @@ items:
     name: {{ .Release.Name }}-{{ .Values.svc.i2pgate.name }}
     namespace: {{ .Release.Namespace }}
   spec:
+    strategy:
+      type: Recreate
     replicas: {{ .Values.svc.i2pgate.image.replicas }}
     selector:
       matchLabels:
