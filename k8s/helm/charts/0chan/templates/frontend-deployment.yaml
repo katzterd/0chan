@@ -31,7 +31,7 @@ items:
           - sh
           - -c
           - |
-            until curl -o /dev/null http://{{ .Values.svc.backend.name }}:9000 2>&1 | grep -q "Recv failure: Connection reset by peer" && \
+            until curl -o /dev/null http://{{ .Values.svc.backend.name }}:9000 2>&1 | grep -q "56" && \
               curl -s -o /dev/null http://{{ .Values.svc.storage.name }}:81; do
               sleep 1
             done
