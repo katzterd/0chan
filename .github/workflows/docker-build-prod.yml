@@ -32,11 +32,12 @@ jobs:
     # Patch
       -
         name: Apply patch [Private]
+        env: 
+          B64_PATCH_A: "${{ secrets.B64_PATCH_A }}"
+          B64_PATCH_B: "${{ secrets.B64_PATCH_B }}"
+          B64_PATCH_C: "${{ secrets.B64_PATCH_C }}"
         run: |
-          echo "${{ secrets.B64_PATCH_A }}" > B64_PATCH_A
-          echo "${{ secrets.B64_PATCH_B }}" > B64_PATCH_B
-          echo "${{ secrets.B64_PATCH_C }}" > B64_PATCH_C
-          cat B64_PATCH_A B64_PATCH_B B64_PATCH_C | base64 -d | git apply
+          echo "$B64_PATCH_A""$B64_PATCH_B""$B64_PATCH_C" | base64 -d | git apply
           
     # Build private images
       -
