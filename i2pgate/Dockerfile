@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y software-properties-common
+    apt-get install -y software-properties-common curl
 
 RUN add-apt-repository ppa:purplei2p/i2pd && \
     apt-get update
