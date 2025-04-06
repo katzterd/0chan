@@ -36,12 +36,14 @@ items:
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.yggdrasilgate.image.name }}:{{ .Values.svc.yggdrasilgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.yggdrasilgate.image.pullPolicy }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-              host: {{ .Values.svc.frontend.name }}
+            exec:
+              command:
+              - curl
+              - -f
+              - http://{{ .Values.svc.frontend.name }}:80
             periodSeconds: 5
-            initialDelaySeconds: 60
+            initialDelaySeconds: 10
+            timeoutSeconds: 10
           securityContext:
             capabilities:
               add: 
