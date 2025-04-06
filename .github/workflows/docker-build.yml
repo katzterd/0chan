@@ -1,6 +1,20 @@
 name: Docker build
 
-on: workflow_call
+on:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '!backend/.gitignore'
+      - 'frontend/**'
+      - '!frontend/.gitignore'
+      - 'storage/**'
+      - 'torgate/**'
+      - 'yggdrasil/**'
+      - 'i2pgate/**'
 
 env:
   FRONTEND_IMAGE_NAME: frontend
@@ -13,6 +27,7 @@ env:
 jobs:
   buildDocker:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
     
     # Prepare
