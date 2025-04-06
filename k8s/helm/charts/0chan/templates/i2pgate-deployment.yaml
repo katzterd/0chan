@@ -35,6 +35,13 @@ items:
         - name: {{ .Values.svc.i2pgate.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.i2pgate.image.name }}:{{ .Values.svc.i2pgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.i2pgate.image.pullPolicy }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              host: {{ .Values.svc.frontend.name }}
+            periodSeconds: 5
+            initialDelaySeconds: 60
           env:
           - name: I2PGATE_PRIVATE_KEY
             valueFrom:

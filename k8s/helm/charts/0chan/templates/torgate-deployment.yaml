@@ -35,6 +35,13 @@ items:
         - name: {{ .Values.svc.torgate.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.torgate.image.name }}:{{ .Values.svc.torgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.torgate.image.pullPolicy }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              host: {{ .Values.svc.frontend.name }}
+            periodSeconds: 5
+            initialDelaySeconds: 60
           env:
           - name: TORGATE_HOSTNAME
             valueFrom:

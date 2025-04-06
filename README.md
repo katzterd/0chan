@@ -6,7 +6,7 @@
 ╚██████╔╝╚██████╗██║  ██║██║  ██╗╚██████╔╝
  ╚═════╝  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝  
 ```
-![CI](https://img.shields.io/github/actions/workflow/status/katzterd/0chan/ci.yml?label=CI&logo=github&style=for-the-badge)
+![CI](https://img.shields.io/github/actions/workflow/status/katzterd/0chan/docker-build.yml?label=CI&logo=github&style=for-the-badge)
 
 ## Installation
 
