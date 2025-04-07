@@ -91,5 +91,8 @@
     .post-img-full {
         position: relative;
         z-index: 1;
+        width: 100% !important;
+        height: auto !important;
+        max-width: 485px;
     }
 </style>
