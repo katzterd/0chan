@@ -11,14 +11,31 @@ env:
   YGGDRASILGATE_IMAGE_NAME: yggdrasil
 
 jobs:
+
   buildDockerProd:
     runs-on: ubuntu-latest
     steps:
-    
-    # Prepare
       -
         name: Checkout
         uses: actions/checkout@v4
+      -
+        name: Filter
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+            storage:
+              - 'storage/**'
+            torgate:
+              - 'torgate/**'
+            i2pgate:
+              - 'i2pgate/**'
+            yggdrasilgate:
+              - 'yggdrasil/**'
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -29,7 +46,6 @@ jobs:
         name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    # Patch
       -
         name: Apply patch [Private]
         env: 
@@ -38,11 +54,11 @@ jobs:
           B64_PATCH_C: "${{ secrets.B64_PATCH_C }}"
         run: |
           echo "$B64_PATCH_A""$B64_PATCH_B""$B64_PATCH_C" | base64 -d | git apply
-          
-    # Build private images
+
       -
         name: Build frontend [Private]
         uses: docker/build-push-action@v5
+        if: steps.filter.outputs.frontend == 'true'
         with:
           context: frontend/.
           file: frontend/Dockerfile
@@ -51,9 +67,11 @@ jobs:
           tags: ghcr.io/${{ github.repository }}-prod/${{ env.FRONTEND_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
       -
         name: Build backend [Private]
         uses: docker/build-push-action@v5
+        if: steps.filter.outputs.backend == 'true'
         with:
           context: backend/.
           file: backend/Dockerfile
@@ -62,9 +80,11 @@ jobs:
           tags: ghcr.io/${{ github.repository }}-prod/${{ env.BACKEND_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
       -
         name: Build storage [Private]
         uses: docker/build-push-action@v5
+        if: steps.filter.outputs.storage == 'true'
         with:
           context: storage/.
           file: storage/Dockerfile
@@ -73,9 +93,11 @@ jobs:
           tags: ghcr.io/${{ github.repository }}-prod/${{ env.STORAGE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
       -
         name: Build torgate [Private]
         uses: docker/build-push-action@v5
+        if: steps.filter.outputs.torgate == 'true'
         with:
           context: torgate/.
           file: torgate/Dockerfile
@@ -84,9 +106,11 @@ jobs:
           tags: ghcr.io/${{ github.repository }}-prod/${{ env.TORGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
       -
         name: Build i2pgate [Private]
         uses: docker/build-push-action@v5
+        if: steps.filter.outputs.i2pgate == 'true'
         with:
           context: i2pgate/.
           file: i2pgate/Dockerfile
@@ -95,9 +119,11 @@ jobs:
           tags: ghcr.io/${{ github.repository }}-prod/${{ env.I2PGATE_IMAGE_NAME }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
       -
         name: Build yggdrasilgate [Private]
         uses: docker/build-push-action@v5
+        if: steps.filter.outputs.yggdrasilgate == 'true'
         with:
           context: yggdrasil/.
           file: yggdrasil/Dockerfile
