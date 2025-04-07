@@ -19,6 +19,7 @@
 
     .board-info.block {
         width: 600px;
+        overflow-wrap: anywhere;
         @media(max-width: $screen-xs-max) {
             width: 80vw;
         }
