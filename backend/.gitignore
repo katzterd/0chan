@@ -1,2 +1,11 @@
-composer.lock
-composer.phar
+/*
+!/config
+!/console
+!/meta
+!/misc
+!/src
+!/www
+!/composer.json
+!/config.inc.php
+!/Dockerfile
+!/.gitignore
