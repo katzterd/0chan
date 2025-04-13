@@ -1,23 +1,32 @@
 name: Helm build
 
-on:
-  pull_request_target:
-    types:
-      - closed
-    branches:
-      - main
-    paths:
-      - 'k8s/helm/**'
-      - '.cr.yaml'
+on: pull_request
     
 permissions: {}
 jobs:
+
+  diff:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      buildHelm: ${{ steps.diff.outputs.buildHelm }}
+    steps:
+    - uses: dorny/paths-filter@v3
+      id: diff
+      with:
+        filters: |
+          buildHelm:
+            - 'k8s/helm/**'
+            - '.cr.yaml'
+
   buildHelm:
     permissions:
       contents: write # to push chart release and create a release (helm/chart-releaser-action)
       packages: write # needed for ghcr access
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
+    needs: diff
+    if: ${{ needs.diff.outputs.buildHelm == 'true' }}
     steps:
     
 # Prepare
