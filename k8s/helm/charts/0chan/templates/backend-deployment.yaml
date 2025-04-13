@@ -26,6 +26,7 @@ items:
         initContainers:
         - name: wait-db
           image: postgres
+          imagePullPolicy: IfNotPresent
           command:
           - sh
           - -ec

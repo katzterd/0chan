@@ -24,6 +24,7 @@ items:
         initContainers:
         - name: i2pgate-wait-frontend
           image: alpine/curl
+          imagePullPolicy: IfNotPresent
           command:
           - sh
           - -c
