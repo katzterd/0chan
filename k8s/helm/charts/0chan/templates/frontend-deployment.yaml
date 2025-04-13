@@ -27,6 +27,7 @@ items:
         initContainers:
         - name: wait-backend-and-storage
           image: alpine/curl
+          imagePullPolicy: IfNotPresent
           command:
           - sh
           - -c

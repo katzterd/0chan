@@ -35,6 +35,9 @@ jobs:
 
   buildDocker:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      packages: write
     needs: diff
     if: ${{ needs.diff.outputs.buildDocker == 'true' }}
     steps:
