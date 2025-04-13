@@ -456,7 +456,7 @@
     .ban-popup {
         position: absolute;
         z-index: 1;
-        width: 375px;
+        min-width: 375px;
         padding: 0 !important;
         .panel-body, .panel-footer { padding: 8px }
         .form-group { margin-bottom: 8px; }

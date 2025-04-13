@@ -40,7 +40,7 @@ items:
               command:
               - curl
               - -f
-              - http://{{ .Values.svc.frontend.name }}:80
+              - http://{{ .Values.svc.frontend.name }}:80/lifecheck
             periodSeconds: 5
             initialDelaySeconds: 10
             timeoutSeconds: 10
