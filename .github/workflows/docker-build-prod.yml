@@ -1,6 +1,9 @@
 name: Docker build (Prod)
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - main
 
 env:
   FRONTEND_IMAGE_NAME: frontend
@@ -15,7 +18,6 @@ jobs:
   buildDockerProd:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: read
       packages: write
     steps:
       -
@@ -26,6 +28,7 @@ jobs:
         uses: dorny/paths-filter@v3
         id: filter
         with:
+          base: ${{ github.ref }}
           filters: |
             frontend:
               - 'frontend/**'
