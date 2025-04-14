@@ -36,7 +36,7 @@ class ApiManagementController extends ApiBaseController
         $response = [];
 
         $form = Form::create();
-        $editableProperties = ['name', 'description', 'hidden', 'nsfw', 'blockRu', 'threadLimit', 'bumpLimit', 'imrequired', 'sage', 'identity', 'likes', 'textboard'];
+        $editableProperties = ['name', 'description', 'hidden', 'nsfw', 'blockRu', 'threadLimit', 'bumpLimit', 'imrequired', 'textboard', 'sage', 'identity', 'likes'];
         if (!$board->getId() || $this->getUser()->canManageAllBoards()) {
             array_unshift($editableProperties, 'dir'); // show "dir" field first
         }
@@ -64,7 +64,7 @@ class ApiManagementController extends ApiBaseController
         }
 
         // saved to modlog
-        $loggedProperties = ['dir', 'name', 'hidden', 'nsfw', 'blockRu', 'threadLimit', 'bumpLimit', 'imrequired', 'sage', 'identity', 'likes', 'textboard'];
+        $loggedProperties = ['dir', 'name', 'hidden', 'nsfw', 'blockRu', 'threadLimit', 'bumpLimit', 'imrequired', 'textboard', 'sage', 'identity', 'likes'];
 
         if ($form->exists('dir')) {
             $form->get('dir')->setAllowedPattern('/^[a-z0-9]+$/');
@@ -115,6 +115,20 @@ class ApiManagementController extends ApiBaseController
                         $form->addWrongLabel('dir', 'Такой раздел уже существует');
                         return false;
                     }
+                }
+                return true;
+            }));
+        } 
+        
+        foreach (['imrequired', 'textboard'] as $array) {
+            $form->addRule($array, CallbackLogicalObject::create(function (Form $form) use ($board) {
+                $imrequired = $form->getValue('imrequired');
+                $textboard = $form->getValue('textboard');
+    
+                if ($imrequired && $textboard) {
+                    $form->addWrongLabel('imrequired', 'Выберите только один из отмеченных вариантов');
+                    $form->addWrongLabel('textboard', 'Выберите только один из отмеченных вариантов');
+                    return false;
                 }
                 return true;
             }));
@@ -184,10 +198,10 @@ class ApiManagementController extends ApiBaseController
                 'threadLimit' => 'Максимальное количество тредов, свыше которого треды будут отмечаться к удалению',
                 'bumpLimit' => 'Максимальное количество постов в треде, после которого он перестанет подниматься',
                 'imrequired' => 'Требовать изображение для создания треда',
+                'textboard' => 'Запретить прикреплять изображения',
                 'sage'  => 'Добавляет на вашу доску возможность отвечать в тред, не поднимая его вверх',
                 'identity' => 'Добавляет возможность при создании/ответа в тред использовать свою личность',
-                'likes' => 'Позволяет оценивать посты (требует авторизации)',
-                'textboard' => 'Режим текстовой доски, запрещает прикреплять изображения'
+                'likes' => 'Позволяет оценивать посты (требует авторизации)'
             ]
         );
 

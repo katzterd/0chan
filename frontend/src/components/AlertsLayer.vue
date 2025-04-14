@@ -67,7 +67,7 @@
     .alerts-wrapper {
         position: fixed;
         z-index: 20;
-        top: 10px;
+        top: 50px;
         right: 10px;
     }
 
