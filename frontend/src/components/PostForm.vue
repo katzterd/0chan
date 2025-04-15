@@ -113,6 +113,9 @@
             this.$bus.on(BusEvents.APPEND_MESSAGE, message => {
                 this.form.message += message;
             });
+            this.$bus.on(BusEvents.CLOSE_CAPTCHA, () => {
+                this.isSending = false;
+            });
         },
         watch: {
             files: () => {

@@ -35,6 +35,7 @@
                 this.visible = false;
                 this.image = null;
                 this.$bus.emit(BusEvents.SET_BLUR, false);
+                this.$bus.emit(BusEvents.CLOSE_CAPTCHA);
             },
             ask(callback) {
                 this.answer = '';
