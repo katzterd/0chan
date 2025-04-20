@@ -20,7 +20,4 @@ export default {
     HIGHLIGHT_POST:     'highlightPost',
     REPLY_TO_POST:      'replyToPost',
     APPEND_MESSAGE:     'appendMessage',
-    DARK_THEME:         'darkTheme',
-    THEME_APPLIED:      'themeApplied',
-    TOGGLE_DARKTHEME:   'toggleDarkTheme',
 }

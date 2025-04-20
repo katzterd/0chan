@@ -33,7 +33,6 @@
             return {
                 blurred: false,
                 contentClass: null,
-                isDark: localStorage.getItem(BusEvents.DARK_THEME) === 'true',
             }
         },
         watch: {
@@ -76,8 +75,6 @@
                     .text(localStorage.custom_css)
                 );
             }
-            this.applyCss();
-            this.$bus.on(BusEvents.TOGGLE_DARKTHEME, this.toggleDarkTheme);
         },
         methods: {
             checkContentClass() {
@@ -87,15 +84,6 @@
                         this.contentClass = comp.contentClass;
                     }
                 }
-            },
-            toggleDarkTheme() {
-                this.isDark = !this.isDark;
-                localStorage.setItem(BusEvents.DARK_THEME, this.isDark);
-                this.applyCss();
-            },
-            applyCss() {
-                document.documentElement.classList.toggle('dark', this.isDark);
-                this.$bus.emit(BusEvents.THEME_APPLIED, this.isDark); 
             },
         }
     }
