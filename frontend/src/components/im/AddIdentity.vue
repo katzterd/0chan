@@ -18,7 +18,7 @@
             </p>
             <form class="form" @submit.prevent="onSubmit">
                 <div class="input-group vspace">
-                    <input type="text" class="form-control" v-model="name" required placeholder="Имя" maxlength="32" :disabled="isSubmitting" />
+                    <input type="text" class="form-control" v-model="name" required placeholder="Имя" maxlength="14" :disabled="isSubmitting" />
                     <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
                         <i class="fa fa-plus"></i>

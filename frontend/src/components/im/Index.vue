@@ -28,17 +28,17 @@
                     </thead>
                     <tbody>
                     <tr v-for="id in identities">
-                        <td>
-                            <span class="im-address" v-clipboard="id.address" @success="addressCopied">{{id.address}}</span>
-                        </td>
                         <td width="100%">
-                            <div class="pull-right">
-                                <a class="im-button btn-default fa fa-search" @click.prevent="$emit('search', id.address)"></a>
-                                <a class="im-button btn-default fa fa-clipboard"  v-clipboard="id.address" @success="addressCopied"></a>
-                                <a class="im-button btn-default fa fa-link"  v-clipboard="id.link" @success="linkCopied"></a>
-                                <a class="im-button btn-default fa fa-trash" @click.prevent="deleteIdentity(id.address)"></a>
+                            <span class="im-address" v-clipboard="id.address" @success="addressCopied">{{id.address}}</span>
+                            <div class="im-identity"><b>⤷</b> {{id.name}}</div>
+                        </td>
+                        <td>
+                            <div class="pull-right" style="display: flex;">
+                                <a class="im-button btn-sm fa fa-search" @click.prevent="$emit('search', id.address)"></a>
+                                <a class="im-button btn-sm fa fa-clipboard"  v-clipboard="id.address" @success="addressCopied"></a>
+                                <a class="im-button btn-sm fa fa-link"  v-clipboard="id.link" @success="linkCopied"></a>
+                                <a class="im-button btn-sm fa fa-trash" @click.prevent="deleteIdentity(id.address)"></a>
                             </div>
-                            {{id.name}}
                         </td>
                     </tr>
                     </tbody>
@@ -142,6 +142,12 @@
 
     .im-address {
         cursor: pointer;
+    }
+    
+    .im-identity {
+        position: relative;
+        display: block;
+        margin: 4px 0 -4px 0;
     }
 
     .add-identity {

@@ -253,8 +253,8 @@ address, .im-address {
   font-size: inherit;
   color: $color-green-dk !important;
   border: 1px solid $color-green-dk;
-  border-radius: 2px;
-  padding: 0 4px;
+  border-radius: 4px;
+  padding: 2px 1px 0px 2px;
 
   &.im-grey {
     color: $color-grey !important;

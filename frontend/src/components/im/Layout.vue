@@ -4,7 +4,7 @@
             <span slot="title">Сообщения</span>
             <span slot="buttons">
                 <button class="btn btn-primary hidden-lg" @click="isDialogsView = !isDialogsView">
-                    <i class="fa fa-fw fa-list"></i> {{isDialogsView ? 'Скрыть' : 'Показать'}} диалоги
+                    <i class="fa fa-fw fa-list"></i> <span class="btn-caption hidden-xs">{{isDialogsView ? 'Скрыть' : 'Показать'}} диалоги</span>
                 </button>
                 <button class="btn btn-default hidden visible-lg" @click="isSwapLayout = !isSwapLayout">
                     <i class="fa fa-fw fa fa-arrows-h"></i>
@@ -176,11 +176,30 @@
                 right: 0 !important;
                 left: 0 !important;
             }
+            
+
         }
+        
+        
 
         .dialog-start {
             margin: 40px auto;
             width: 300px;
         }
+    }
+    
+    @media(max-width: $screen-sm-min) {
+        
+        .dialog-header .im-address {
+            display: none;
+        }
+        
+        .im-box {
+            position: fixed;
+        }
+        .form-control {
+            resize: none;
+        }
+    
     }
 </style>
