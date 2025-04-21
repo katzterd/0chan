@@ -288,6 +288,7 @@
         .message-text {
             vertical-align: top;
             width: 100%;
+            word-break: break-word;
         }
         .message-date {
             white-space: nowrap;

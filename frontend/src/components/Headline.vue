@@ -4,7 +4,7 @@
             <slot name="title"></slot>
         </div>
         <div class="headmenu-buttons headmenu-buttons-right">
-            <button @click="darkThemeSwitcher" title="Переключить тему" type="button" class="btn" :class="{ 'btn-theme-dark': isDark, 'btn-theme-def': !isDark }">
+            <button @click="toggleTheme" title="Переключить тему" type="button" class="btn" style="background-color:transparent; box-shadow: unset;">
                 <i class="fa fa-adjust"></i>
             </button>
             <slot name="buttons"></slot>
@@ -20,28 +20,29 @@
 <script>
     import BusEvent from '../app/BusEvents'
 
+    const currentTheme = localStorage.getItem('DarkMode') === 'true'
+    document.documentElement.classList.toggle('dark', currentTheme)
+
     export default {
-        data () {
+        data() {
             return {
-                isDark: false,
+                isDark: currentTheme
             }
         },
         mounted() {
             const title = this.$refs.title.textContent.trim().replace(/ — /g, ' - ').replace(/(\s+)/g, ' ');
             document.title = title;
-            this.isDark = localStorage.getItem(BusEvent.DARK_THEME) === 'true';
-            this.$bus.on(BusEvent.THEME_APPLIED, isDark => {
-                this.isDark = isDark;
-            });
         },
         methods: {
             toggleMobile() {
                 this.$bus.emit(BusEvent.TOGGLE_SIDEBAR, true);
-                },
-            darkThemeSwitcher() {
-                this.$bus.emit(BusEvent.TOGGLE_DARKTHEME, true);
-                },
             },
+            toggleTheme() {
+                this.isDark = !this.isDark
+                localStorage.setItem('DarkMode', this.isDark)
+                document.documentElement.classList.toggle('dark', this.isDark)
+            },
+        },
     }
 </script>
 
@@ -93,19 +94,11 @@
     .headmenu-buttons {
         position: absolute;
         z-index: 1;
+        display: flex;
+        gap: 3px;
 
         &-right { right: 3px; }
         &-left  {  left: 3px; }
-    }
-    
-    .btn-theme-dark {
-        background-color: #393f4a;
-        text-decoration: none !important;
-    }
-    
-    .btn-theme-def {
-        background-color: #d9d9d9;
-        text-decoration: none !important;
     }
 
     @media (max-width: $screen-xs-max) {
