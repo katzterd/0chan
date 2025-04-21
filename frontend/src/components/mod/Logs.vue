@@ -3,7 +3,7 @@
         <form v-if="dir" @submit.prevent="onMessageSubmit" class="form-inline">
             <div class="form-group">
                 <label>Сообщение:</label>
-                <input type="text" v-model="message" maxlength="255" class="form-control" style="width: 400px;">
+                <input type="text" v-model="message" maxlength="255" class="form-control" style="width: 300px; display: inline-block;">
                 <button type="submit" :disabled="!message" class="btn btn-primary"><i class="fa fa-send"></i></button>
             </div>
         </form>

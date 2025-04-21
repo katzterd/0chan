@@ -22,9 +22,7 @@
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" v-model="newModeratorIsAdmin" class="form-control"
-                                           :disabled="isAdding" />
-                                    админ
+                                    <input type="checkbox" v-model="newModeratorIsAdmin" :disabled="isAdding"/> админ
                                 </label>
                             </div>
                         </div>

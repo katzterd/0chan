@@ -282,6 +282,7 @@
 
                     .sidemenu-board-title {
                         color: $color-grey-lt;
+                        word-break: break-word;
                     }
 
                     .sidemenu-board-dir {

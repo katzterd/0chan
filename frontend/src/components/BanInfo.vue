@@ -57,6 +57,6 @@
 
 <style >
     .ban-info.block {
-        width: 400px;
+//        width: 400px;
     }
 </style>
