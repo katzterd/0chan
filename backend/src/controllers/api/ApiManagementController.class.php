@@ -126,8 +126,8 @@ class ApiManagementController extends ApiBaseController
                 $textboard = $form->getValue('textboard');
     
                 if ($imrequired && $textboard) {
-                    $form->addWrongLabel('imrequired', 'Выберите только один из отмеченных вариантов');
-                    $form->addWrongLabel('textboard', 'Выберите только один из отмеченных вариантов');
+                    $form->addWrongLabel('imrequired', 'Вы можете выбрать только один из отмеченных вариантов');
+                    $form->addWrongLabel('textboard', 'Вы можете выбрать только один из отмеченных вариантов');
                     return false;
                 }
                 return true;

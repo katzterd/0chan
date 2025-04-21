@@ -66,10 +66,11 @@
 
         .modals-wrapper3 {
             position: relative;
-            display: inline-block;
+            display: inline-flex;
             margin-left: auto;
             margin-right: auto;
             text-align: start;
+            margin: 0 10px;
 
             > button.close {
                 position: absolute;

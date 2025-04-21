@@ -111,9 +111,11 @@
 
         .headmenu-title {
             position: absolute;
-            left: 50px;
+            left: 40px;
             right: 0;
             text-align: left;
+            font-size: 24px;
+            line-height: normal;
         }
     }
 
