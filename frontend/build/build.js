@@ -3,9 +3,9 @@ require('./check-versions')()
 
 process.env.NODE_ENV = 'production'
 
-var ora = require('ora')
+var ora = require('ora').default
 var path = require('path')
-var chalk = require('chalk')
+var chalk = require('chalk').default
 var shell = require('shelljs')
 var webpack = require('webpack')
 var config = require('../config')

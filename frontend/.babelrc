@@ -1,9 +1,13 @@
 {
   "presets": [
-    ["es2015", { "modules": false }],
-    "stage-2"
+    ["@babel/preset-env", {
+        "modules": false,
+        "targets": "> 0.25%, not dead",
+        "loose": true,
+        "forceAllTransforms": true
+    }]
   ],
-  "plugins": [ "transform-promise-to-bluebird", "transform-runtime" ],
+  "plugins": [ "transform-promise-to-bluebird", "@babel/plugin-transform-runtime" ],
   "comments": false,
   "env": {
     "test": {

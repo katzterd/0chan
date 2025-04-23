@@ -3,6 +3,7 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 var webpack = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 //var Dotenv = require('dotenv-webpack');
 
 function resolve (dir) {
@@ -53,7 +54,7 @@ module.exports = {
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
-        query: {
+        options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
@@ -61,7 +62,7 @@ module.exports = {
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
         loader: 'url-loader',
-        query: {
+        options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
@@ -75,6 +76,7 @@ module.exports = {
         jQuery: "jquery",
         Raphael: "raphael/raphael"
     }),
+    new MiniCssExtractPlugin()
 //    new Dotenv({
 //        path: '../.env'
 //    })
