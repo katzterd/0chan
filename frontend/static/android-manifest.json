@@ -1,0 +1,23 @@
+{
+  "short_name": "Øchan",
+  "name": "Øchan",
+  "icons": [
+    {
+      "src": "/static/favicon-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/static/favicon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "background_color": "#00ae73",
+  "display": "standalone",
+  "theme_color": "#3367D6",
+  "description": "Øchan"
+}
+
