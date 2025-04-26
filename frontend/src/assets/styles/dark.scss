@@ -36,6 +36,14 @@
     color: #777;
   }
 
+  .hand {
+    color: #777 !important;
+  }
+
+  .hand.active {
+    color: #eee !important;
+  }
+
   .post .post-body .post-referenced-by,
   .post .post-body .post-replied-by,
   .post .post-header .white,
