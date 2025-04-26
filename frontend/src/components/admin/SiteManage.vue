@@ -7,6 +7,7 @@
         </Headline>
 
         <div class="row">
+
             <div class="col-md-12">
                 <form @submit.prevent="saveSettings">
                     <div class="panel panel-default">
@@ -26,7 +27,28 @@
                     </div>
                 </form>
             </div>
-        </div>
+<!--       
+            <div class="col-md-12">
+                <form @submit.prevent="saveSettings">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <b>Спамлист</b>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-horizontal">
+                                <textarea class="form-control" v-model="spamlist" rows="10"></textarea>
+                            </div>
+                        </div>
+                        <div class="panel-footer text-right">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-gears"></i> Сохранить
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+-->
+        </div>   
     </div>
 </template>
 
@@ -47,7 +69,8 @@
         data() {
         	return {
         		settings_data: null,
-                form: null
+            form: null,
+//            spamlist: ''
         	}
         },
         methods: {
