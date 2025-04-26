@@ -3,6 +3,12 @@ $tStart = microtime(true);
 require '../config.inc.php';
 $tInit = microtime(true);
 
+if ($_SERVER['REQUEST_URI'] == "/api/spam.txt") {
+    header('Content-Type: text/plain; charset=UTF-8');
+    echo file_get_contents(dirname(__FILE__) . "/spam.txt");
+    exit;
+}
+
 $errorReporting = null;
 if (PRODUCTION) {
     $sentryEndpoint = getenv('SENTRY_BACKEND');

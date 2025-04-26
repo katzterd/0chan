@@ -294,6 +294,10 @@
                                 case 'tor_disabled':
                                     this.$bus.emit(BusEvents.ALERT_ERROR, 'Постинг с тор зеркала временно отключен') ;
                                     break;
+                                    
+                                case 'spamlist':
+                                    this.$bus.emit(BusEvents.ALERT_ERROR, 'Вы пытаетесь отправить ссылку из спамлиста') ;
+                                    break;
                             }
                         } else {
                             throw new Error(result);

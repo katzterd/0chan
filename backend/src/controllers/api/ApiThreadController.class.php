@@ -67,6 +67,41 @@ class ApiThreadController extends ApiBaseController
 
         return $response;
     }
+    
+    public function spamFilterCheck($message) {
+			$cyr = array('А', 'а', 'В', 'Д', 'Е', 'е', 'К', 'к', 'М', 'м', 'Н', 'н', 'О', 'о', 'Р', 'р', 'С', 'с', 'Т', 'У', 'у', 'Х', 'х', 'Ь', 'ь');
+			$lat = array('A', 'a', 'B', 'D', 'E', 'e', 'K', 'k', 'M', 'm', 'H', 'H', 'O', 'o', 'P', 'p', 'C', 'c', 'T', 'Y', 'y', 'X', 'x', 'b', 'b');
+
+			$message = strip_tags(str_replace($cyr, $lat, mb_strtolower(str_replace($cyr, $lat, mb_strtoupper($message)))));
+			// удаление разметки и пробелов
+			$message = preg_replace('/%/', '', $message);
+			$message = preg_replace('/\*/', '', $message);
+			$message = preg_replace('/(?<!\S)\-(?!\s)/u', '', $message);
+			$message = preg_replace('/`/', '', $message);
+			$message = preg_replace('/\s+/', '', $message);
+
+			if(!strlen($message)) return false;
+
+			$spamtxturl = PATH_BASE . 'www' . DIRECTORY_SEPARATOR . 'spam.txt';
+
+			// лямбда для обхода array_map, принимающего только один аргумент
+			$repl = function($link) use($cyr, $lat) {
+				return str_replace($cyr, $lat, mb_strtolower(str_replace($cyr, $lat, mb_strtoupper($link))));
+			};
+
+			if (!file_exists($spamtxturl)) {
+				return false;
+			} else {
+				$badlinks = array_map($repl, array_map('rtrim', file($spamtxturl, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)));
+			}
+
+			foreach ($badlinks as $badlink) {
+				if (stripos($message, $badlink) !== false) {
+					return true;
+					break;
+				}
+			}
+		}
 
     /**
      * @Post
@@ -194,6 +229,13 @@ class ApiThreadController extends ApiBaseController
         }
 
         $message = $form->getValue('message');
+        
+        if (!empty($message)) {
+					if ($this->spamFilterCheck($message) == true) {
+							return ['ok' => false, 'reason' => 'spamlist'];
+					}
+				}
+        
         $sage = $form->getValue('sage');
 
         $isSageAllowed = $thread->getBoard()->getSage();
