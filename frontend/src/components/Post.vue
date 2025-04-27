@@ -440,6 +440,7 @@
     .post-popup {
         position: absolute;
         z-index: 1;
+        min-width: auto;
         .post {
             padding: 0;
             margin: 0;
@@ -510,6 +511,11 @@
             &.post-inline-attachment{
                 max-height: 500px;
                 overflow: auto;
+                
+                @media(max-width: $screen-xs-max) {
+                    overflow: inherit;
+                }
+
             }
             .post-body-message {
                 max-height: 400px;
@@ -550,6 +556,11 @@
             }
             .post-body-message {
                 display: inline;
+                
+                @media(max-width: $screen-xs-max) {
+                    display: inline-block;
+                }
+
             }
         }
 
