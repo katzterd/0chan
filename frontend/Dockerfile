@@ -11,15 +11,15 @@ FROM node:fermium AS builder
 
 WORKDIR /builder
 
+COPY --from=install /install/node_modules ./node_modules
+
+ADD package.json package-lock.json .
 ADD ./build                        ./build
 ADD ./config                       ./config
-ADD ./src                          ./src
-ADD ./static                       ./static
 ADD ./.babelrc                     ./.babelrc
 ADD ./index.html                   ./index.html
-ADD package.json package-lock.json .
-
-COPY --from=install /install/node_modules ./node_modules
+ADD ./static                       ./static
+ADD ./src                          ./src
 
 RUN npm run build
 
