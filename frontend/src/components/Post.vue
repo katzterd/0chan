@@ -510,7 +510,7 @@
 
             &.post-inline-attachment{
                 max-height: 500px;
-                overflow: auto;
+                overflow: hidden;
             }
             .post-body-message {
                 max-height: 400px;
