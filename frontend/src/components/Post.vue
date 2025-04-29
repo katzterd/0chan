@@ -511,11 +511,6 @@
             &.post-inline-attachment{
                 max-height: 500px;
                 overflow: auto;
-                
-                @media(max-width: $screen-xs-max) {
-                    overflow: inherit;
-                }
-
             }
             .post-body-message {
                 max-height: 400px;
