@@ -440,7 +440,8 @@
     .post-popup {
         position: absolute;
         z-index: 1;
-        min-width: auto;
+        width: auto;
+        min-width: 250px;
         .post {
             padding: 0;
             margin: 0;
