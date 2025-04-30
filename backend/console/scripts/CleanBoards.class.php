@@ -1,10 +1,13 @@
 <?php
+
 /**
  * @package Scripts
  */
-class Script_CleanBoards extends ConsoleScript {
+class Script_CleanBoards extends ConsoleScript
+{
 
-    public function run() {
+    public function run()
+    {
         $maxPurgeAtDate                 = Timestamp::makeNow()->modify(Thread::CLEANUP_DELAY_AFTER_PURGED  . ' ago');
         $maxDeletedAtDate               = Timestamp::makeNow()->modify(Thread::CLEANUP_DELAY_AFTER_DELETED . ' ago');
         $maxDeletedAtDateForBoards      = Timestamp::makeNow()->modify(Board::CLEANUP_DELAY_AFTER_DELETED  . ' ago');
@@ -92,12 +95,21 @@ class Script_CleanBoards extends ConsoleScript {
                     }
 
                     if ($postIds) {
+                        // delete rates
+                        $this->log('-- removing rates');
+                        $db->queryColumn(
+                            OSQL::delete()
+                                ->from(Rate::dao()->getTable())
+                                ->where(Expression::in('post_id', $postIds))
+                                ->returning('id')
+                        );
+
                         // delete references
                         $this->log('-- removing posts references');
                         $db->queryColumn(
                             OSQL::delete()
                                 ->from(PostReference::dao()->getTable())
-                                ->  where(Expression::in('referenced_by_id', $postIds))
+                                ->where(Expression::in('referenced_by_id', $postIds))
                                 ->orWhere(Expression::in('references_to_id', $postIds))
                                 ->returning('id')
                         );
@@ -149,7 +161,6 @@ class Script_CleanBoards extends ConsoleScript {
 
                     $this->log('-- removed board ' . $board->getDir());
                     Board::dao()->drop($board);
-
                 } else {
                     /** @var Thread[] $overflowThreads */
                     $overflowThreads = Criteria::create(Thread::dao())
@@ -182,7 +193,6 @@ class Script_CleanBoards extends ConsoleScript {
 
                 $this->log('committing (suicide)... ');
                 $db->commit();
-
             } catch (Exception $e) {
                 $db->rollback();
                 throw $e;
@@ -190,5 +200,4 @@ class Script_CleanBoards extends ConsoleScript {
         }
         $this->log('all done!');
     }
-
 }
