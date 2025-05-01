@@ -34,6 +34,19 @@
 
   .post-button {
     color: #777;
+
+    &:hover,
+    &.active {
+      color: $color-green;
+    }
+  }
+
+  .post-dislike {
+
+    &:hover,
+    &.active {
+      color: $color-red;
+    }
   }
 
   .hand {
