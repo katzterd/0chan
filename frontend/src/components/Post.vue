@@ -43,7 +43,7 @@
                             <i class="fa fa-spinner fa-spin fa-fw" v-if="thread.isLocked === null"></i>
                         </span>
                     </span>
-                    <span v-if="post.sage" class="fa fa-arrow-down" title="sage"></span>
+                    <span v-if="post.sage" class="fa fa-arrow-down" title="Sage"></span>
                     <span class="post-date">{{post.date | timestamp }}</span>
                 </span>
             </div>
@@ -123,8 +123,8 @@
 
                 <div class="pull-right" v-if="!post.isDeleted">
                     <span v-if="post.user" class="text-muted post-date">{{ post.user.name }}</span>
-                    <span class="post-button" v-if="thread.board.likes == true" @click="ratePost(true)"><i class="fa fa-angle-up"></i> {{ post.likes.liked }}</span>
-                    <span class="post-button post-dislike" v-if="thread.board.likes == true" @click="ratePost(false)"><i class="fa fa-angle-down"></i> {{ post.likes.disliked }}</span>
+                    <span class="post-button" v-if="thread.board.likes == true" @click="ratePost(true)" title="Нульчую"><i class="fa fa-angle-up"></i> {{ post.likes.liked }}</span>
+                    <span class="post-button post-dislike" v-if="thread.board.likes == true" @click="ratePost(false)" title="НСБ"><i class="fa fa-angle-down"></i> {{ post.likes.disliked }}</span>
                     <span class="post-button post-button-reply" @click="toggleReplyForm" v-if="post.canReplyTo"><i class="fa fa-reply"></i></span>
                     <span class="post-button" v-if="post.ban" title="Забанен" @click="showBanInfo">
                         <i v-if="!isFetchingBanInfo" class="fa fa-fw fa-gavel" ></i>

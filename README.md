@@ -13,27 +13,27 @@
 ### Docker compose way
 
 #### 1. Prepare .env 
-```
-$ cp .env-dist .env
+```console
+cp .env-dist .env
 ```
 Then fill fields in `.env` by your text editor with needed values
 
 #### 2. Deploy
-```
-$ docker compose up -d
+```console
+docker compose up -d
 ```
 
 #### 3. Setup db and admin account
-```
-$ docker exec -t backend /src/config/docker-entrypoint.sh createdb createadmin
+```console
+docker exec -t backend /src/config/docker-entrypoint.sh createdb createadmin
 ```
 you can simply remove  `createadmin`  from this line, if you don't need admin account
 
 frontend will appear on `http://localhost:80`
 
 #### (Optional) Get yggdrasil node address (if enabled)
-```
-$ docker exec -t yggdrasil /docker-entrypoint.sh getaddr
+```console
+docker exec -t yggdrasil /docker-entrypoint.sh getaddr
 ```
 
 ### K8S way
