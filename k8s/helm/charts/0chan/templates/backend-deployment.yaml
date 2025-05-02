@@ -74,6 +74,14 @@ items:
               secretKeyRef:
                 key: POSTGRES_PASSWORD
                 name: {{ include "SecretsName" . }}
+          volumeMounts:
+          - name: {{ .Values.svc.backend.name }}-api-data-pv
+            mountPath: /src/www/api
+            subPath: api_data
+        volumes:
+        - name: {{ .Values.svc.backend.name }}-api-data-pv
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-{{ .Values.svc.backend.name }}-api-data-pvc
               
 - apiVersion: v1
   kind: Service
@@ -84,6 +92,21 @@ items:
     selector:
       app: {{ .Values.svc.backend.name }}
     clusterIP: None
+    
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: {{ .Release.Name }}-{{ .Values.svc.backend.name }}-api-data-pvc
+    namespace: {{ .Release.Namespace }}
+    annotations:
+      helm.sh/resource-policy: keep
+  spec:
+    accessModes: [ {{ .Values.storageClass.accessMode }} ]
+    storageClassName: {{ include "StorageClassName" . }}
+    resources:
+      requests:
+        storage: 100Mi
+    volumeMode: Filesystem
 
 kind: List
 metadata:
