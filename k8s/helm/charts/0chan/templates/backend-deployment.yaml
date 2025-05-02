@@ -75,13 +75,13 @@ items:
                 key: POSTGRES_PASSWORD
                 name: {{ include "SecretsName" . }}
           volumeMounts:
-          - name: {{ .Values.svc.backend.name }}-api_data-pv
+          - name: {{ .Values.svc.backend.name }}-api-data-pv
             mountPath: /src/www/api
             subPath: api_data
         volumes:
-        - name: {{ .Values.svc.backend.name }}-api_data-pv
+        - name: {{ .Values.svc.backend.name }}-api-data-pv
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-{{ .Values.svc.backend.name }}-api_data-pvc
+            claimName: {{ .Release.Name }}-{{ .Values.svc.backend.name }}-api-data-pvc
               
 - apiVersion: v1
   kind: Service
@@ -96,7 +96,7 @@ items:
 - apiVersion: v1
   kind: PersistentVolumeClaim
   metadata:
-    name: {{ .Release.Name }}-{{ .Values.svc.backend.name }}-api_data-pvc
+    name: {{ .Release.Name }}-{{ .Values.svc.backend.name }}-api-data-pvc
     namespace: {{ .Release.Namespace }}
     annotations:
       helm.sh/resource-policy: keep
