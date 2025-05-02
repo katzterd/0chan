@@ -1,6 +1,7 @@
 <?php
 
-class Markdown {
+class Markdown
+{
     public static function format($message)
     {
         if (empty($message)) {
@@ -39,18 +40,6 @@ class Markdown {
 
         $takeoutStore = [];
 
-        foreach ($takeouts as $takeout) {
-            $message = preg_replace_callback(
-                $takeout['regexp'],
-                function ($match) use ($takeout, &$takeoutStore) {
-                    $id = '[[' . uniqid($takeout['type']) . ']]';
-                    $takeoutStore[$id] = str_replace('$1', $match[1], $takeout['replace']);
-                    return $id;
-                },
-                $message
-            );
-        }
-
         // типографизация
         $message = preg_replace('/(^|\s|\*|\^|\%|\~)--($|\s|\*|\^|\%|\~)/', '$1&mdash;$2', $message);
         $message = preg_replace('/(^|\s|\*|\^|\%|\~)-($|\s|\*|\^|\%|\~)/', '$1&mdash;$2', $message);
@@ -60,7 +49,7 @@ class Markdown {
         $message = preg_replace('/^&gt;\s*(.+)$/m', '<blockquote>&gt; $1</blockquote>', $message);
         $message = preg_replace('/^&lt;\s*(.+)$/m', '<blockquote class="revquo">&lt; $1</blockquote>', $message);
         // остальная разметка
-	$message = preg_replace('/\(\(\(([^\(\)]+)\)\)\)/', '<span class="them">((($1)))</span>', $message);
+        $message = preg_replace('/\(\(\(([^\(\)]+)\)\)\)/', '<span class="them">((($1)))</span>', $message);
         $message = preg_replace('/%%([\s\S]+?)%%/', '<mark>$1</mark>', $message);
         $message = preg_replace('/\*\*([^\*]+)\*\*/', '<b>$1</b>', $message);
         $message = preg_replace('/\*([^\*]+)\*/',   '<i>$1</i>', $message);
@@ -73,6 +62,18 @@ class Markdown {
         $message = preg_replace('/(?<!\S)\-(?!\s)(.+?)(?<!\s)\-(?!\S)/u',  '<del>$1</del>', $message);
 
         $message = nl2br($message);
+
+        foreach ($takeouts as $takeout) {
+            $message = preg_replace_callback(
+                $takeout['regexp'],
+                function ($match) use ($takeout, &$takeoutStore) {
+                    $id = '[[' . uniqid($takeout['type']) . ']]';
+                    $takeoutStore[$id] = str_replace('$1', $match[1], $takeout['replace']);
+                    return $id;
+                },
+                $message
+            );
+        }
 
         foreach ($takeoutStore as $find => $replace) {
             $message = str_replace($find, $replace, $message);
