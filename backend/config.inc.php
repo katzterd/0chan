@@ -45,9 +45,7 @@ if (!file_exists(PATH_LOGS)) {
 }
 
 if (!file_exists(FILE_SPAM)) {
-    $file = fopen(FILE_SPAM, 'w');
-    fwrite($file);
-    fclose($file);
+    file_put_contents(FILE_SPAM, '');
     chmod(FILE_SPAM, 0777);  
 }
 
