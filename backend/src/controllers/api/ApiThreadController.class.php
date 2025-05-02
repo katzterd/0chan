@@ -84,7 +84,7 @@ class ApiThreadController extends ApiBaseController
 
 			if(!strlen($message)) return false;
 
-			$spamtxturl = PATH_BASE . 'www' . DIRECTORY_SEPARATOR . 'spam.txt';
+			$spamtxturl = PATH_BASE . 'www' . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'spam.txt';
 
 			// лямбда для обхода array_map, принимающего только один аргумент
 			$repl = function($link) use($cyr, $lat) {
