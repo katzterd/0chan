@@ -79,6 +79,8 @@ class ApiThreadController extends ApiBaseController
 			$message = preg_replace('/(?<!\S)\-(?!\s)/u', '', $message);
 			$message = preg_replace('/`/', '', $message);
 			$message = preg_replace('/\s+/', '', $message);
+			// удаление специальных символов
+			$message = preg_replace('/[!@#$^&()_+\-=\[\]{};\':"\\\\|,.<>\/?~=]/', '', $message);
 
 			if(!strlen($message)) return false;
 
