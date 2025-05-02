@@ -44,7 +44,7 @@ class ApiGlobalsController extends ApiBaseController
             'globals' => []
         ];
         foreach ($globals as $global) {
-            $response['globals'] []= [
+            $response['globals'][] = [
                 'login' => $global->getLogin(),
                 'role' => $global->getRole()->getName()
             ];
@@ -73,7 +73,7 @@ class ApiGlobalsController extends ApiBaseController
         $user->setRoleId($role);
         User::dao()->save($user);
 
-        return [ 'ok' => true ];
+        return ['ok' => true];
     }
 
     /**
@@ -88,7 +88,7 @@ class ApiGlobalsController extends ApiBaseController
         $user->setRoleId(UserRole::USER);
         User::dao()->save($user);
 
-        return [ 'ok' => true ];
+        return ['ok' => true];
     }
 
     /**
@@ -137,7 +137,7 @@ class ApiGlobalsController extends ApiBaseController
 
         $post_data = $this->getRequest()->getPost();
 
-        foreach(array_keys($this->keys) as $key) {
+        foreach (array_keys($this->keys) as $key) {
             if (!isset($post_data[$key])) {
                 return ['ok' => false, 'errors' => ['Не все поля заполнены']];
             }
@@ -145,7 +145,7 @@ class ApiGlobalsController extends ApiBaseController
 
         $cache = Cache::me();
 
-        foreach(array_keys($this->keys) as $key) {
+        foreach (array_keys($this->keys) as $key) {
             $value = $post_data[$key];
 
             if ($value) {
@@ -158,4 +158,23 @@ class ApiGlobalsController extends ApiBaseController
         return ['ok' => true];
     }
 
+    public function spamlistGetAction()
+    {
+        $this->assertAccess();
+
+        $spamlist_data = file_get_contents(FILE_SPAM);
+
+        return ['ok' => true, 'spamlist' => $spamlist_data];
+    }
+
+    public function spamlistUpdateAction()
+    {
+        $this->assertAccess();
+
+        $response = $this->getRequest()->getBody();
+
+        file_put_contents(FILE_SPAM, $response);
+
+        return ['ok' => true];
+    }
 }
