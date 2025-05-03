@@ -189,6 +189,15 @@ blockquote, .quote {
   font-style: italic;
   font-size: inherit;
   margin: 0;
+
+  &.revquo {
+    color: #e0727f;
+  }
+}
+
+.them {
+    background: #FAF8F8;
+    color: #3060A8;
 }
 
 mark, .spoiler {

@@ -58,8 +58,8 @@ class Markdown
         $message = preg_replace('/`(.+?)`/', '<code>$1</code>', $message);
         $message = preg_replace('/(?<![\w\/])(0x[a-f0-9]{8})(?!\w)/', '<address>$1</address>', $message);
         // легаси-разметка зачёркиваний и подчёркиваний
-        $message = preg_replace('/(?<!\S)\_(?!\s)(.+?)(?<!\s)\_(?!\S)/u',  '<u>$1</u>', $message);
-        $message = preg_replace('/(?<!\S)\-(?!\s)(.+?)(?<!\s)\-(?!\S)/u',  '<del>$1</del>', $message);
+        $message = preg_replace('/(?<!\S)\__(?!\s)(.+?)(?<!\s)\__(?!\S)/u',  '<u>$1</u>', $message);
+        $message = preg_replace('/(?<!\S)\--(?!\s)(.+?)(?<!\s)\--(?!\S)/u',  '<del>$1</del>', $message);
 
         $message = nl2br($message);
 
