@@ -456,7 +456,12 @@
     .ban-popup {
         position: absolute;
         z-index: 1;
-        min-width: 200px;
+        min-width: 375px;
+        
+        @media(max-width: $screen-xs-max) {
+                min-width: 200px;
+            }
+        
         padding: 0 !important;
         .panel-body, .panel-footer { padding: 8px }
         .form-group { margin-bottom: 8px; }
