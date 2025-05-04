@@ -57,7 +57,7 @@ class ApiManagementController extends ApiBaseController
                 $primitive->setMin(1)->setMax(8);
             }
             if ($propertyName == 'name') {
-                $primitive->setMin(1)->setMax(16);
+                $primitive->setMin(1)->setMax(14);
             }
             if ($propertyName == 'description') {
                 $primitive->setMin(0)->setMax(256);
