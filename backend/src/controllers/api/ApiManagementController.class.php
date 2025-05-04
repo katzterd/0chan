@@ -54,10 +54,13 @@ class ApiManagementController extends ApiBaseController
                 $primitive->setMin(200)->setMax(1000);
             }
             if ($propertyName == 'dir') {
-                $primitive->setMin(1)->setMax(10);
+                $primitive->setMin(1)->setMax(8);
             }
             if ($propertyName == 'name') {
-                $primitive->setMin(1)->setMax(32);
+                $primitive->setMin(1)->setMax(14);
+            }
+            if ($propertyName == 'description') {
+                $primitive->setMin(0)->setMax(256);
             }
 
             $form->add($primitive);

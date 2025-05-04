@@ -440,8 +440,6 @@
     .post-popup {
         position: absolute;
         z-index: 1;
-        width: auto;
-        min-width: 250px;
         .post {
             padding: 0;
             margin: 0;
@@ -459,6 +457,11 @@
         position: absolute;
         z-index: 1;
         min-width: 375px;
+        
+        @media(max-width: $screen-xs-max) {
+                min-width: 200px;
+            }
+        
         padding: 0 !important;
         .panel-body, .panel-footer { padding: 8px }
         .form-group { margin-bottom: 8px; }
@@ -473,7 +476,7 @@
         position: relative;
         padding: 0 !important;
         min-width: 400px;
-        max-width: 100%;
+        max-width: calc(100% - 10px);
         clear: both;
         transition: opacity 0.5s, border-color 1s ease-out;
 
@@ -482,6 +485,8 @@
         }
 
         .post-header {
+            max-width: 100%;
+            overflow-wrap: break-word;
             padding: 2px 10px;
             font-size: 8pt;
             .post-date {
@@ -506,12 +511,12 @@
             padding: 0 10px;
 
             @media(min-width: $screen-lg-min) {
-                max-width: 1000px;
+                max-width: 100%;
             }
 
             &.post-inline-attachment{
                 max-height: 500px;
-                overflow: hidden;
+                overflow: auto;
             }
             .post-body-message {
                 max-height: 400px;
@@ -552,11 +557,6 @@
             }
             .post-body-message {
                 display: inline;
-                
-                @media(max-width: $screen-xs-max) {
-                    display: inline-block;
-                }
-
             }
         }
 
@@ -566,7 +566,6 @@
             cursor: default;
             margin-top: 5px;
             padding: 2px 0;
-
 
             .post-button-reply {
                 color: $color-green-dk;
