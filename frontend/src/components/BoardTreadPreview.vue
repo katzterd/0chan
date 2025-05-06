@@ -1,5 +1,5 @@
 <template>
-    <div class="thread">
+    <div class="thread" v-bind:class="{ threadwrap: storage.isThreadListVisible() }">
         <ThreadPosts :thread="thread.thread" :posts="posts" :root="thread.opPost" :tree="false" @reply="onReply">
             <div :class="$style.omittedPosts" slot="omittedPosts">
                 <span v-if="thread.skippedPosts > 0">
@@ -18,6 +18,7 @@
 <script>
     import Post from '../components/Post.vue'
     import ThreadPosts from '../components/ThreadPosts.vue'
+    import Storage from '../services/Storage'
     import Thread from '../services/Thread'
     import BusEvents from '../app/BusEvents'
 
@@ -25,6 +26,11 @@
         props: [ 'thread' ],
         components: {
             Post, ThreadPosts
+        },
+        data () {
+            return {
+                storage: Storage,
+            }
         },
         computed: {
             posts() {
