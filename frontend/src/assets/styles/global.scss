@@ -200,6 +200,12 @@ blockquote, .quote {
     color: #3060A8;
 }
 
+.threadwrap {
+  @media (min-width: $screen-lg-min) {
+    max-width: calc(100% - 400px);
+  }
+}
+
 mark, .spoiler {
     color: $color-grey-lt;
     background: $color-grey-lt;
