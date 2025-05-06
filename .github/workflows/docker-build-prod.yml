@@ -23,13 +23,14 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       -
         name: Filter
-        uses: dorny/paths-filter@v3
+        uses: tj-actions/changed-files@v46.0.5
         id: filter
         with:
-          base: ${{ github.ref }}
-          filters: |
+          files_yaml: |
             frontend:
               - 'frontend/**'
               - '!frontend/.gitignore'
@@ -66,7 +67,7 @@ jobs:
       -
         name: Build frontend [Private]
         uses: docker/build-push-action@v5
-        if: steps.filter.outputs.frontend == 'true'
+        if: steps.filter.outputs.frontend_any_changed == 'true'
         with:
           context: frontend/.
           file: frontend/Dockerfile
@@ -79,7 +80,7 @@ jobs:
       -
         name: Build backend [Private]
         uses: docker/build-push-action@v5
-        if: steps.filter.outputs.backend == 'true'
+        if: steps.filter.outputs.backend_any_changed == 'true'
         with:
           context: backend/.
           file: backend/Dockerfile
@@ -92,7 +93,7 @@ jobs:
       -
         name: Build storage [Private]
         uses: docker/build-push-action@v5
-        if: steps.filter.outputs.storage == 'true'
+        if: steps.filter.outputs.storage_any_changed == 'true'
         with:
           context: storage/.
           file: storage/Dockerfile
@@ -105,7 +106,7 @@ jobs:
       -
         name: Build torgate [Private]
         uses: docker/build-push-action@v5
-        if: steps.filter.outputs.torgate == 'true'
+        if: steps.filter.outputs.torgate_any_changed == 'true'
         with:
           context: torgate/.
           file: torgate/Dockerfile
@@ -118,7 +119,7 @@ jobs:
       -
         name: Build i2pgate [Private]
         uses: docker/build-push-action@v5
-        if: steps.filter.outputs.i2pgate == 'true'
+        if: steps.filter.outputs.i2pgate_any_changed == 'true'
         with:
           context: i2pgate/.
           file: i2pgate/Dockerfile
@@ -131,7 +132,7 @@ jobs:
       -
         name: Build yggdrasilgate [Private]
         uses: docker/build-push-action@v5
-        if: steps.filter.outputs.yggdrasilgate == 'true'
+        if: steps.filter.outputs.yggdrasilgate_any_changed == 'true'
         with:
           context: yggdrasil/.
           file: yggdrasil/Dockerfile
