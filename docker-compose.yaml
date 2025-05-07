@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     networks:
-      - bridge
+      - 0chan
     deploy:
       mode: replicated
       replicas: 1
@@ -34,7 +34,7 @@ services:
     env_file:
       - .env
     networks:
-      - bridge
+      - 0chan
     deploy:
       placement:
         constraints:
@@ -60,7 +60,7 @@ services:
     env_file:
       - .env
     networks:
-      - bridge
+      - 0chan
     deploy:
       mode: global
       placement:
@@ -84,7 +84,7 @@ services:
     env_file:
       - .env
     networks:
-      - bridge
+      - 0chan
     deploy:
       mode: replicated
       replicas: 1
@@ -107,7 +107,7 @@ services:
     env_file:
       - .env
     networks:
-      - bridge
+      - 0chan
     deploy:
       mode: replicated
       replicas: 1
@@ -130,7 +130,7 @@ services:
     env_file:
       - .env
     networks:
-      - bridge
+      - 0chan
     cap_add:
       - NET_ADMIN
     devices:
@@ -158,7 +158,7 @@ services:
     env_file:
       - .env
     networks:
-      - bridge
+      - 0chan
     deploy:
       placement:
         constraints:
@@ -168,14 +168,14 @@ services:
     image: redis:7-alpine
     container_name: cache
     networks:
-      - bridge
+      - 0chan
     deploy:
       placement:
           constraints:
             - node.labels.nc.role == main
     
 networks:
-  bridge:
+  0chan:
 
 volumes:
   api_data:
