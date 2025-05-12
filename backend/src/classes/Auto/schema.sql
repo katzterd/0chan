@@ -178,6 +178,7 @@ CREATE TABLE "attachment_image" (
     "server" CHARACTER VARYING(64) NULL,
     "filename" CHARACTER VARYING(64) NOT NULL,
     "file_size" INTEGER NOT NULL,
+    "md5" CHARACTER VARYING(32) NOT NULL,
     "width" INTEGER NOT NULL,
     "height" INTEGER NOT NULL,
     PRIMARY KEY("id")

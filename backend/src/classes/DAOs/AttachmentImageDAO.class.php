@@ -31,6 +31,7 @@
                     ->setServer($storage->getNameExt())
                     ->setFilename($item['name'])
                     ->setFileSize($item['size'])
+                    ->setMd5($item['md5'])
                     ->setHeight($item['height'])
                     ->setWidth($item['width']);
             }
@@ -102,6 +103,7 @@
                         ->setRole($role)
                         ->setFilename($filename . $filenameSuffix)
                         ->setFileSize(strlen($blob))
+			->setMd5(md5($image))
                         ->setHeight($image->getImageHeight())
                         ->setWidth($image->getImageWidth())
                         ->writeFile($blob);

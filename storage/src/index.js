@@ -3,6 +3,7 @@
 const fs            = require('fs');
 const path          = require('path');
 const base64url     = require('base64url');
+const crypto        = require('crypto');
 const express       = require('express');
 const multer        = require('multer');
 const sharp         = require('sharp');
@@ -150,6 +151,8 @@ function processImage(buffer, sizes, filename) {
         .then(([ buf, metadataProcessed, next ]) => {
             const fileExt = metadataProcessed.format === 'jpeg' ? 'jpg' : metadataProcessed.format;
             const fullFilename = filename + (size ? '-' + size : '') + '.' + fileExt;
+            const md5 = crypto.createHash('md5');
+            md5.update(buf);
             return saveBuffer(buf, fullFilename)
                 .then((savedFileAesKey) => Object.assign(
                     {
@@ -159,6 +162,7 @@ function processImage(buffer, sizes, filename) {
                             format: metadataProcessed.format,
                             width:  metadataProcessed.width,
                             height: metadataProcessed.height,
+                            md5:    md5.digest('hex'),
                             size:   buf.length
                         },
                     },
