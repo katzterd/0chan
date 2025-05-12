@@ -64,7 +64,11 @@
                     </label>
                 </span>
             </span>
-            <select v-if="identities && board.identity" v-model="sel_identity">
+            <select
+                class="select btn btn-default"
+                v-if="identities && board.identity"
+                v-model="sel_identity"
+            >
                 <option
                     value="notselected"
                     :selected="sel_identity == 'notselected'"
@@ -545,6 +549,11 @@ export default {
             -ms-user-select: none;
             user-select: none;
         }
+    }
+
+    .select {
+        padding: 5px 5px 4px 5px;
+        font-size: 12px;
     }
 }
 
