@@ -3,15 +3,15 @@
 class ApiGlobalsController extends ApiBaseController
 {
     private $keys = [
-        'registerRequired' => ['title' => 'Постинг после регистрации', 'description' => 'Постинг возможен только после регистрации.'],
-        'inviteRequired' => ['title' => 'Инвайты', 'description' => 'Регистрация возможна только при наличии инвайта.'],
-        'torgateRegisterRequired' => ['title' => 'Постинг после регистрации (Tor)', 'description' => 'Постинг через Tor-зеркало возможно только после регистрации'],
-        'disableTorPosting' => ['title' => 'Постинг через Tor', 'description' => 'Отключить постинг для пользователей тора'],
+        'registerRequired' => ['title' => 'Постинг после регистрации', 'description' => 'Постинг возможен только после регистрации'],
+        'inviteRequired' => ['title' => 'Инвайты', 'description' => 'Регистрация возможна только при наличии инвайта'],
+        'torgateRegisterRequired' => ['title' => 'Постинг после регистрации (Darknet)', 'description' => 'Постинг через Tor/I2P/Yggdrasil возможен только после регистрации'],
+        'disableTorPosting' => ['title' => 'Постинг через зеркала Darknet', 'description' => 'Отключить постинг для пользователей Tor/I2P/Yggdrasil'],
         'globalTimeout' => ['title' => 'Таймаут', 'description' => 'Таймаут на создание тредов (5 тредов за 5 минут, после чего ожидание час)'],
-        'sameImageLimit' => ['title' => 'Лимит на одинаковые изображения', 'description' => 'Фильтр одинаковых изображений (не более 1-го одинакового изображения в N минут', 'type' => 'int', 'default' => 0],
+        'sameImageLimit' => ['title' => 'Лимит на одинаковые изображения', 'description' => 'Фильтр одинаковых изображений - не более 1-го одинакового изображения в N минут', 'type' => 'int', 'default' => 0],
         'repliesLimit' => ['title' => 'Ограничение постинга', 'description' => 'Ограничение постинга N постов в час'],
         'repliesLimitMax' => ['title' => 'Ограничение постинга', 'description' => 'Макс кол-во постов в час', 'type' => 'int', 'default' => 100],
-        'disableRegister' => ['title' => 'Отключает регистрацию', 'description' => 'Отключает полностью регистрацию']
+        'disableRegister' => ['title' => 'Отключение регистрации', 'description' => 'Отключает полностью регистрацию']
     ];
 
     /**
