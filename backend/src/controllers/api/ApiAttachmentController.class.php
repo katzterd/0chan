@@ -12,11 +12,13 @@ class ApiAttachmentController extends ApiBaseController
     public function uploadAction()
     {
         $form = Form::create()
-            ->add(Primitive::binary('data')
-                ->setMax(Attachment::MAX_FILE_SIZE)
+            ->add(
+                Primitive::binary('data')
+                    ->setMax(Attachment::MAX_FILE_SIZE)
             )
-            ->add(Primitive::file('file')
-                ->setMax(Attachment::MAX_FILE_SIZE)
+            ->add(
+                Primitive::file('file')
+                    ->setMax(Attachment::MAX_FILE_SIZE)
             )
             ->add(Primitive::string('url'))
             ->add(Primitive::boolean('b64'))
@@ -98,6 +100,18 @@ class ApiAttachmentController extends ApiBaseController
         return $this->addAttachment($images, $embed);
     }
 
+    public function getSameImages($md5)
+    {
+        $images = Criteria::create(AttachmentImage::dao())
+            ->add(Expression::eq('md5', $md5))
+            ->addOrder(OrderBy::create('id')->desc())
+            ->setLimit(1)
+            ->getList();
+        foreach ($images as $image) {
+            return $image;
+        }
+    }
+
 
     /**
      * @param Attachment $attachment
@@ -108,7 +122,7 @@ class ApiAttachmentController extends ApiBaseController
     public function cancelAction(Attachment $attachment, $token)
     {
         if ($attachment->getPost() || $attachment->isPublished() || $attachment->getPublishToken() !== $token) {
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
 
         $db = DBPool::getByDao(Attachment::dao());
@@ -135,13 +149,13 @@ class ApiAttachmentController extends ApiBaseController
         $isNsfw = $this->getBooleanParam($isNsfw);
 
         if ($attachment->getPost() || $attachment->isPublished() || $attachment->getPublishToken() !== $token) {
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
 
         $attachment->setNsfw($isNsfw);
         Attachment::dao()->take($attachment);
 
-        return ['ok' => true, 'isNsfw' => $attachment->isNsfw() ];
+        return ['ok' => true, 'isNsfw' => $attachment->isNsfw()];
     }
 
     /**
@@ -152,6 +166,12 @@ class ApiAttachmentController extends ApiBaseController
      */
     protected function addAttachment(array $images = [], AttachmentEmbed $embed = null)
     {
+        $sameImageLimit = (int)Cache::me()->get('sameImageLimit');
+        if (!$sameImageLimit) {
+            $sameImageLimit = 0;
+        }
+        $rejectionTime = Timestamp::makeNow()->modify("-{$sameImageLimit} minutes");
+
         $attachment = Attachment::create()
             ->setCreateDate(Timestamp::makeNow())
             ->setPublishToken(AttachmentDAO::makePublishToken());
@@ -168,12 +188,22 @@ class ApiAttachmentController extends ApiBaseController
             Attachment::dao()->add($attachment);
 
             foreach ($images as $image) {
+                $md5 = $image->getMd5();
+                $sameImage = $this->getSameImages($md5);
+
+                if (!empty($sameImage)) {
+                    $sameImageCreateTime = $sameImage->getAttachment()->getCreateDate();
+
+                    if ($sameImageCreateTime > $rejectionTime) {
+                        return ['ok' => false, 'reason' => 'Вы пытаетесь отправить уже загруженное до этого изображение'];
+                    }
+                }
+
                 $image->setAttachment($attachment);
                 AttachmentImage::dao()->add($image);
             }
 
             $db->commit();
-
         } catch (Exception $e) {
 
             if ($db->inTransaction()) {
@@ -183,7 +213,8 @@ class ApiAttachmentController extends ApiBaseController
             foreach ($images as $image) {
                 try {
                     $image->removeFile();
-                } catch (Exception $e) {}
+                } catch (Exception $e) {
+                }
             }
 
             throw $e;
@@ -192,7 +223,7 @@ class ApiAttachmentController extends ApiBaseController
         return [
             'ok' => true,
             'attachment' => array_merge(
-                [ 'token' => $attachment->getPublishToken()],
+                ['token' => $attachment->getPublishToken()],
                 $attachment->export()
             )
         ];

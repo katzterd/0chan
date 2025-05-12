@@ -8,7 +8,7 @@ class ApiGlobalsController extends ApiBaseController
         'torgateRegisterRequired' => ['title' => 'Постинг после регистрации (Tor)', 'description' => 'Постинг через Tor-зеркало возможно только после регистрации'],
         'disableTorPosting' => ['title' => 'Постинг через Tor', 'description' => 'Отключить постинг для пользователей тора'],
         'globalTimeout' => ['title' => 'Таймаут', 'description' => 'Таймаут на создание тредов 3 треда за 5 минут после чего ожидание час.'],
-        //'dupeimageLimit' => ['title' => 'Лимит на одинаковые изображения', 'description' => 'Фильтр одинаковых изображений (не более 1-го одинакового изображения в N минут'],
+        'sameImageLimit' => ['title' => 'Лимит на одинаковые изображения', 'description' => 'Фильтр одинаковых изображений (не более 1-го одинакового изображения в N минут', 'type' => 'int', 'default' => 0],
         'repliesLimit' => ['title' => 'Ограничение постинга', 'description' => 'Ограничение постинга N постов в час'],
         'repliesLimitMax' => ['title' => 'Ограничение постинга', 'description' => 'Макс кол-во постов в час', 'type' => 'int', 'default' => 100],
         'disableRegister' => ['title' => 'Отключает регистрацию', 'description' => 'Отключает полностью регистрацию']
