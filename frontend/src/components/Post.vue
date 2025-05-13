@@ -14,7 +14,7 @@
                     <router-link :to="threadRoute" @click.native="replyToPost(post.id)">
                         #{{post.id}}
                     </router-link>
-                    <b class="post-username" v-if="post.identity">&mdash; <span :title="post.identity.address" ><i>{{post.identity.name}}</i></span></b>
+                    <span v-if="post.identity"> &mdash; <router-link :to="imRoute" class="post-username"><b><span :title="post.identity.address" ><i>{{post.identity.name}}</i></span></b></router-link></span>
                 </span>
                 <span class="pull-right">
                     <span v-if="thread && post.isOpPost" class="post-thread-options">
@@ -418,6 +418,9 @@
                     name: 'thread', params: { dir: this.post.boardDir, threadId: this.post.threadId },
                     hash: this.post.isOpPost ? '' : '#' + this.post.id
                 };
+            },
+            imRoute() {
+                return { name: 'im_start', params: { toAddress: this.post.identity.address } }
             },
             purgeDateTitle() {
                 let title = 'Отмечен к удалению в ' + Filters.timestamp(this.thread.purgedAt);
