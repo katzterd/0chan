@@ -163,7 +163,7 @@ export default {
                 if (response.data.identities.length) {
                     this.identities = response.data.identities;
 
-                    if (localStorage.selectedIdentity !== null) {
+                    if (localStorage.hasOwnProperty('selectedIdentity')) {
                         this.sel_identity = localStorage.selectedIdentity;
                     } else {
                         this.sel_identity = "notselected";
