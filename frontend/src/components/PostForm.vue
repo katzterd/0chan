@@ -58,9 +58,8 @@
                             class="sage"
                             v-model="form.sage"
                             type="checkbox"
-                        /><i class="checkbox off fa fa-square"></i
-                        ><i class="checkbox on fa fa-check-square"></i>
-                        <span>Sage</span>
+                        /><i class="post-button off fa fa-thumbs-down"></i
+                        ><i class="post-button on fa fa-thumbs-down"></i>
                     </label>
                 </span>
             </span>
@@ -163,7 +162,7 @@ export default {
                 if (response.data.identities.length) {
                     this.identities = response.data.identities;
 
-                    if (localStorage.hasOwnProperty('selectedIdentity')) {
+                    if (localStorage.hasOwnProperty("selectedIdentity")) {
                         this.sel_identity = localStorage.selectedIdentity;
                     } else {
                         this.sel_identity = "notselected";
@@ -524,30 +523,41 @@ export default {
     }
 
     .checkbox-container {
-        padding: 1px 5px 0px 5px;
+        padding: 1px 0px 0px 0px;
         input[type="checkbox"] {
             display: none;
         }
-        input[type="checkbox"] ~ i.checkbox.off {
+        input[type="checkbox"] ~ i.post-button.off {
             display: inline;
         }
-        input[type="checkbox"] ~ i.checkbox.on {
+        input[type="checkbox"] ~ i.post-button.on {
             display: none;
         }
-        input[type="checkbox"]:checked ~ i.checkbox.off {
+        input[type="checkbox"]:checked ~ i.post-button.off {
             display: none;
         }
-        input[type="checkbox"]:checked ~ i.checkbox.on {
+        input[type="checkbox"]:checked ~ i.post-button.on {
             display: inline;
+            color: $color-red;
         }
-        span {
-            font-size: 12px;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+
+        input[type="checkbox"] ~ i.post-button {
+            padding-left: 7px;
+            padding-right: 7px;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                input[type="checkbox"] ~ i.post-button {
+                    color: $color-red;
+                }
+            }
+        }
+
+        &:active {
+            input[type="checkbox"] ~ i.post-button {
+                color: $color-red;
+            }
         }
     }
 
