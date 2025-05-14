@@ -39,7 +39,7 @@
             </div>
 
             <div v-show="isReplyToOpPostFormShown">
-                <PostForm v-if="isReplyToOpPostFormEnabled" :reply-to="opPost" @submit="onReply" ref="form" :board="thread.board"></PostForm>
+                <PostForm v-if="isReplyToOpPostFormEnabled" :is-thread="!!thread" :reply-to="opPost" @submit="onReply" ref="form" :board="thread.board"></PostForm>
             </div>
 
             <div style="margin-top: 20px; margin-bottom: 40px" class="btn-group">

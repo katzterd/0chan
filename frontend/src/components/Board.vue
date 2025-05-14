@@ -37,7 +37,7 @@
 
         <div class="new-thread-form" v-show="newThreadForm && board.canCreateThread">
             <div>
-                <PostForm :board="board" @submit="onPostSubmit" />
+                <PostForm :board="board" @submit="onThreadSubmit" />
             </div>
             <div class="separator"></div>
         </div>
@@ -56,7 +56,7 @@
 
         <div v-scroll-spy="threadScrollPos">
             <div v-for="thread in threads" style="margin-top: 20px;">
-                <BoardThreadPreview :thread="thread" @reply="onPostSubmit" />
+                <BoardThreadPreview :thread="thread" />
                 <div class="separator thread-separator"></div>
             </div>
         </div>
@@ -122,6 +122,7 @@
                 type: null,
                 board: null,
                 threads: [],
+                noko: null,
                 newThreadForm: false,
                 pagination: null,
                 fetchingMore: false,
@@ -132,6 +133,11 @@
             threadCount() {
                 return this.board ? this.board.threads.length : 0;
             }
+        },
+        created () {
+            BusEvents.$bus.on('noko', (value) => {
+                this.noko = value;
+            });
         },
         beforeRouteUpdate(to, from, next) {
             if (!this.$router.sameRoute(from, to)) {
@@ -205,12 +211,16 @@
                     this.fetchingMore = false;
                 });
             },
-            onPostSubmit(post) {
-                this.$router.push({
-                    name: 'thread',
-                    params: { dir: post.boardDir, threadId: post.threadId },
-                    hash: '#' + post.id
-                });
+            onThreadSubmit(post) {
+                if (this.noko) {
+                    this.$router.push({
+                        name: 'thread',
+                        params: { dir: post.boardDir, threadId: post.threadId },
+                        hash: '#' + post.id
+                    });
+                } else {
+                    this.fetch();
+                }
             },
             showBoardInfo() {
                 this.$bus.emit(BusEvents.SHOW_MODAL, BoardInfo, { board: this.board })
