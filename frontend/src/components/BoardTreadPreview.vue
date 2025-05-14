@@ -48,8 +48,14 @@ export default {
     data() {
         return {
             storage: Storage,
+            noko: null,
             numExpandPosts: 50,
         };
+    },
+    created() {
+        BusEvents.$bus.on("noko", (value) => {
+            this.noko = value;
+        });
     },
     computed: {
         posts() {
@@ -80,6 +86,15 @@ export default {
     methods: {
         onReply(post) {
             this.$emit("reply", post);
+            if (this.noko) {
+                this.$router.push({
+                    name: "thread",
+                    params: { dir: post.boardDir, threadId: post.threadId },
+                    hash: "#" + post.id,
+                });
+            } else {
+                this.updateThread();
+            }
         },
         updateThread() {
             const thread = this.thread.thread;

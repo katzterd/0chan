@@ -51,16 +51,31 @@
             <span class="post-options" v-if="board.sage">
                 <span class="post-sage">
                     <label
-                        class="sage-label checkbox-container btn btn-default"
+                        class="checkbox-container btn btn-default"
                         title="Не поднимать тред"
                     >
                         <input
                             class="sage"
                             v-model="form.sage"
                             type="checkbox"
-                        /><i class="checkbox off fa fa-square"></i
-                        ><i class="checkbox on fa fa-check-square"></i>
-                        <span>Sage</span>
+                        /><i
+                            class="sage-button post-button off fa fa-thumbs-down"
+                        ></i
+                        ><i
+                            class="sage-button post-button on fa fa-thumbs-down"
+                        ></i>
+                    </label>
+                </span>
+                <span class="post-noko" v-if="!areWeInThread">
+                    <label
+                        class="checkbox-container btn btn-default"
+                        title="Переходить в тред после отправки"
+                    >
+                        <input class="noko" v-model="noko" type="checkbox" />
+                        <i class="noko-button post-button off fa fa-sign-in"></i
+                        ><i
+                            class="noko-button post-button on fa fa-sign-in"
+                        ></i>
                     </label>
                 </span>
             </span>
@@ -119,6 +134,7 @@
 import $ from "jquery";
 import DragEvents2 from "dragevents2";
 import Vue from "vue";
+import Router from "../app/Router";
 import UI from "../app/UI";
 import BusEvents from "../app/BusEvents";
 import Api from "../services/Api";
@@ -134,7 +150,7 @@ export default {
     components: {
         PostAttachment,
     },
-    props: ["reply-to", "board"],
+    props: ["reply-to", "board", "is-thread"],
     data() {
         return {
             maxLength: 9001,
@@ -147,6 +163,7 @@ export default {
                 identity: "",
                 sage: false,
             },
+            noko: false,
             files: [],
             embeds: [],
             uploads: [],
@@ -157,13 +174,24 @@ export default {
             sel_identity: "notselected",
         };
     },
+    computed: {
+        areWeInThread() {
+            if (Router.currentRoute.name == "thread") {
+                return true;
+            } else {
+                return false;
+            }
+        },
+    },
     created() {
+        this.noko = localStorage.noko === 'true';
+        BusEvents.$bus.emit('noko', this.noko);
         if (this.board.identity == true && Session.auth) {
             Dialog.identities().then((response) => {
                 if (response.data.identities.length) {
                     this.identities = response.data.identities;
 
-                    if (localStorage.hasOwnProperty('selectedIdentity')) {
+                    if (localStorage.hasOwnProperty("selectedIdentity")) {
                         this.sel_identity = localStorage.selectedIdentity;
                     } else {
                         this.sel_identity = "notselected";
@@ -179,6 +207,9 @@ export default {
             this.isSending = false;
         });
     },
+    updated() {
+        BusEvents.$bus.emit('noko', this.noko);
+    },
     watch: {
         files: () => {
             this.upload(this.files);
@@ -190,12 +221,15 @@ export default {
                 textarea.style.cssText = `height: ${textarea.scrollHeight}px;`;
             });
         },
-        sel_identity: (newv, old) => {
-            if (newv === null) {
+        sel_identity(value) {
+            if (value === null) {
                 return;
             }
-            localStorage.selectedIdentity = newv;
-            this.sel_identity = newv;
+            localStorage.selectedIdentity = value;
+            this.sel_identity = value;
+        },
+        noko(value) {
+            localStorage.noko = value;
         },
     },
     mounted() {
@@ -459,19 +493,6 @@ export default {
 <style lang="scss" rel="stylesheet/scss">
 @import "~assets/styles/_vars";
 
-.sage-label {
-    height: 25px;
-    vertical-align: middle;
-    font-weight: normal;
-    margin-bottom: 0;
-    input {
-        vertical-align: middle;
-    }
-    span {
-        vertical-align: middle;
-    }
-}
-
 .reply-form {
     max-width: 100%;
     clear: both;
@@ -524,30 +545,47 @@ export default {
     }
 
     .checkbox-container {
-        padding: 1px 5px 0px 5px;
+        height: 25px;
+        vertical-align: middle;
+        padding: 1px 0px 0px 0px !important;
         input[type="checkbox"] {
             display: none;
         }
-        input[type="checkbox"] ~ i.checkbox.off {
+        input[type="checkbox"] ~ i.post-button.off {
             display: inline;
         }
-        input[type="checkbox"] ~ i.checkbox.on {
+        input[type="checkbox"] ~ i.post-button.on {
             display: none;
         }
-        input[type="checkbox"]:checked ~ i.checkbox.off {
+        input[type="checkbox"]:checked ~ i.post-button.off {
             display: none;
         }
-        input[type="checkbox"]:checked ~ i.checkbox.on {
+        input[type="checkbox"]:checked ~ i.sage-button.on {
             display: inline;
+            color: $color-red;
         }
-        span {
-            font-size: 12px;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
+        input[type="checkbox"]:checked ~ i.noko-button.on {
+            display: inline;
+            color: $color-green;
+        }
+        input[type="checkbox"] ~ i.sage-button {
+            padding-left: 7px;
+            padding-right: 7px;
+        }
+        input[type="checkbox"] ~ i.noko-button {
+            padding-left: 7px;
+            padding-right: 7px;
+        }
+
+        @media (hover: hover) {
+            &:hover {
+                input[type="checkbox"] ~ i.sage-button {
+                    color: $color-red;
+                }
+                input[type="checkbox"] ~ i.noko-button {
+                    color: $color-green;
+                }
+            }
         }
     }
 
