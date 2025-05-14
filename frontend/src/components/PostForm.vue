@@ -48,8 +48,8 @@
                 <span>{{ form.message.length }}</span
                 >/{{ maxLength }}
             </span>
-            <span class="post-options" v-if="board.sage">
-                <span class="post-sage">
+            <span class="post-options">
+                <span class="post-sage" v-if="board.sage">
                     <label
                         class="checkbox-container btn btn-default"
                         title="Не поднимать тред"
@@ -78,26 +78,27 @@
                         ></i>
                     </label>
                 </span>
-            </span>
-            <select
-                class="select btn btn-default"
-                v-if="identities && board.identity"
-                v-model="sel_identity"
-            >
-                <option
-                    value="notselected"
-                    :selected="sel_identity == 'notselected'"
+
+                <select
+                    class="select btn btn-default"
+                    v-if="identities && board.identity"
+                    v-model="sel_identity"
                 >
-                    Личность
-                </option>
-                <option
-                    v-for="identity in identities"
-                    :value="identity.address"
-                    :selected="sel_identity == identity.address"
-                >
-                    {{ identity.name }}
-                </option>
-            </select>
+                    <option
+                        value="notselected"
+                        :selected="sel_identity == 'notselected'"
+                    >
+                        Личность
+                    </option>
+                    <option
+                        v-for="identity in identities"
+                        :value="identity.address"
+                        :selected="sel_identity == identity.address"
+                    >
+                        {{ identity.name }}
+                    </option>
+                </select>
+            </span>&nbsp;
             <div class="pull-right attachment-btns" v-if="!board.textboard">
                 <span
                     class="reply-form-limit-counter"
@@ -184,8 +185,8 @@ export default {
         },
     },
     created() {
-        this.noko = localStorage.noko === 'true';
-        BusEvents.$bus.emit('noko', this.noko);
+        this.noko = localStorage.noko === "true";
+        BusEvents.$bus.emit("noko", this.noko);
         if (this.board.identity == true && Session.auth) {
             Dialog.identities().then((response) => {
                 if (response.data.identities.length) {
@@ -208,7 +209,7 @@ export default {
         });
     },
     updated() {
-        BusEvents.$bus.emit('noko', this.noko);
+        BusEvents.$bus.emit("noko", this.noko);
     },
     watch: {
         files: () => {
@@ -545,9 +546,8 @@ export default {
     }
 
     .checkbox-container {
-        height: 25px;
         vertical-align: middle;
-        padding: 1px 0px 0px 0px !important;
+        padding: 1px 0px 1px 0px !important;
         input[type="checkbox"] {
             display: none;
         }
@@ -590,7 +590,7 @@ export default {
     }
 
     .select {
-        padding: 5px 5px 4px 5px;
+        padding: 4px;
         font-size: 12px;
     }
 }
