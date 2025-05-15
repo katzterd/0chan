@@ -11,7 +11,7 @@
             <span style="width: 10px; display: inline-block"> </span>
             <ul class="pagination">
                 <li v-for="n in block" :class="{ active: current == n }">
-                    <a href="#" @click.prevent="current = n">{{n}}</a>
+                    <a href="#" @click.prevent="current = n">{{ n }}</a>
                 </li>
             </ul>
         </span>
@@ -27,39 +27,43 @@
 </template>
 
 <script>
-    const SPREAD = 7;
+const SPREAD = 7;
 
-    export default {
-        props: ['page', 'totalPages', 'noArrows'],
-        data() {
-            return {
-                current: parseInt(this.page)
-            }
+export default {
+    props: ["page", "totalPages", "noArrows"],
+    data() {
+        return {
+            current: parseInt(this.page),
+        };
+    },
+    watch: {
+        current(value) {
+            this.$emit("change", value);
         },
-        watch: {
-            current(value) {
-                this.$emit('change', value);
+    },
+    computed: {
+        pageBlocks() {
+            const blocks = [];
+            if (this.current - SPREAD > 1) {
+                blocks.push([1]);
             }
-        },
-        computed: {
-            pageBlocks() {
-                const blocks = [];
-                if (this.current - SPREAD > 1) {
-                    blocks.push([1]);
-                }
-                const mainBlock = [];
-                for (let i = Math.max(1, this.current - SPREAD); i <= Math.min(this.totalPages, this.current + SPREAD); i++) {
-                    mainBlock.push(i);
-                }
-                blocks.push(mainBlock);
+            const mainBlock = [];
+            for (
+                let i = Math.max(1, this.current - SPREAD);
+                i <= Math.min(this.totalPages, this.current + SPREAD);
+                i++
+            ) {
+                mainBlock.push(i);
+            }
+            blocks.push(mainBlock);
 
-                if (this.current + SPREAD < this.totalPages) {
-                    blocks.push([this.totalPages]);
-                }
-                return blocks;
+            if (this.current + SPREAD < this.totalPages) {
+                blocks.push([this.totalPages]);
             }
-        }
-    }
+            return blocks;
+        },
+    },
+};
 </script>
 
 <style lang="scss" rel="stylesheet/scss"></style>

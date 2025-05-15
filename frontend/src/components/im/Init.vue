@@ -12,25 +12,23 @@
 </template>
 
 <script>
-    import Headline  from '../Headline.vue'
-    import AddIdentity from './AddIdentity.vue'
-    import Dialog from '../../services/Dialog'
+import Headline from "../Headline.vue";
+import AddIdentity from "./AddIdentity.vue";
+import Dialog from "../../services/Dialog";
 
-    export default {
-        components: {
-            Headline,
-            AddIdentity
+export default {
+    components: {
+        Headline,
+        AddIdentity,
+    },
+    methods: {
+        fetch() {
+            return Dialog.identities().then((response) => {
+                if (response.data.identities.length) {
+                    this.$router.push({ name: "im" });
+                }
+            });
         },
-        methods: {
-            fetch() {
-                return Dialog.identities().then(
-                    response => {
-                        if (response.data.identities.length) {
-                            this.$router.push({name: 'im'});
-                        }
-                    }
-                )
-            }
-        }
-    }
+    },
+};
 </script>

@@ -97,8 +97,8 @@
                     >
                         {{ identity.name }}
                     </option>
-                </select>
-            </span>&nbsp;
+                </select> </span
+            >&nbsp;
             <div class="pull-right attachment-btns" v-if="!board.textboard">
                 <span
                     class="reply-form-limit-counter"
