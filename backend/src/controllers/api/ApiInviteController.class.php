@@ -21,8 +21,7 @@ class ApiInviteController extends ApiBaseController
 
 		$now = time();
 
-		foreach ($invites as $invite) 
-		{
+		foreach ($invites as $invite) {
 			$inv = $invite->export();
 
 			if ($now - $invite->getCreatedAt()->toStamp() > 86400 && !$invite->isUsed()) {

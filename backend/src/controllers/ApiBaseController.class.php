@@ -1,6 +1,7 @@
 <?php
 
-abstract class ApiBaseController extends BaseController {
+abstract class ApiBaseController extends BaseController
+{
 
     protected $captchaAsserted = false;
 
@@ -21,25 +22,26 @@ abstract class ApiBaseController extends BaseController {
         });
     }
 
-    public function assertCaptcha() {
+    public function assertCaptcha()
+    {
         // already checked in this request
         if ($this->captchaAsserted) {
             return;
         }
 
-		$captchaId = null;
-		if ($this->getRequest()->hasGetVar('captcha')) {
-			$captchaId = $this->getRequest()->getGetVar('captcha');
-		} else if ($this->getRequest()->hasPostVar('captcha')) {
-			$captchaId = $this->getRequest()->getPostVar('captcha');
-		}
+        $captchaId = null;
+        if ($this->getRequest()->hasGetVar('captcha')) {
+            $captchaId = $this->getRequest()->getGetVar('captcha');
+        } else if ($this->getRequest()->hasPostVar('captcha')) {
+            $captchaId = $this->getRequest()->getPostVar('captcha');
+        }
 
-		if (!$captchaId || !CaptchaStorage::me()->useCaptcha($captchaId)) {
-			throw new ApiCaptchaRequiredException;
-		}
+        if (!$captchaId || !CaptchaStorage::me()->useCaptcha($captchaId)) {
+            throw new ApiCaptchaRequiredException;
+        }
 
-		$this->captchaAsserted = true;
-	}
+        $this->captchaAsserted = true;
+    }
 
     public function limitWithCaptcha($event, $timespan, $max = 1)
     {
@@ -77,33 +79,34 @@ abstract class ApiBaseController extends BaseController {
         } catch (BadRequestException $e) {
             throw new ApiBadRequestException();
         }
-	}
+    }
 
-	public function handleRequest(HttpRequest $request) {
-	    $apiView = ApiView::create();
-		$this->mav->setView($apiView);
-		try {
+    public function handleRequest(HttpRequest $request)
+    {
+        $apiView = ApiView::create();
+        $this->mav->setView($apiView);
+        try {
 
-		    parent::handleRequest($request);
+            parent::handleRequest($request);
+        } catch (ApiException $e) {
+            $apiView->setHttpCode($e->getCode());
+            $this->mav->setModel(
+                Model::create()
+                    ->set('error', $e->getCode())
+                    ->set('message', $e->getMessage())
+                    ->set('details', $e->getDetails())
+            );
+        }
 
-		} catch (ApiException $e) {
-		    $apiView->setHttpCode($e->getCode());
-			$this->mav->setModel(
-				Model::create()
-					->set('error', $e->getCode())
-					->set('message', $e->getMessage())
-					->set('details', $e->getDetails())
-			);
-		}
-
-		return $this->mav;
-	}
+        return $this->mav;
+    }
 
     /**
      * @param $value
      * @return bool
      */
-    public function getBooleanParam($value) {
+    public function getBooleanParam($value)
+    {
         if (is_bool($value)) {
             return $value;
         } else if (is_string($value)) {
@@ -119,5 +122,4 @@ abstract class ApiBaseController extends BaseController {
             ->setLimit($itemsPerPage)
             ->setOffset(($page - 1) * $itemsPerPage);
     }
-
-} 
+}

@@ -1,62 +1,70 @@
 <?php
 
-abstract class BaseController implements Controller {
+abstract class BaseController implements Controller
+{
 
     protected $actionName = 'default';
     /** @var HttpRequest */
     protected $request;
-	/** @var ModelAndView */
-	protected $mav;
-	/** @var User */
-	protected $user;
+    /** @var ModelAndView */
+    protected $mav;
+    /** @var User */
+    protected $user;
 
-	private $decorators = [];
+    private $decorators = [];
 
-    protected function getRequest() {
+    protected function getRequest()
+    {
         return $this->request;
     }
 
-	public  function __construct() {
-		$this->mav = ModelAndView::create();
-	}
+    public  function __construct()
+    {
+        $this->mav = ModelAndView::create();
+    }
 
-	/**
-	 * @return UserSession|null
-	 */
-	protected function getSession() {
-		if ($this->getRequest()->hasAttachedVar('session')) {
-			return $this->getRequest()->getAttachedVar('session');
-		}
-		return null;
-	}
+    /**
+     * @return UserSession|null
+     */
+    protected function getSession()
+    {
+        if ($this->getRequest()->hasAttachedVar('session')) {
+            return $this->getRequest()->getAttachedVar('session');
+        }
+        return null;
+    }
 
-	/**
+    /**
      * @return User|null
      */
-    protected function getUser() {
-		if (!$this->user) {
-			$session = $this->getSession();
-			if ($session instanceof UserSession && $session->getUserId()) {
-				$this->user = User::dao()->getById($session->getUserId());
-			}
-		}
-		return $this->user;
+    protected function getUser()
+    {
+        if (!$this->user) {
+            $session = $this->getSession();
+            if ($session instanceof UserSession && $session->getUserId()) {
+                $this->user = User::dao()->getById($session->getUserId());
+            }
+        }
+        return $this->user;
     }
 
     /**
      * MyBitchesController -> myBitches
      * @return string
      */
-	public function getTemplatePath() {
+    public function getTemplatePath()
+    {
         return str_replace('Controller', '', lcfirst(get_class($this)));
     }
 
-	public function getLayoutPath() {
-		return 'layouts/main';
-	}
+    public function getLayoutPath()
+    {
+        return 'layouts/main';
+    }
 
-	public function registerDecorator($name, callable $hook) {
-	    $this->decorators[$name] = $hook;
+    public function registerDecorator($name, callable $hook)
+    {
+        $this->decorators[$name] = $hook;
     }
 
     // removed for arguments independency
@@ -123,7 +131,7 @@ abstract class BaseController implements Controller {
             if (isset($this->decorators[$docAttributes[0][$i]])) {
                 $hook = $this->decorators[$docAttributes[0][$i]];
                 $closure = function () use ($closure, $hook) {
-                      return $hook($closure);
+                    return $hook($closure);
                 };
             }
         }
@@ -133,7 +141,8 @@ abstract class BaseController implements Controller {
         return $closure;
     }
 
-    public function handleRequest(HttpRequest $request) {
+    public function handleRequest(HttpRequest $request)
+    {
         $this->request = $request;
 
         $requestCall = $this->makeCallable($request);
@@ -144,12 +153,11 @@ abstract class BaseController implements Controller {
             foreach ($result as $key => $data) {
                 $this->mav->getModel()->set($key, $data);
             }
-			if (!$this->mav->getView()) {
-				$this->mav->setView($this->getTemplatePath() . '/' . $this->actionName);
-			}
+            if (!$this->mav->getView()) {
+                $this->mav->setView($this->getTemplatePath() . '/' . $this->actionName);
+            }
         } else if ($result instanceof GenericUri || $result instanceof a) {
             return $this->mav->setView(RedirectView::create($result->toString()));
-
         } else {
             $this->mav = $result;
         }
@@ -157,13 +165,15 @@ abstract class BaseController implements Controller {
         return $this->mav;
     }
 
-	public function isPostRequest() {
-		return $this->request->getMethod()->getId() == HttpMethod::POST;
-	}
+    public function isPostRequest()
+    {
+        return $this->request->getMethod()->getId() == HttpMethod::POST;
+    }
 
-	public function isDeleteRequest() {
-		return $this->request->getMethod()->getId() == HttpMethod::DELETE;
-	}
+    public function isDeleteRequest()
+    {
+        return $this->request->getMethod()->getId() == HttpMethod::DELETE;
+    }
 
     public function assertRights() {}
-} 
+}
