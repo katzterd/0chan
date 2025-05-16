@@ -20,7 +20,7 @@ class ApiCaptchaController extends ApiBaseController
     public function defaultAction($captcha = null, $answer = null)
     {
         $this->limit('captchaRequests', 600, 60, function () {
-         //   throw new ApiForbiddenException('too many captcha requests');
+            //   throw new ApiForbiddenException('too many captcha requests');
         });
 
         $provider = $this->getCaptchaProvider();
@@ -47,7 +47,6 @@ class ApiCaptchaController extends ApiBaseController
                 'captcha' => $captchaId,
                 'ok' => $valid
             ];
-
         } else {
             if (!$captcha) {
                 $captcha = $provider->getCaptcha();

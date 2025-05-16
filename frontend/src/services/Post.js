@@ -1,14 +1,14 @@
-import Api from './Api'
+import Api from "./Api";
 
 export default {
     get(postId) {
-        return Api.get('post', { params: { post: postId }});
+        return Api.get("post", { params: { post: postId } });
     },
     upvote(postId) {
-        return Api.get('post/rate', { params: { post: postId, isLike: true }});
+        return Api.get("post/rate", { params: { post: postId, isLike: true } });
     },
     downvote(postId) {
-        return Api.get('post/rate', { params: { post: postId }});
+        return Api.get("post/rate", { params: { post: postId } });
     },
     rate(postId, isLike) {
         if (isLike) {
@@ -16,5 +16,5 @@ export default {
         } else {
             return this.downvote(postId);
         }
-    }
-}
+    },
+};

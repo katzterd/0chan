@@ -99,13 +99,10 @@ class ApiBoardController extends ApiBaseController
                 throw new ApiBlockRuException();
             }
             $criteria->add(Expression::eq('board', $board));
-
         } else if ($isFavourites) {
             $criteria->add(Expression::eq('board.favouritedBy.user', $this->getUser()));
-
         } else if ($isOnlyWatched) {
             $criteria->add(Expression::in('id', $this->getUser()->getWatchedThreads(true)->makeQuery()));
-
         } else {
             $criteria->add(Expression::isFalse('board.hidden'));
             if (!$this->getUser() || !$this->getUser()->isShowNsfw()) {
@@ -133,7 +130,7 @@ class ApiBoardController extends ApiBaseController
                     // the thread is gone by now
                     continue;
                 }
-                $threads [] = $threadUnordered[$threadId];
+                $threads[] = $threadUnordered[$threadId];
             }
             $cursorHasMore = count($cursor) > ($page * self::THREADS_PER_PAGE);
         } else {
@@ -183,7 +180,7 @@ class ApiBoardController extends ApiBaseController
         foreach ($threads as $thread) {
             $lastPosts = [];
             foreach ($thread->getLastPosts(self::NUM_LAST_POSTS) as $lastPost) {
-                $lastPosts [] = $lastPost->export();
+                $lastPosts[] = $lastPost->export();
             }
 
             $response['threads'][] = [
@@ -290,7 +287,7 @@ class ApiBoardController extends ApiBaseController
                     'isModerated' => $this->getUser()->canModerateBoard($board)
                 ]);
             }
-            $response['boards'] [] = $boardInfo;
+            $response['boards'][] = $boardInfo;
         }
         return $response;
     }
@@ -318,7 +315,6 @@ class ApiBoardController extends ApiBaseController
                     ->setUser($this->getUser())
                     ->setCreateDate(Timestamp::makeNow())
             );
-
         } else if (!$isFavourite && $existing) {
             FavouriteBoard::dao()->drop($existing);
         }

@@ -29,7 +29,7 @@ class ApiModerationController extends ApiBaseController
 
         $response['moderatedBoards'] = [];
         foreach ($this->getUser()->getModeratedBoards() as $board) {
-            $response['moderatedBoards'] [] = $board->export();
+            $response['moderatedBoards'][] = $board->export();
         }
 
         //$newReportsCriteria = Criteria::create(PostReport::dao())
@@ -97,7 +97,7 @@ class ApiModerationController extends ApiBaseController
         $response = ['logs' => []];
 
         foreach ($logs as $log) {
-            $response['logs'] [] = $log->export($this->getUser());
+            $response['logs'][] = $log->export($this->getUser());
         }
 
         $response['pagination'] = [
@@ -135,7 +135,7 @@ class ApiModerationController extends ApiBaseController
         $response = ['feed' => []];
 
         foreach ($attachments as $attachment) {
-            $response['feed'] [] = [
+            $response['feed'][] = [
                 'postId' => $attachment->getPostId(),
                 'publishedAt' => $attachment->getPost()->getCreateDate()->toStamp(),
                 'attachment' => $attachment->export(),
@@ -188,7 +188,7 @@ class ApiModerationController extends ApiBaseController
                     ->setDate($date)
                     ->setBoard($board);
             }
-            $response['stats'] []= $stat->export();
+            $response['stats'][] = $stat->export();
         }
 
 
@@ -237,12 +237,12 @@ class ApiModerationController extends ApiBaseController
             if (!isset($reasons[$report->getPostId()])) {
                 $reasons[$report->getPostId()] = [];
             }
-            $reasons[$report->getPostId()] [] = $report->export();
+            $reasons[$report->getPostId()][] = $report->export();
         }
 
         $response = ['reports' => []];
         foreach ($reportedPosts as $post) {
-            $response['reports'] [] = [
+            $response['reports'][] = [
                 'post' => $post->export(),
                 'reasons' => $reasons[$post->getId()],
                 'isApproved' => $post->isApproved()
@@ -281,7 +281,7 @@ class ApiModerationController extends ApiBaseController
         $response = ['bans' => []];
 
         foreach ($bans as $ban) {
-            $response['bans'] [] = $ban->export(true);
+            $response['bans'][] = $ban->export(true);
         }
 
         $response['pagination'] = [
@@ -645,7 +645,7 @@ class ApiModerationController extends ApiBaseController
     public function deleteAttachmentAction(Attachment $attachment)
     {
         if (!$attachment->getPost() || !$attachment->getPost()->canBeModeratedBy($this->getUser())) {
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
 
         $db = DBPool::getByDao(Attachment::dao());
@@ -683,7 +683,7 @@ class ApiModerationController extends ApiBaseController
     public function restoreAttachmentAction(Attachment $attachment)
     {
         if (!$attachment->getPost() || !$attachment->getPost()->canBeModeratedBy($this->getUser())) {
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
 
         $db = DBPool::getByDao(Attachment::dao());
@@ -722,13 +722,13 @@ class ApiModerationController extends ApiBaseController
         $isNsfw = $this->getBooleanParam($isNsfw);
 
         if (!$attachment->getPost() || !$attachment->getPost()->canBeModeratedBy($this->getUser())) {
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
 
         $attachment->setNsfw($isNsfw);
         Attachment::dao()->take($attachment);
 
-        return ['ok' => true, 'isNsfw' => $attachment->isNsfw() ];
+        return ['ok' => true, 'isNsfw' => $attachment->isNsfw()];
     }
 
     /**
@@ -787,7 +787,7 @@ class ApiModerationController extends ApiBaseController
             ->setUpdateDate(Timestamp::makeNow());
         Thread::dao()->take($thread);
 
-        return ['ok' => true ];
+        return ['ok' => true];
     }
 
     /**

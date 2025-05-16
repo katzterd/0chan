@@ -6,13 +6,17 @@
         <div class="panel panel-default vspace">
             <div class="panel-heading">
                 <ul class="nav nav-pills">
-                    <router-link v-for="section in sections"
-                                 :key="section.route"
-                                 :to="{ name: section.route }"
-                                 tag="li" class="nav-item" active-class="active">
+                    <router-link
+                        v-for="section in sections"
+                        :key="section.route"
+                        :to="{ name: section.route }"
+                        tag="li"
+                        class="nav-item"
+                        active-class="active"
+                    >
                         <a class="nav-link">
                             <i :class="'fa fa-fw ' + section.icon"></i>
-                            {{section.title}}
+                            {{ section.title }}
                         </a>
                     </router-link>
                 </ul>
@@ -29,51 +33,57 @@
 </template>
 
 <script>
-    import Headline from '../Headline.vue';
-    import Session from '../../services/Session'
+import Headline from "../Headline.vue";
+import Session from "../../services/Session";
 
-    export default {
-        components: {
-            Headline
-        },
-        data() {
-            return {
-                loading: false,
-            }
-        },
-        computed: {
-            sections() {
-                const list = [
+export default {
+    components: {
+        Headline,
+    },
+    data() {
+        return {
+            loading: false,
+        };
+    },
+    computed: {
+        sections() {
+            const list = [
+                {
+                    title: "Доски",
+                    icon: "fa-list",
+                    route: "admin_boards",
+                },
+            ];
+            if (Session.isGlobalAdmin) {
+                list.push(
                     {
-                        title: 'Доски',
-                        icon: 'fa-list',
-                        route: 'admin_boards'
+                        title: "Глобальные модераторы",
+                        icon: "fa-users",
+                        route: "admin_globals",
+                    },
+                    {
+                        title: "Управление сайтом",
+                        icon: "fa-gears",
+                        route: "admin_sitemanage",
+                    },
+                    {
+                        title: "Список пользователей",
+                        icon: "fa-users",
+                        route: "admin_users",
                     }
-                ];
-                if (Session.isGlobalAdmin) {
-                    list.push({
-                        title:  'Глобальные модераторы',
-                        icon:   'fa-users',
-                        route:  'admin_globals'
-                    }, {
-                        title: 'Управление сайтом',
-                        icon: 'fa-gears',
-                        route: 'admin_sitemanage'
-                    }, {
-                        title: 'Список пользователей',
-                        icon: 'fa-users',
-                        route: 'admin_users'
-                    })
-                }
-                return list;
+                );
             }
+            return list;
         },
-        methods: {
-            fetch() {
-                this.loading = true;
-                return this.$refs.view.fetch()
-                  .then(r => { this.loading = false; return r });
-            }
-        }
-    }
+    },
+    methods: {
+        fetch() {
+            this.loading = true;
+            return this.$refs.view.fetch().then((r) => {
+                this.loading = false;
+                return r;
+            });
+        },
+    },
+};
 </script>

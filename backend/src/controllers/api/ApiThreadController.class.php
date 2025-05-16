@@ -62,48 +62,49 @@ class ApiThreadController extends ApiBaseController
         ];
 
         foreach ($posts as $post) {
-            $response['posts'] [] = $post->export();
+            $response['posts'][] = $post->export();
         }
 
         return $response;
     }
-    
-    public function spamFilterCheck($message) {
-			$cyr = array('А', 'а', 'В', 'Д', 'Е', 'е', 'К', 'к', 'М', 'м', 'Н', 'н', 'О', 'о', 'Р', 'р', 'С', 'с', 'Т', 'У', 'у', 'Х', 'х', 'Ь', 'ь');
-			$lat = array('A', 'a', 'B', 'D', 'E', 'e', 'K', 'k', 'M', 'm', 'H', 'H', 'O', 'o', 'P', 'p', 'C', 'c', 'T', 'Y', 'y', 'X', 'x', 'b', 'b');
 
-			$message = strip_tags(str_replace($cyr, $lat, mb_strtolower(str_replace($cyr, $lat, mb_strtoupper($message)))));
-			// удаление разметки и пробелов
-			$message = preg_replace('/%/', '', $message);
-			$message = preg_replace('/\*/', '', $message);
-			$message = preg_replace('/(?<!\S)\-(?!\s)/u', '', $message);
-			$message = preg_replace('/`/', '', $message);
-			$message = preg_replace('/\s+/', '', $message);
-			// удаление специальных символов
-			$message = preg_replace('/[!@#$^&()_+\-=\[\]{};\':"\\\\|,.<>\/?~=]/', '', $message);
+    public function spamFilterCheck($message)
+    {
+        $cyr = array('А', 'а', 'В', 'Д', 'Е', 'е', 'К', 'к', 'М', 'м', 'Н', 'н', 'О', 'о', 'Р', 'р', 'С', 'с', 'Т', 'У', 'у', 'Х', 'х', 'Ь', 'ь');
+        $lat = array('A', 'a', 'B', 'D', 'E', 'e', 'K', 'k', 'M', 'm', 'H', 'H', 'O', 'o', 'P', 'p', 'C', 'c', 'T', 'Y', 'y', 'X', 'x', 'b', 'b');
 
-			if(!strlen($message)) return false;
+        $message = strip_tags(str_replace($cyr, $lat, mb_strtolower(str_replace($cyr, $lat, mb_strtoupper($message)))));
+        // удаление разметки и пробелов
+        $message = preg_replace('/%/', '', $message);
+        $message = preg_replace('/\*/', '', $message);
+        $message = preg_replace('/(?<!\S)\-(?!\s)/u', '', $message);
+        $message = preg_replace('/`/', '', $message);
+        $message = preg_replace('/\s+/', '', $message);
+        // удаление специальных символов
+        $message = preg_replace('/[!@#$^&()_+\-=\[\]{};\':"\\\\|,.<>\/?~=]/', '', $message);
 
-			$spamtxturl = PATH_BASE . 'www' . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'spam.txt';
+        if (!strlen($message)) return false;
 
-			// лямбда для обхода array_map, принимающего только один аргумент
-			$repl = function($link) use($cyr, $lat) {
-				return str_replace($cyr, $lat, mb_strtolower(str_replace($cyr, $lat, mb_strtoupper($link))));
-			};
+        $spamtxturl = PATH_BASE . 'www' . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'spam.txt';
 
-			if (!file_exists($spamtxturl)) {
-				return false;
-			} else {
-				$badlinks = array_map($repl, array_map('rtrim', file($spamtxturl, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)));
-			}
+        // лямбда для обхода array_map, принимающего только один аргумент
+        $repl = function ($link) use ($cyr, $lat) {
+            return str_replace($cyr, $lat, mb_strtolower(str_replace($cyr, $lat, mb_strtoupper($link))));
+        };
 
-			foreach ($badlinks as $badlink) {
-				if (stripos($message, $badlink) !== false) {
-					return true;
-					break;
-				}
-			}
-		}
+        if (!file_exists($spamtxturl)) {
+            return false;
+        } else {
+            $badlinks = array_map($repl, array_map('rtrim', file($spamtxturl, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)));
+        }
+
+        foreach ($badlinks as $badlink) {
+            if (stripos($message, $badlink) !== false) {
+                return true;
+                break;
+            }
+        }
+    }
 
     /**
      * @Post
@@ -194,7 +195,7 @@ class ApiThreadController extends ApiBaseController
 
             if (Cache::me()->get('torgateRegisterRequired') && !$this->getUser()) {
                 return [
-                    'ok' => false, 
+                    'ok' => false,
                     'reason' => 'registerRequired'
                 ];
             }
@@ -231,13 +232,13 @@ class ApiThreadController extends ApiBaseController
         }
 
         $message = $form->getValue('message');
-        
+
         if (!empty($message)) {
-					if ($this->spamFilterCheck($message) == true) {
-							return ['ok' => false, 'reason' => 'spamlist'];
-					}
-				}
-        
+            if ($this->spamFilterCheck($message) == true) {
+                return ['ok' => false, 'reason' => 'spamlist'];
+            }
+        }
+
         $sage = $form->getValue('sage');
 
         $isSageAllowed = $thread->getBoard()->getSage();
@@ -246,7 +247,7 @@ class ApiThreadController extends ApiBaseController
         $post = Post::create()
             ->setCreateDate(Timestamp::makeNow())
             ->setMessage($message);
-        
+
         if ($sage && $isSageAllowed) {
             $post->setSage($sage);
         }
@@ -264,7 +265,7 @@ class ApiThreadController extends ApiBaseController
 
         $isTimeoutEnabled = Cache::me()->get('globalTimeout');
         $timeout_cmd = null;
-        $af_key = Cache::me()->get('af:'.$thread->getBoard()->getId());
+        $af_key = Cache::me()->get('af:' . $thread->getBoard()->getId());
 
         $isReplyTimeoutEnabled = Cache::me()->get('repliesLimit');
         $repliesLimitMax = intval(Cache::me()->get('repliesLimitMax'));
@@ -302,10 +303,10 @@ class ApiThreadController extends ApiBaseController
             }
 
             $bumpLimit = Criteria::create(Post::dao())
-                    ->add(Expression::eq('thread', $thread))
-                    ->add(Expression::isFalse('deleted'))
-                    ->addProjection(Projection::count('id', 'count'))
-                    ->getCustom('count') >= $thread->getBoard()->getBumpLimit();
+                ->add(Expression::eq('thread', $thread))
+                ->add(Expression::isFalse('deleted'))
+                ->addProjection(Projection::count('id', 'count'))
+                ->getCustom('count') >= $thread->getBoard()->getBumpLimit();
 
             if ($bumpLimit && !$thread->isBumpLimitReached()) {
                 $thread->setBumpLimitReached(true);
@@ -334,7 +335,7 @@ class ApiThreadController extends ApiBaseController
             }
 
             if ($thread->getBoard()->getImrequired()) {
-                if($parent == null && empty($imageIds)){
+                if ($parent == null && empty($imageIds)) {
                     return ["ok" => false, "reason" => "gimme_image"];
                 }
             }
@@ -366,9 +367,9 @@ class ApiThreadController extends ApiBaseController
             }
 
             if ($thread->getBoard()->getTextboard()) {
-                if(!empty($imageIds)){
+                if (!empty($imageIds)) {
                     return ["ok" => false, "reason" => "textboard"];
-                }  
+                }
             }
 
             if (preg_match_all('/>>([0-9]+)/', $message, $refMatches)) {
@@ -384,7 +385,6 @@ class ApiThreadController extends ApiBaseController
             }
 
             $db->commit();
-
         } catch (Exception $e) {
             if ($db->inTransaction()) {
                 $db->rollback();
@@ -397,14 +397,14 @@ class ApiThreadController extends ApiBaseController
         if ($timeout_cmd) { // Этот костыль здесь потому что Cache не работает во время щапущенной транзакции... миша гей.
             switch ($timeout_cmd) {
                 case 'create':
-                    Cache::me()->increment('af:'.$thread->getBoard()->getId(), 1);
-                    Cache::me()->expire('af:'.$thread->getBoard()->getId(), 3600);
+                    Cache::me()->increment('af:' . $thread->getBoard()->getId(), 1);
+                    Cache::me()->expire('af:' . $thread->getBoard()->getId(), 3600);
                     break;
 
                 case 'increment':
-                    Cache::me()->increment('af:'.$thread->getBoard()->getId(), 1);
+                    Cache::me()->increment('af:' . $thread->getBoard()->getId(), 1);
                     break;
-                
+
                 default:
                     break;
             }
@@ -420,7 +420,7 @@ class ApiThreadController extends ApiBaseController
                 case 'increment':
                     Cache::me()->increment('repliesLimitCounter', 1);
                     break;
-                
+
                 default:
                     break;
             }
@@ -445,7 +445,7 @@ class ApiThreadController extends ApiBaseController
         $watchedThreadIds = $this->getUser()->getWatchedThreads(true)->getList();
         $updated = false;
         if ($isWatched && !in_array($thread->getId(), $watchedThreadIds)) {
-            $watchedThreadIds [] = $thread->getId();
+            $watchedThreadIds[] = $thread->getId();
             $updated = true;
         } else if (!$isWatched && in_array($thread->getId(), $watchedThreadIds)) {
             $watchedThreadIds = array_filter(

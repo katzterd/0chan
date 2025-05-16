@@ -97,8 +97,8 @@
                     >
                         {{ identity.name }}
                     </option>
-                </select>
-            </span>&nbsp;
+                </select> </span
+            >&nbsp;
             <div class="pull-right attachment-btns" v-if="!board.textboard">
                 <span
                     class="reply-form-limit-counter"
@@ -357,7 +357,7 @@ export default {
                 this.isSending = false;
                 const result = response.data;
                 if (result.ok) {
-                    this.$emit("submit", result.post);
+                    return this.$emit("submit", result.post);
                 } else if (result.reason) {
                     switch (result.reason) {
                         case "form":

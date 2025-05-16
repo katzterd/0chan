@@ -1,20 +1,24 @@
-import {Axios} from 'axios'
-import BusEvents from '../app/BusEvents'
-import Router from '../app/Router'
-import $ from 'jquery';
+import { Axios } from "axios";
+import BusEvents from "../app/BusEvents";
+import Router from "../app/Router";
+import $ from "jquery";
 
-import Session from './Session';
-import UI from '../app/UI';
+import Session from "./Session";
+import UI from "../app/UI";
 
 let API_URL;
 if (process.env.NODE_ENV == "production") {
-    API_URL = document.location.protocol + '//' + document.location.hostname + '/api/';
+    API_URL =
+        document.location.protocol +
+        "//" +
+        document.location.hostname +
+        "/api/";
 } else {
-    API_URL = '//localhost/api/';
+    API_URL = "//localhost/api/";
 }
 
 const axios = new Axios({
-    baseURL: API_URL
+    baseURL: API_URL,
 });
 /*
 let errorHappened = false;
@@ -49,61 +53,69 @@ axios.request = (config) => {
     return promise;
 };
 */
-axios.interceptors.request.use(
-    config => {
-        const session = Session.id;
-        if (session) {
-            config.params = { ...config.params, session };
-        }
-        return config;
+axios.interceptors.request.use((config) => {
+    const session = Session.id;
+    if (session) {
+        config.params = { ...config.params, session };
     }
-);
+    return config;
+});
 
 axios.interceptors.response.use(
-    response => {
-        if (response.headers.hasOwnProperty('x-session')) {
-            Session.id = response.headers['x-session'];
+    (response) => {
+        if (response.headers.hasOwnProperty("x-session")) {
+            Session.id = response.headers["x-session"];
         }
 
         return response;
     },
-    error => {
+    (error) => {
         const status = error.response ? error.response.status : -1;
-        const data   = error.response ? error.response.data   : {};
+        const data = error.response ? error.response.data : {};
 
-        if (status === 403 && data.details && data.details.require === 'auth') {
+        if (status === 403 && data.details && data.details.require === "auth") {
             return Session.get().then(() => {
-                Router.push({name: 'login'})
+                Router.push({ name: "login" });
             });
-
-        } else if (status === 403 && data.details && data.details.require === 'captcha') {
-            return new Promise(resolve => {
-                BusEvents.$bus.emit(
-                    BusEvents.REQUEST_CAPTCHA,
-                    (captcha) => {
-                        const repeat = error.config;
-                        repeat.params = { ...repeat.params, captcha };
-                        resolve(axios.request(repeat));
-                    }
-                )
+        } else if (
+            status === 403 &&
+            data.details &&
+            data.details.require === "captcha"
+        ) {
+            return new Promise((resolve) => {
+                BusEvents.$bus.emit(BusEvents.REQUEST_CAPTCHA, (captcha) => {
+                    const repeat = error.config;
+                    repeat.params = { ...repeat.params, captcha };
+                    resolve(axios.request(repeat));
+                });
             });
-
         } else if (status === 404 || status === 403) {
             //Router.replace({name: 'notFound'});
             throw error;
-        } if (status >= 520) {
+        }
+        if (status >= 520) {
             // cf errors
             throw error;
         }
 
         if (!error.config.silentFail) {
-            const requestedUrl = error.config.url + (error.config.params ? '?' + $.param(error.config.params) : '');
-            UI.bsod(error,
-                '=== REQUEST: ===',
-                error.config.method.toUpperCase() + ' ' + requestedUrl + "\n"
-                + (error.config.body ? JSON.stringify(error.config.body, null, 4) : ''),
-                '=== RESPONSE: ===',
-                error.response ? (error.response.status + ' ' + error.response.statusText) : error.message,
+            const requestedUrl =
+                error.config.url +
+                (error.config.params ? "?" + $.param(error.config.params) : "");
+            UI.bsod(
+                error,
+                "=== REQUEST: ===",
+                error.config.method.toUpperCase() +
+                    " " +
+                    requestedUrl +
+                    "\n" +
+                    (error.config.body
+                        ? JSON.stringify(error.config.body, null, 4)
+                        : ""),
+                "=== RESPONSE: ===",
+                error.response
+                    ? error.response.status + " " + error.response.statusText
+                    : error.message,
                 data
             );
             throw error;

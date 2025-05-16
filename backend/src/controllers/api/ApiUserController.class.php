@@ -48,7 +48,9 @@ class ApiUserController extends ApiBaseController
         );
 
         $response['form'] = FormHelper::toClient(
-            $form, $user->proto()->getPropertyReadableNames(), [
+            $form,
+            $user->proto()->getPropertyReadableNames(),
+            [
                 'showNsfw' => 'Показывать безнравственный и аморальный контент (расчлененка, эротика, аниме)',
                 'treeView' => 'При переходе в тред, переключаться по-умолчанию на древовидный просмотр',
                 'viewDeleted' => 'Показывать удаленные посты и треды в модерируемых досках'
@@ -70,11 +72,11 @@ class ApiUserController extends ApiBaseController
 
         if (Cache::me()->get('disableRegister')) {
             return [
-                 'ok' => false,
+                'ok' => false,
                 'form-errors' => [
                     'invite' => 'Регистрация отключена!'
                 ]
-            ];   
+            ];
         }
 
         $form = $this->makeForm();
@@ -105,7 +107,6 @@ class ApiUserController extends ApiBaseController
                     'invite'    => $invite_err
                 ]
             ];
-
         }
 
         $password = $form->getValue('password');
@@ -157,7 +158,7 @@ class ApiUserController extends ApiBaseController
 
         UserSession::start($this->getRequest(), $user);
 
-        return [ 'ok' => true ];
+        return ['ok' => true];
     }
 
     /**
@@ -197,9 +198,9 @@ class ApiUserController extends ApiBaseController
                 ];
             }
             UserSession::start($this->getRequest(), $user);
-            return [ 'ok' => true ];
+            return ['ok' => true];
         } else {
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
     }
 
@@ -307,13 +308,13 @@ class ApiUserController extends ApiBaseController
         if ($session instanceof UserSession) {
             $session->destroy();
         }
-        return [ 'ok' => true ];
+        return ['ok' => true];
     }
 
     /**
      * @return Form
      */
-    protected function makeForm($action='register')
+    protected function makeForm($action = 'register')
     {
         $form = Form::create()
             ->add(
@@ -337,7 +338,7 @@ class ApiUserController extends ApiBaseController
             ->addMissingLabel('login', 'Логин не введён')
             ->addMissingLabel('password', 'Пароль не введён')
             ->addWrongLabel('login', sprintf('Логин должен быть не короче %d знаков', self::LOGIN_MIN_LENGTH))
-            ->addWrongLabel('password', sprintf('Пароль должен быть не короче %d знаков', self::PASSWORD_MIN_LENGTH))//->addWrongLabel('email',    'E-mail введён некорректно')
+            ->addWrongLabel('password', sprintf('Пароль должен быть не короче %d знаков', self::PASSWORD_MIN_LENGTH)) //->addWrongLabel('email',    'E-mail введён некорректно')
         ;
 
         if (Cache::me()->get('inviteRequired') && $action == 'register') {
@@ -347,8 +348,8 @@ class ApiUserController extends ApiBaseController
                     ->setMax(128)
                     ->required()
             )
-            ->addMissingLabel('invite', 'Для регистрации на сайте, необходим инвайт, получить его вы можете у других пользователей сайта')
-            ->addWrongLabel('invite', 'Для регистрации на сайте, необходим инвайт, вы использовали неверный инвайт');
+                ->addMissingLabel('invite', 'Для регистрации на сайте, необходим инвайт, получить его вы можете у других пользователей сайта')
+                ->addWrongLabel('invite', 'Для регистрации на сайте, необходим инвайт, вы использовали неверный инвайт');
         }
 
         return $form;
@@ -391,6 +392,6 @@ class ApiUserController extends ApiBaseController
         $this->getSession()->destroy();
         UserSession::start($this->getRequest(), $this->getUser());
 
-        return [ 'ok' => true ];
+        return ['ok' => true];
     }
 }

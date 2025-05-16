@@ -29,6 +29,7 @@
                 &vert; <a @click="updateThread">Обновить</a>
             </div>
         </ThreadPosts>
+        <a :class="$style.omittedPosts" slot="omittedPosts" v-if="threadExpanded && thread.lastPosts.length > numExpandPosts" @click="updateThread">Обновить</a>
     </div>
 </template>
 
@@ -50,6 +51,7 @@ export default {
             storage: Storage,
             noko: null,
             numExpandPosts: 50,
+            threadExpanded: false,
         };
     },
     created() {
@@ -118,15 +120,16 @@ export default {
             const loadedPosts = this.thread.lastPosts
                 ? this.thread.lastPosts.length
                 : 0;
+            const postsToExpand = loadedPosts + this.numExpandPosts;
             return Thread.get(threadId, this.thread.opPost.id).then(
                 (response) => {
                     const allPosts = response.data.posts;
-                    const postsToExpand = loadedPosts + this.numExpandPosts;
                     this.thread.lastPosts = allPosts.slice(-postsToExpand);
                     this.thread.skippedPosts = Math.max(
                         0,
                         allPosts.length - postsToExpand
                     );
+                    this.threadExpanded = true;
                 }
             );
         },

@@ -82,7 +82,8 @@ class ApiManagementController extends ApiBaseController
                         ->getCustom('count');
 
                     if ($countCreatedRecently >= self::MAX_NEW_BOARDS_PER_DAY) {
-                        $form->addWrongLabel('dir',
+                        $form->addWrongLabel(
+                            'dir',
                             sprintf('Лимит создания досок достигнут: не более %d в сутки', self::MAX_NEW_BOARDS_PER_DAY)
                         );
                         return false;
@@ -101,7 +102,7 @@ class ApiManagementController extends ApiBaseController
                         return false;
                     }
 
-                    if (in_array($dir, [ 'api', 'admin', 'res', 'src', 'images', 'static', 'loops' ])) {
+                    if (in_array($dir, ['api', 'admin', 'res', 'src', 'images', 'static', 'loops'])) {
                         $form->addWrongLabel('dir', 'Этот путь зарезервирован');
                         return false;
                     }
@@ -121,13 +122,13 @@ class ApiManagementController extends ApiBaseController
                 }
                 return true;
             }));
-        } 
-        
+        }
+
         foreach (['imrequired', 'textboard'] as $array) {
             $form->addRule($array, CallbackLogicalObject::create(function (Form $form) use ($board) {
                 $imrequired = $form->getValue('imrequired');
                 $textboard = $form->getValue('textboard');
-    
+
                 if ($imrequired && $textboard) {
                     $form->addWrongLabel('imrequired', 'Вы можете выбрать только один из отмеченных вариантов');
                     $form->addWrongLabel('textboard', 'Вы можете выбрать только один из отмеченных вариантов');
@@ -185,14 +186,15 @@ class ApiManagementController extends ApiBaseController
                     $db->rollback();
                     throw $e;
                 }
-
             } else {
                 $response['error'] = true;
             }
         }
 
         $response['form'] = FormHelper::toClient(
-            $form, $board->proto()->getPropertyReadableNames(), [
+            $form,
+            $board->proto()->getPropertyReadableNames(),
+            [
                 'description' => 'Основная информация о доске: тематика обсуждений, правила и т.п. ' .
                     'Также рекомендуется указать здесь ID личности для связи',
                 'hidden' => 'Доска не показана в списке, треды не попадают на главную',
@@ -283,7 +285,7 @@ class ApiManagementController extends ApiBaseController
         $response['moderators'] = [];
 
         foreach ($moderators as $moderator) {
-            $response['moderators'] [] = [
+            $response['moderators'][] = [
                 'createdAt' => $moderator->getCreatedAt()->toStamp(),
                 'moderator' => $moderator->getUser()->getLogin(),
                 'initiator' => $moderator->getInitiator()->getLogin(),
@@ -337,7 +339,6 @@ class ApiManagementController extends ApiBaseController
                 ->add();
 
             $db->commit();
-
         } catch (Exception $e) {
             if ($db->inTransaction()) {
                 $db->rollback();

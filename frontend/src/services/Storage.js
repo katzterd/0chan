@@ -7,7 +7,9 @@ const settings = {
         if (isHidden) {
             this.store.hiddenPosts.push(postId);
         } else {
-            this.store.hiddenPosts = this.store.hiddenPosts.filter(id => id != postId);
+            this.store.hiddenPosts = this.store.hiddenPosts.filter(
+                (id) => id != postId
+            );
         }
         save();
     },
@@ -20,20 +22,19 @@ const settings = {
     },
     isThreadListVisible() {
         return this.store.threadList;
-    }
-
+    },
 };
 
 function save() {
-    window.localStorage.setItem('userSettings', JSON.stringify(settings.store));
+    window.localStorage.setItem("userSettings", JSON.stringify(settings.store));
 }
 
 function load() {
-    let stored = window.localStorage.getItem('userSettings');
+    let stored = window.localStorage.getItem("userSettings");
     if (stored) {
         settings.store = JSON.parse(stored);
     }
 }
 
 load();
-export default settings
+export default settings;

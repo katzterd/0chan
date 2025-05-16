@@ -40,7 +40,9 @@ class ApiDialogController extends ApiBaseController
                                 Expression::andBlock(
                                     Expression::isFalse('read'),
                                     Expression::eq('to.user', $this->getUser())
-                                ), true)
+                                ),
+                                true
+                            )
                             ->addElse(null),
                         'unreadCount'
                     )
@@ -50,7 +52,7 @@ class ApiDialogController extends ApiBaseController
 
             foreach ($messagesInfo as $messageInfo) {
                 $messageCounts[$messageInfo['dialog']] = $messageInfo['messageCount'];
-                $unreadCounts [$messageInfo['dialog']] = $messageInfo['unreadCount'];
+                $unreadCounts[$messageInfo['dialog']] = $messageInfo['unreadCount'];
             }
 
             /** @var DialogMessage[] $lastMessages */
@@ -83,7 +85,7 @@ class ApiDialogController extends ApiBaseController
                 'lastMessage'   => $lastMessages[$dialog->getId()]->export($this->getUser()),
             ];
 
-            $response['dialogs'] [] = $item;
+            $response['dialogs'][] = $item;
         }
 
         return $response;
@@ -173,9 +175,9 @@ class ApiDialogController extends ApiBaseController
         $messagesExport = [];
         $unreadIds = [];
         foreach ($messages as $message) {
-            $messagesExport []= $message->export($this->getUser());
+            $messagesExport[] = $message->export($this->getUser());
             if ($message->isUnreadFor($this->getUser())) {
-                $unreadIds []= $message->getId();
+                $unreadIds[] = $message->getId();
             }
         }
 
@@ -267,7 +269,7 @@ class ApiDialogController extends ApiBaseController
 
             /** @var Dialog[] $dialogs */
             $dialogs = [];
-            foreach ([ [$as, $to], [$to, $as] ] as list($me, $with)) {
+            foreach ([[$as, $to], [$to, $as]] as list($me, $with)) {
                 /** @var UserIdentity $me */
                 /** @var UserIdentity $with */
 
@@ -291,7 +293,6 @@ class ApiDialogController extends ApiBaseController
             $message->getDialogs()->mergeList($dialogs)->save();
 
             $db->commit();
-
         } catch (Exception $e) {
             if ($db->inTransaction()) {
                 $db->rollback();
@@ -315,7 +316,7 @@ class ApiDialogController extends ApiBaseController
     {
         if (!$to || $to->isDeleted()) {
             $this->limitWithCaptcha('dialogErrors', 3600, 50);
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
 
         /** @var UserIdentity[] $identities */
@@ -364,7 +365,7 @@ class ApiDialogController extends ApiBaseController
                     'last' => $dialog ? $dialog->getUpdatedAt()->toStamp() : null,
                 ]
             );
-            $response['as'] []= $as;
+            $response['as'][] = $as;
         }
 
         return $response;
@@ -402,7 +403,7 @@ class ApiDialogController extends ApiBaseController
                 $inserted = true;
             } catch (DuplicateObjectException $e) {
                 if (--$attempts == 0) {
-                    return [ 'ok' => false ];
+                    return ['ok' => false];
                 }
             }
         } while (!$inserted);
@@ -423,7 +424,7 @@ class ApiDialogController extends ApiBaseController
     public function deleteIdentityAction(UserIdentity $address = null)
     {
         if (!$address || $address->getUserId() != $this->getUser()->getId()) {
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
 
         $db = DBPool::getByDao(UserIdentity::dao());
@@ -448,7 +449,7 @@ class ApiDialogController extends ApiBaseController
             throw $e;
         }
 
-        return [ 'ok' => true ];
+        return ['ok' => true];
     }
 
     /**
@@ -461,7 +462,7 @@ class ApiDialogController extends ApiBaseController
     public function deleteDialogAction(Dialog $dialog = null)
     {
         if (!$dialog || $dialog->getAs()->getUserId() != $this->getUser()->getId()) {
-            return [ 'ok' => false ];
+            return ['ok' => false];
         }
 
         $db = DBPool::getByDao(Dialog::dao());
@@ -472,12 +473,10 @@ class ApiDialogController extends ApiBaseController
             Dialog::dao()->drop($dialog);
 
             $db->commit();
-            return [ 'ok' => true ];
-
+            return ['ok' => true];
         } catch (Exception $e) {
             $db->rollback();
             throw $e;
         }
     }
-
 }

@@ -9,5 +9,4 @@ class ApiDebugController extends ApiBaseController
     {
         return Cache::me()->get('debug_' . $id);
     }
-
 }
