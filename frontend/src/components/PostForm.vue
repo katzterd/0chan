@@ -569,12 +569,12 @@ export default {
             color: $color-green;
         }
         input[type="checkbox"] ~ i.sage-button {
-            padding-left: 7px;
-            padding-right: 7px;
+            padding-left: 6px;
+            padding-right: 6px;
         }
         input[type="checkbox"] ~ i.noko-button {
-            padding-left: 7px;
-            padding-right: 7px;
+            padding-left: 6px;
+            padding-right: 6px;
         }
 
         @media (hover: hover) {
