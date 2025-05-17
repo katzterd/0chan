@@ -417,6 +417,20 @@ export default {
                             );
                             break;
 
+                        case "post_timeout":
+                            this.$bus.emit(
+                                BusEvents.ALERT_ERROR,
+                                "Вы постите слишком часто, сбавьте темп"
+                            );
+                            break;
+
+                        case "thread_timeout":
+                            this.$bus.emit(
+                                BusEvents.ALERT_ERROR,
+                                "Вы создаете треды слишком часто, сбавьте темп"
+                            );
+                            break;
+
                         case "replies_timeout":
                             this.$bus.emit(
                                 BusEvents.ALERT_ERROR,
@@ -569,12 +583,12 @@ export default {
             color: $color-green;
         }
         input[type="checkbox"] ~ i.sage-button {
-            padding-left: 7px;
-            padding-right: 7px;
+            padding-left: 6px;
+            padding-right: 6px;
         }
         input[type="checkbox"] ~ i.noko-button {
-            padding-left: 7px;
-            padding-right: 7px;
+            padding-left: 6px;
+            padding-right: 6px;
         }
 
         @media (hover: hover) {

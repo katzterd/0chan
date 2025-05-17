@@ -9,6 +9,8 @@ class ApiGlobalsController extends ApiBaseController
         'disableTorPosting' => ['title' => 'Постинг через зеркала Darknet', 'description' => 'Отключить постинг для пользователей Tor/I2P/Yggdrasil'],
         'globalTimeout' => ['title' => 'Таймаут', 'description' => 'Таймаут на создание тредов (5 тредов за 5 минут, после чего ожидание час)'],
         'sameImageLimit' => ['title' => 'Лимит на одинаковые изображения', 'description' => 'Фильтр одинаковых изображений - не более 1-го одинакового изображения в N минут', 'type' => 'int', 'default' => 0],
+        'postIpTimeout' => ['title' => 'Лимит на создание постов', 'description' => 'Таймаут на создание постов с одного ip-адреса - не более 1-го поста в N секунд', 'type' => 'int', 'default' => 5],
+        'threadIpTimeout' => ['title' => 'Лимит на создание тредов', 'description' => 'Таймаут на создание тредов с одного ip-адреса - не более 1-го поста в N секунд', 'type' => 'int', 'default' => 300],
         'repliesLimit' => ['title' => 'Ограничение постинга', 'description' => 'Ограничение постинга N постов в час'],
         'repliesLimitMax' => ['title' => 'Ограничение постинга', 'description' => 'Макс кол-во постов в час', 'type' => 'int', 'default' => 100],
         'disableRegister' => ['title' => 'Отключение регистрации', 'description' => 'Отключает полностью регистрацию']

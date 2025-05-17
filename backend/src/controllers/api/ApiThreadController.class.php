@@ -68,6 +68,37 @@ class ApiThreadController extends ApiBaseController
         return $response;
     }
 
+    public function getLastThreadByIP($iphash)
+    {
+        $posts = Criteria::create(Post::dao())->add(Expression::eq('ipHash', $iphash))
+            ->add(Expression::isNull('parent'))
+            ->addOrder(OrderBy::create('id')
+                ->desc())
+            ->setLimit(1)
+            ->getList();
+
+        if (is_array($posts) || is_object($posts)) {
+            foreach ($posts as $post) {
+                return $post;
+            }
+        }
+    }
+
+    public function getLastPostByIP($iphash)
+    {
+        $posts = Criteria::create(Post::dao())->add(Expression::eq('ipHash', $iphash))
+            ->addOrder(OrderBy::create('id')
+                ->desc())
+            ->setLimit(1)
+            ->getList();
+
+        if (is_array($posts) || is_object($posts)) {
+            foreach ($posts as $post) {
+                return $post;
+            }
+        }
+    }
+
     public function spamFilterCheck($message)
     {
         $cyr = array('А', 'а', 'В', 'Д', 'Е', 'е', 'К', 'к', 'М', 'м', 'Н', 'н', 'О', 'о', 'Р', 'р', 'С', 'с', 'Т', 'У', 'у', 'Х', 'х', 'Ь', 'ь');
@@ -198,6 +229,30 @@ class ApiThreadController extends ApiBaseController
                     'ok' => false,
                     'reason' => 'registerRequired'
                 ];
+            }
+        }
+
+        $iphash = $this->getSession()->getIpHash();
+
+        if (!empty($this->getLastPostByIP($iphash))) {
+            $postIpTimeout = (int)Cache::me()->get('postIpTimeout');
+            if (!$postIpTimeout) {
+                $postIpTimeout = 5;
+            }
+            $now = time();
+            if ($now - $this->getLastPostByIP($iphash)->getCreateDate()->toStamp() < $postIpTimeout) {
+                return ['ok' => false, 'reason' => 'post_timeout'];
+            }
+        }
+
+        if (!empty($this->getLastThreadByIP($iphash)) && (is_null($parent))) {
+            $threadIpTimeout = (int)Cache::me()->get('threadIpTimeout');
+            if (!$threadIpTimeout) {
+                $threadIpTimeout = 300;
+            }
+            $now = time();
+            if ($now - $this->getLastThreadByIP($iphash)->getCreateDate()->toStamp() < $threadIpTimeout) {
+                return ['ok' => false, 'reason' => 'thread_timeout'];
             }
         }
 

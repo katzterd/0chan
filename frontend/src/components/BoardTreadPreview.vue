@@ -26,10 +26,18 @@
                         }}</a
                     >
                 </span>
-                &vert; <a @click="updateThread">Обновить</a>
+                <span v-if="!(threadExpanded || threadReplied)">
+                    &vert; <a @click="updateThread">Обновить</a>
+                </span>
             </div>
         </ThreadPosts>
-        <a :class="$style.omittedPosts" slot="omittedPosts" v-if="threadExpanded && thread.lastPosts.length > numExpandPosts" @click="updateThread">Обновить</a>
+        <a
+            :class="$style.omittedPosts"
+            slot="omittedPosts"
+            v-if="threadExpanded || threadReplied"
+            @click="updateThread"
+            >Обновить</a
+        >
     </div>
 </template>
 
@@ -52,6 +60,7 @@ export default {
             noko: null,
             numExpandPosts: 50,
             threadExpanded: false,
+            threadReplied: false,
         };
     },
     created() {
@@ -96,6 +105,7 @@ export default {
                 });
             } else {
                 this.updateThread();
+                this.threadReplied = true;
             }
         },
         updateThread() {
