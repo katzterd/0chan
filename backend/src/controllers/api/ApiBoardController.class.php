@@ -4,7 +4,7 @@ class ApiBoardController extends ApiBaseController
 {
     const THREADS_PER_PAGE = 10;
     const THREADS_IN_CURSOR = 200;
-    const NUM_LAST_POSTS = 3;
+    const NUM_LAST_POSTS = 5;
 
     /**
      * @return array
