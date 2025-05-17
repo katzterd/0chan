@@ -417,6 +417,20 @@ export default {
                             );
                             break;
 
+                        case "post_timeout":
+                            this.$bus.emit(
+                                BusEvents.ALERT_ERROR,
+                                "Вы постите слишком часто, сбавьте темп"
+                            );
+                            break;
+
+                        case "thread_timeout":
+                            this.$bus.emit(
+                                BusEvents.ALERT_ERROR,
+                                "Вы создаете треды слишком часто, сбавьте темп"
+                            );
+                            break;
+
                         case "replies_timeout":
                             this.$bus.emit(
                                 BusEvents.ALERT_ERROR,
