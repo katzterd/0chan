@@ -29,4 +29,4 @@ ADD ./docker-entrypoint.sh    /docker-entrypoint.sh
 ADD ./supervisord.conf        ./supervisord.conf
 ADD ./yggdrasil.conf          ./yggdrasil.conf
 
-ENTRYPOINT /docker-entrypoint.sh $(echo $ARGS)
+ENTRYPOINT [ "bash", "/docker-entrypoint.sh" ]

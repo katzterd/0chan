@@ -2,9 +2,10 @@ FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y tor curl
+RUN apt-get update && apt-get install -y supervisor socat tor curl
 
-ADD ./torrc.conf /etc/tor/torrc
-ADD ./init.sh /init.sh
+ADD ./docker-entrypoint.sh  /docker-entrypoint.sh
+ADD ./supervisord.conf      /supervisord.conf
+ADD ./torrc.conf            /etc/tor/torrc
 
-CMD bash /init.sh
+CMD [ "bash", "/docker-entrypoint.sh" ]

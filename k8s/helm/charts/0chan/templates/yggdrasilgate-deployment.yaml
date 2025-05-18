@@ -36,15 +36,6 @@ items:
         - name: {{ .Values.svc.yggdrasilgate.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.yggdrasilgate.image.name }}:{{ .Values.svc.yggdrasilgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.yggdrasilgate.image.pullPolicy }}
-          livenessProbe:
-            exec:
-              command:
-              - curl
-              - -f
-              - http://{{ .Values.svc.frontend.name }}:80/lifecheck
-            periodSeconds: 5
-            initialDelaySeconds: 10
-            timeoutSeconds: 10
           securityContext:
             capabilities:
               add: 
@@ -54,16 +45,6 @@ items:
             valueFrom:
               secretKeyRef:
                 key: YGGDRASILGATE_PRIVATE_KEY
-                name: {{ include "SecretsName" . }}
-          - name: GATE_ENDPOINT_HOST
-            valueFrom:
-              secretKeyRef:
-                key: GATE_ENDPOINT_HOST
-                name: {{ include "SecretsName" . }}
-          - name: GATE_ENDPOINT_PORT
-            valueFrom:
-              secretKeyRef:
-                key: GATE_ENDPOINT_PORT
                 name: {{ include "SecretsName" . }}
           volumeMounts:
           - mountPath: /dev/net/tun
