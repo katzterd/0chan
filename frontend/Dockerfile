@@ -28,13 +28,15 @@ FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -y && apt-get install -y nginx nginx-extras
+RUN apt-get update -y && \
+    apt-get install -y nginx nginx-extras supervisor socat
 
-ADD ./deploy/docker-entrypoint.sh /docker-entrypoint.sh
-ADD ./deploy/nginx.conf /nginx.conf
+ADD ./deploy/docker-entrypoint.sh   /docker-entrypoint.sh
+ADD ./deploy/supervisord.conf       /supervisord.conf
+ADD ./deploy/nginx.conf             /nginx.conf
 
 COPY --from=builder /builder/dist /dist
 
 EXPOSE 80
 
-CMD [ "/bin/bash", "-c", "/docker-entrypoint.sh" ]
+CMD [ "bash", "/docker-entrypoint.sh" ]

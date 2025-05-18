@@ -36,15 +36,6 @@ items:
         - name: {{ .Values.svc.torgate.image.name }}
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.torgate.image.name }}:{{ .Values.svc.torgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.torgate.image.pullPolicy }}
-          livenessProbe:
-            exec:
-              command:
-              - curl
-              - -f
-              - http://{{ .Values.svc.frontend.name }}:80/lifecheck
-            periodSeconds: 5
-            initialDelaySeconds: 10
-            timeoutSeconds: 10
           env:
           - name: TORGATE_HOSTNAME
             valueFrom:
@@ -60,16 +51,6 @@ items:
             valueFrom:
               secretKeyRef:
                 key: TORGATE_PRIVATE_KEY
-                name: {{ include "SecretsName" . }}
-          - name: GATE_ENDPOINT_HOST
-            valueFrom:
-              secretKeyRef:
-                key: GATE_ENDPOINT_HOST
-                name: {{ include "SecretsName" . }}
-          - name: GATE_ENDPOINT_PORT
-            valueFrom:
-              secretKeyRef:
-                key: GATE_ENDPOINT_PORT
                 name: {{ include "SecretsName" . }}
 
 kind: List

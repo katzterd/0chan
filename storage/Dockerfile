@@ -12,10 +12,10 @@ RUN npm install
 
 ADD ./config  ./config
 ADD ./src     ./src
-ADD ./init.sh ./init.sh
+ADD ./docker-entrypoint.sh ./docker-entrypoint.sh
 
 EXPOSE 80
 EXPOSE 228
 EXPOSE 53
 
-CMD bash init.sh
+CMD [ "bash", "/app/docker-entrypoint.sh" ]
