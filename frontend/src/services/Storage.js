@@ -2,6 +2,7 @@ const settings = {
     store: {
         hiddenPosts: [],
         threadList: true,
+        hiddenBoards: [],
     },
     setHiddenPost(postId, isHidden) {
         if (isHidden) {
@@ -22,6 +23,19 @@ const settings = {
     },
     isThreadListVisible() {
         return this.store.threadList;
+    },
+    setHiddenBoard(boardDir) {
+        if (!this.store.hiddenBoards.includes(boardDir)) {
+            this.store.hiddenBoards.push(boardDir);
+        } else {
+            this.store.hiddenBoards = this.store.hiddenBoards.filter(
+                (d) => d !== boardDir
+            );
+        }
+        save();
+    },
+    isBoardHidden(boardDir) {
+        return this.store.hiddenBoards.includes(boardDir);
     },
 };
 

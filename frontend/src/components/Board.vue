@@ -102,7 +102,15 @@
         </div>
 
         <div v-scroll-spy="threadScrollPos">
-            <div v-for="thread in threads" style="margin-top: 20px">
+            <div
+                v-for="thread in threads"
+                style="margin-top: 20px"
+                :style="{
+                    display: storage.isBoardHidden(thread.thread.board.dir)
+                        ? 'none'
+                        : 'block',
+                }"
+            >
                 <BoardThreadPreview :thread="thread" />
                 <div class="separator thread-separator"></div>
             </div>
@@ -181,6 +189,7 @@ export default {
             pagination: null,
             fetchingMore: false,
             threadScrollPos: 0,
+            storage: Storage,
         };
     },
     computed: {

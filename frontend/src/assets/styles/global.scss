@@ -128,8 +128,6 @@ a, span.a, a > *, span.a > * {
   text-decoration: none !important;
   cursor: pointer;
   transition: color 0.2s linear !important;
-  max-width: 100%;
-  height: auto !important;
 }
 
 a, span.a {
@@ -196,8 +194,8 @@ blockquote, .quote {
 }
 
 .them {
-    background: #FAF8F8;
-    color: #3060A8;
+  background: #FAF8F8;
+  color: #3060A8;
 }
 
 .threadwrap {
@@ -206,16 +204,41 @@ blockquote, .quote {
   }
 }
 
-mark, .spoiler {
-    color: $color-grey-lt;
-    background: $color-grey-lt;
-    padding: 2px;
-    transition: color .2s, background .2s;
+.boardhideunhide {
+  position: absolute;
+  left: 0;
+  @media (min-width: $screen-sm-min) {
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s !important;
+  }
+}
 
-    &:hover {
-      color: inherit;
-      background: rgba($color-grey-lt, 0.25);
+.sidemenu-board-item:hover .boardhideunhide {
+  opacity: 1;
+}
+
+.sidemenu-board-item {
+  &.is-hidden {
+    a {
+      text-decoration: line-through !important;
+            
+      .sidemenu-board-title, .sidemenu-board-dir {
+        color: $color-grey !important;
+      }
     }
+  }
+}
+
+mark, .spoiler {
+color: $color-grey-lt;
+  background: $color-grey-lt;
+  padding: 2px;
+  transition: color .2s, background .2s;
+
+  &:hover {
+    color: inherit;
+    background: rgba($color-grey-lt, 0.25);
+  }
 }
 
 code {
