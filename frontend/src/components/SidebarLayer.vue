@@ -56,11 +56,42 @@
                 <div class="sidemenu-boards-list">
                     <div
                         class="sidemenu-board-item"
+                        :class="{
+                            'is-hidden': storage.isBoardHidden(board.dir),
+                        }"
                         v-for="board in filteredBoards"
                     >
                         <content-link
                             :to="{ name: 'board', params: { dir: board.dir } }"
                         >
+                            <span
+                                class="pull-left sidemenu-board-icons boardhideunhide"
+                            >
+                                <span
+                                    :title="
+                                        storage.isBoardHidden(board.dir)
+                                            ? 'Показать'
+                                            : 'Скрыть'
+                                    "
+                                    @click.stop.prevent="
+                                        toggleHideBoard(board.dir)
+                                    "
+                                >
+                                    <i
+                                        :class="{
+                                            fa: true,
+                                            'fa-minus-square-o':
+                                                !storage.isBoardHidden(
+                                                    board.dir
+                                                ),
+                                            'fa-plus-square-o':
+                                                storage.isBoardHidden(
+                                                    board.dir
+                                                ),
+                                        }"
+                                    ></i>
+                                </span>
+                            </span>
                             <span class="pull-right sidemenu-board-icons">
                                 <span
                                     v-if="board.isModerated"
@@ -96,6 +127,7 @@ import BusEvents from "../app/BusEvents";
 import User from "../services/User";
 import Session from "../services/Session";
 import Board from "../services/Board";
+import Storage from "../services/Storage";
 import ContentLink from "./ContentLink.vue";
 
 export default {
@@ -110,6 +142,7 @@ export default {
             session: Session,
             search: "",
             boardList: [],
+            storage: Storage,
         };
     },
     watch: {
@@ -178,6 +211,9 @@ export default {
             this.forceBoardRoute({ name: "board", params: { dir: board.dir } });
             this.search = "";
             this.$refs.search.blur();
+        },
+        toggleHideBoard(dir) {
+            Storage.setHiddenBoard(dir);
         },
     },
     computed: {
