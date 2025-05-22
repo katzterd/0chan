@@ -189,7 +189,6 @@ export default {
             pagination: null,
             fetchingMore: false,
             threadScrollPos: 0,
-            storage: Storage,
         };
     },
     computed: {

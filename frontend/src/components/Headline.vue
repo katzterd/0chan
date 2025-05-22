@@ -5,7 +5,7 @@
         </div>
         <div class="headmenu-buttons headmenu-buttons-right">
             <button
-                @click="toggleTheme"
+                @click="storage.toggleDarkTheme()"
                 title="Переключить тему"
                 type="button"
                 class="btn"
@@ -28,14 +28,12 @@
 
 <script>
 import BusEvent from "../app/BusEvents";
-
-const currentTheme = localStorage.getItem("DarkMode") === "true";
-document.documentElement.classList.toggle("dark", currentTheme);
+import Storage from "../services/Storage";
 
 export default {
     data() {
         return {
-            isDark: currentTheme,
+            storage: Storage,
         };
     },
     mounted() {
@@ -48,11 +46,6 @@ export default {
     methods: {
         toggleMobile() {
             this.$bus.emit(BusEvent.TOGGLE_SIDEBAR, true);
-        },
-        toggleTheme() {
-            this.isDark = !this.isDark;
-            localStorage.setItem("DarkMode", this.isDark);
-            document.documentElement.classList.toggle("dark", this.isDark);
         },
     },
 };
