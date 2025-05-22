@@ -7,6 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
     <link rel="icon" href="/static/favicon.ico" />
     <link rel="manifest" href="/static/android-manifest.json" />
+    <script>
+    settings = localStorage.userSettings;
+        if (settings) {
+            isDark = JSON.parse(settings).isDark;
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            }
+        }
+    </script>
   </head>
   <body>
     <div id="app"></div>

@@ -3,6 +3,7 @@ const settings = {
         hiddenPosts: [],
         threadList: true,
         hiddenBoards: [],
+        isDark: false,
     },
     setHiddenPost(postId, isHidden) {
         if (isHidden) {
@@ -23,6 +24,14 @@ const settings = {
     },
     isThreadListVisible() {
         return this.store.threadList;
+    },
+    toggleDarkTheme() {
+        this.store.isDark = !this.store.isDark;
+        document.documentElement.classList.toggle("dark", settings.store.isDark);
+        save();
+    },
+    isDark() {
+        return this.store.isDark;
     },
     setHiddenBoard(boardDir) {
         if (!this.store.hiddenBoards.includes(boardDir)) {
