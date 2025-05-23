@@ -42,6 +42,12 @@ items:
           ports:
           - containerPort: 9000
           env:
+          - name: LOCALGW_KEY
+            valueFrom:
+              secretKeyRef:
+                key: LOCALGW_KEY
+                name: {{ include "SecretsName" . }}
+                optional: true
           - name: ADMIN_LOGIN
             valueFrom:
               secretKeyRef:

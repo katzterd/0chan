@@ -183,7 +183,7 @@ class UserSession extends AutoUserSession implements Prototyped
 	{
 		$key = HeaderUtils::getRequestHeader('X-Localgw-Key');
 
-		if ($key == LOCALGW_KEY) {
+		if ((LOCALGW_KEY !== '') && ($key == LOCALGW_KEY)) {
 			return true;
 		} else {
 			return false;
