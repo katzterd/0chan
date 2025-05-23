@@ -30,6 +30,7 @@ if (PRODUCTION) {
     define('APCU_ENABLED', false);
 }
 
+define('LOCALGW_KEY', getenv('LOCALGW_KEY'));
 
 // shared classes
 define('PATH_CLASSES', 		  PATH_SOURCE.'classes'.DIRECTORY_SEPARATOR);

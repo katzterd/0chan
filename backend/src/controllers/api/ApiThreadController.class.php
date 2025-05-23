@@ -303,6 +303,12 @@ class ApiThreadController extends ApiBaseController
             ->setCreateDate(Timestamp::makeNow())
             ->setMessage($message);
 
+        if (null !== $this->getSession()->isLocalGateway()) {
+            $post->setLocalGw($this->getSession()->isLocalGateway());
+        } else {
+            $post->setLocalGw(false);
+        }
+
         if ($sage && $isSageAllowed) {
             $post->setSage($sage);
         }

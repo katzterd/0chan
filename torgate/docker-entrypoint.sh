@@ -2,6 +2,13 @@
 
 mkdir -p /var/lib/tor/hidden_service
 
+if [ -z "${LOCALGW_KEY}" ]; then
+    echo "LOCALGW_KEY environment var is undefined, torgate will be disabled";
+    exit 0;
+else
+    sed -i 's/__LOCALGW_KEY__/'"${LOCALGW_KEY}"'/' /nginx.conf
+fi
+
 if [ -z "${TORGATE_HOSTNAME}" ]; then
     echo "TORGATE_HOSTNAME environment var is undefined, torgate will be disabled";
     exit 0;
@@ -26,4 +33,4 @@ fi
 chmod -R 600 /var/lib/tor/hidden_service
 echo "Torgate started: ${TORGATE_HOSTNAME} -> frontend:80"
 
-supervisord -c /supervisord.conf
+supervisord -c ./supervisord.conf

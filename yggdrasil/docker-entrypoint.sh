@@ -9,8 +9,15 @@ for ARGS in $@; do
 
 if [[ -z $@ ]]; then
 
+    if [ -z "${LOCALGW_KEY}" ]; then
+        echo "LOCALGW_KEY environment var is undefined, yggdrasilgate will be disabled";
+        exit 0;
+    else
+        sed -i 's/__LOCALGW_KEY__/'"${LOCALGW_KEY}"'/' /nginx.conf
+    fi
+
     if [ -z "${YGGDRASILGATE_PRIVATE_KEY}" ]; then
-        echo "YGGDRASILGATE_PRIVATE_KEY environment var is undefined, yggdrasil will be disabled";
+        echo "YGGDRASILGATE_PRIVATE_KEY environment var is undefined, yggdrasilgate will be disabled";
         exit 0;
     else
         sed -i 's/__YGGDRASILGATE_PRIVATE_KEY__/'"PrivateKey: ${YGGDRASILGATE_PRIVATE_KEY}"'/' ./yggdrasil.conf
