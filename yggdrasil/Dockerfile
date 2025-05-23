@@ -6,6 +6,7 @@ RUN apt-get update && \
     apt-get install -y  supervisor \
                         unzip \
                         socat \
+                        nginx \
                         curl \
                         gpg
 
@@ -26,6 +27,7 @@ RUN curl -L -o ./peers_updater.zip https://github.com/ygguser/peers_updater/rele
 RUN unzip ./peers_updater.zip && rm ./peers_updater.zip
 
 ADD ./docker-entrypoint.sh    /docker-entrypoint.sh
+ADD ./nginx.conf              /nginx.conf
 ADD ./supervisord.conf        ./supervisord.conf
 ADD ./yggdrasil.conf          ./yggdrasil.conf
 

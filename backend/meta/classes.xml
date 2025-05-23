@@ -163,6 +163,7 @@
                 <property name="parent" type="Post" relation="OneToOne" fetch="lazy" required="false" />
                 <property name="user" type="User" relation="OneToOne" fetch="lazy" required="false" />
                 <property name="ipHash" type="String" size="64" required="false" />
+                <property name="localGw" type="Boolean" required="true" default="false" />
                 <property name="createDate" type="Timestamp" required="true" />
                 <property name="deleted" type="Boolean" required="true" default="false" />
                 <property name="message" type="String" size="9001" required="false" />

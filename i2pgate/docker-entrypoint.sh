@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [ -z "${LOCALGW_KEY}" ]; then
+    echo "LOCALGW_KEY environment var is undefined, i2pgate will be disabled";
+    exit 0;
+else
+    sed -i 's/__LOCALGW_KEY__/'"${LOCALGW_KEY}"'/' /nginx.conf
+fi
+
 if [ -z "${I2PGATE_PRIVATE_KEY}" ]; then
     echo "I2PGATE_PRIVATE_KEY environment var is undefined, i2pgate will be disabled";
     exit 0;
@@ -9,4 +16,4 @@ fi
 
 printf "i2pgate started\n\n"
 
-supervisord -c /supervisord.conf
+supervisord -c ./supervisord.conf
