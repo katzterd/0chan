@@ -41,6 +41,11 @@ items:
               add: 
               - NET_ADMIN
           env:
+          - name: LOCALGW_KEY
+            valueFrom:
+              secretKeyRef:
+                key: LOCALGW_KEY
+                name: {{ include "SecretsName" . }}
           - name: YGGDRASILGATE_PRIVATE_KEY
             valueFrom:
               secretKeyRef:

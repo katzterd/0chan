@@ -37,6 +37,11 @@ items:
           image: {{ include "ImageRegistry" . }}/{{ .Values.svc.i2pgate.image.name }}:{{ .Values.svc.i2pgate.image.tag }}
           imagePullPolicy: {{ .Values.svc.i2pgate.image.pullPolicy }}
           env:
+          - name: LOCALGW_KEY
+            valueFrom:
+              secretKeyRef:
+                key: LOCALGW_KEY
+                name: {{ include "SecretsName" . }}
           - name: I2PGATE_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
