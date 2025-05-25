@@ -127,9 +127,8 @@ function processImage(buffer, sizes, filename) {
             if (size > 0) {
                 // do resize
                 return sharpImage
-                    .resize(size, size)
                     .resize(size, size, { fit: 'inside', withoutEnlargement: true, background: {r: 255, g: 255, b: 255, alpha: 1} })
-                    .flatten()
+                    .flatten( { background: {r: 255, g: 255, b: 255} } )
                     .toFormat('jpeg')
                     .toBuffer();
             } else {
