@@ -101,6 +101,9 @@ class ApiThreadController extends ApiBaseController
 
     public function spamFilterCheck($message)
     {
+        $cache = Cache::me();
+        $key = 'spamlist';
+
         $cyr = array('А', 'а', 'В', 'Д', 'Е', 'е', 'К', 'к', 'М', 'м', 'Н', 'н', 'О', 'о', 'Р', 'р', 'С', 'с', 'Т', 'У', 'у', 'Х', 'х', 'Ь', 'ь');
         $lat = array('A', 'a', 'B', 'D', 'E', 'e', 'K', 'k', 'M', 'm', 'H', 'H', 'O', 'o', 'P', 'p', 'C', 'c', 'T', 'Y', 'y', 'X', 'x', 'b', 'b');
 
@@ -116,17 +119,17 @@ class ApiThreadController extends ApiBaseController
 
         if (!strlen($message)) return false;
 
-        $spamtxturl = PATH_BASE . 'www' . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'spam.txt';
+        $spamvalue = $cache->get($key);
 
         // лямбда для обхода array_map, принимающего только один аргумент
         $repl = function ($link) use ($cyr, $lat) {
             return str_replace($cyr, $lat, mb_strtolower(str_replace($cyr, $lat, mb_strtoupper($link))));
         };
 
-        if (!file_exists($spamtxturl)) {
+        if (!($spamvalue)) {
             return false;
         } else {
-            $badlinks = array_map($repl, array_map('rtrim', file($spamtxturl, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)));
+            $badlinks = array_map($repl, array_map('rtrim', explode("\n", $spamvalue)));
         }
 
         foreach ($badlinks as $badlink) {
