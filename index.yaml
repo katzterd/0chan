@@ -3,6 +3,21 @@ entries:
   0chan:
   - apiVersion: v2
     appVersion: 1.2.0
+    created: "2025-05-27T14:16:12.469889296Z"
+    description: 0chan k8s helm chart.
+    digest: 587a4d4e7ac8fb05874a4a6593e6570cb971c136428ca6fd91e319d03153b050
+    home: https://github.com/katzterd/0chan
+    icon: https://raw.githubusercontent.com/katzterd/0chan/refs/heads/main/frontend/static/favicon.ico
+    name: 0chan
+    sources:
+    - https://github.com/katzterd/0chan
+    - https://github.com/katzterd/0chan/tree/main/k8s/helm
+    type: application
+    urls:
+    - https://github.com/katzterd/0chan/releases/download/0chan-0.4.2/0chan-0.4.2.tgz
+    version: 0.4.2
+  - apiVersion: v2
+    appVersion: 1.2.0
     created: "2025-05-23T10:28:46.873551224Z"
     description: 0chan k8s helm chart.
     digest: 9fb5db8382a3d3db258e24dd0fffa365799341b1f28554091a2421349db11c45
@@ -180,4 +195,4 @@ entries:
     urls:
     - https://github.com/katzterd/0chan/releases/download/0chan-0.1.0/0chan-0.1.0.tgz
     version: 0.1.0
-generated: "2025-05-23T10:28:46.873579659Z"
+generated: "2025-05-27T14:16:12.469951106Z"
