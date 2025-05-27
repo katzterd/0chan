@@ -62,3 +62,18 @@ Storage space request override
 {{- .Values.storageClass.pods.storage.defaultRequestSpace }}
 {{- end }}
 {{- end }}
+
+{{/*
+Override pvc name
+*/}}
+{{- define "PvcName" -}}
+{{- $template := .template -}}
+{{- $values := .values -}}
+{{- $pvc := $values.pvc | default dict -}}
+{{- if hasKey $pvc $template -}}
+{{- $pvcVal := get $pvc $template -}}
+{{- $pvcVal.pvcName -}}
+{{- else -}}
+{{- printf "%s-pv" $template -}}
+{{- end -}}
+{{- end -}}

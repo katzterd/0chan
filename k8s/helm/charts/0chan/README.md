@@ -27,6 +27,8 @@ helm delete -n <namespace> <my-release>
 | `svc.torgate.enable`                       | "true" to enable torgate                      | None (Disabled)                                         |
 | `svc.i2pgate.enable`                       | "true" to enable i2pgate                      | None (Disabled)                                         |
 | `svc.yggdrasilgate.enable`                 | "true" to enable yggdrasilgate                | None (Disabled)                                         |
+| `pvc.db.pvcName`                           | Override db pvc name                          | `db-pv`                                                 |
+| `pvc.storage.pvcName`                      | Override storage pvc name                     | `storage-pv`                                            |
 | `registry`                                 | Override Container registry                   | `ghcr.io/katzterd/0chan`                                |
 | `secretsName`                              | Override secrets name                         | `0chan-secrets`                                         |
 | `storageClass.name`                        | Override storage class name                   | `0chan-sc`                                              |
