@@ -5,7 +5,7 @@ $tInit = microtime(true);
 
 if ($_SERVER['REQUEST_URI'] == "/api/spam.txt") {
     header('Content-Type: text/plain; charset=UTF-8');
-    echo file_get_contents(dirname(__FILE__) . "/api/spam.txt");
+    echo Cache::me()->get('spamlist');
     exit;
 }
 

@@ -39,15 +39,9 @@ define('PATH_TEMPLATES', 	  PATH_SOURCE.'templates'.DIRECTORY_SEPARATOR);
 define('PATH_SCRIPTS', 	    PATH_BASE.'console'.DIRECTORY_SEPARATOR.'scripts'.DIRECTORY_SEPARATOR);
 define('PATH_TESTS', 	      PATH_BASE.'console'.DIRECTORY_SEPARATOR.'tests'.DIRECTORY_SEPARATOR);
 define('PATH_LOGS', 	        '/var/www/logs/');
-define('FILE_SPAM', 	        PATH_BASE.'www'.DIRECTORY_SEPARATOR.'api'.DIRECTORY_SEPARATOR.'spam.txt');
 
 if (!file_exists(PATH_LOGS)) {
     mkdir(PATH_LOGS, 0777, true);
-}
-
-if (!file_exists(FILE_SPAM)) {
-    file_put_contents(FILE_SPAM, '');
-    chmod(FILE_SPAM, 0777);  
 }
 
 // onPHP init
