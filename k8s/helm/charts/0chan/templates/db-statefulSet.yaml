@@ -51,11 +51,11 @@ items:
                 key: POSTGRES_PASSWORD
                 name: {{ include "SecretsName" . }}
           volumeMounts:
-          - name: {{ include "PvcName" (dict "template" "db" "values" .Values) }}
+          - name: {{ .Values.svc.db.name }}-pv
             mountPath: /var/lib/postgresql/data
     volumeClaimTemplates:
     - metadata:
-        name: {{ include "PvcName" (dict "template" "db" "values" .Values) }}
+        name: {{ .Values.svc.db.name }}-pv
       spec:
         accessModes: [ {{ .Values.storageClass.accessMode }} ]
         storageClassName: {{ include "StorageClassName" . }}

@@ -44,11 +44,11 @@ items:
                 key: SALT
                 name: {{ include "SecretsName" . }}
           volumeMounts:
-          - name: {{ include "PvcName" (dict "template" "storage" "values" .Values) }}
+          - name: {{ .Values.svc.storage.name }}-pv
             mountPath: /storage
     volumeClaimTemplates:
     - metadata:
-        name: {{ include "PvcName" (dict "template" "storage" "values" .Values) }}
+        name: {{ .Values.svc.storage.name }}-pv
       spec:
         accessModes: [ {{ .Values.storageClass.accessMode }} ]
         storageClassName: {{ include "StorageClassName" . }}
