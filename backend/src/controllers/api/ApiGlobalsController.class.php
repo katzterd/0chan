@@ -164,18 +164,36 @@ class ApiGlobalsController extends ApiBaseController
     {
         $this->assertAccess();
 
-        $spamlist_data = file_get_contents(FILE_SPAM);
+        $cache = Cache::me();
 
-        return ['ok' => true, 'spamlist' => $spamlist_data];
+        $key = 'spamlist';
+
+        $spamlist_data = $cache->get($key);
+
+        if ($spamlist_data) {
+            $response = $spamlist_data;
+        } else {
+            $response = '';
+        }
+
+        return ['ok' => true, 'spamlist' => $response];
     }
 
     public function spamlistUpdateAction()
     {
         $this->assertAccess();
 
-        $response = $this->getRequest()->getBody();
+        $cache = Cache::me();
 
-        file_put_contents(FILE_SPAM, $response);
+        $key = 'spamlist';
+
+        $value = $this->getRequest()->getBody();
+
+        if ($value) {
+            $cache->set($key, $value, time());
+        } else {
+            $cache->delete($key);
+        }
 
         return ['ok' => true];
     }
