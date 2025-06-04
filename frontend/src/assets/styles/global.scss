@@ -204,15 +204,6 @@ blockquote, .quote {
   }
 }
 
-.boardhideunhide {
-  position: absolute;
-  left: 0;
-  @media (min-width: $screen-sm-min) {
-    opacity: 0;
-    transition: opacity 0.2s, color 0.2s !important;
-  }
-}
-
 .sidemenu-board-item:hover .boardhideunhide {
   opacity: 1;
 }

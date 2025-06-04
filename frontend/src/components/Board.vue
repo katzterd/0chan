@@ -90,6 +90,7 @@
             <ul v-show="storage.isThreadListVisible()">
                 <li
                     v-for="(t, index) in threads"
+                    v-if="!storage.isBoardHidden(t.thread.board.dir)"
                     :class="{ active: threadScrollPos == index }"
                     @click="$scrollTo(index)"
                 >
@@ -105,11 +106,7 @@
             <div
                 v-for="thread in threads"
                 style="margin-top: 20px"
-                :style="{
-                    display: storage.isBoardHidden(thread.thread.board.dir)
-                        ? 'none'
-                        : 'block',
-                }"
+                v-if="!storage.isBoardHidden(thread.thread.board.dir)"
             >
                 <BoardThreadPreview :thread="thread" />
                 <div class="separator thread-separator"></div>

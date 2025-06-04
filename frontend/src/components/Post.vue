@@ -9,7 +9,21 @@
                 'post-highlighted': isHighlighted,
             }"
         >
-            <div class="post-header">
+            <div
+                class="post-header"
+                :class="{
+                    'boardhideunhide':
+                        thread && post.isOpPost && isOverboard,
+                }"
+            >
+                <span
+                    v-if="thread && post.isOpPost && isOverboard"
+                    title="Скрыть доску"
+                    @click="toggleHideBoard(thread.board.dir)"
+                    class="post-button"
+                    style="padding: 0"
+                    ><i class="fa fa-minus-square-o"></i
+                ></span>
                 <a :name="post.id" v-if="anchored"></a>
                 <span class="post-id">
                     <router-link :to="boardRoute">
@@ -631,6 +645,9 @@ export default {
         onOpenedAttachment(isOpen) {
             this.openedAttachments += isOpen ? 1 : -1;
         },
+        toggleHideBoard(dir) {
+            Storage.setHiddenBoard(dir);
+        },
     },
     created() {
         this.isHidden = Storage.isHiddenPost(this.post.id);
@@ -673,6 +690,9 @@ export default {
                 this.openedAttachments === 0 &&
                 this.post.attachments.length === 1
             );
+        },
+        isOverboard() {
+            return !["board", "thread"].includes(this.$route.name);
         },
     },
 };
@@ -828,6 +848,10 @@ export default {
             }
         }
     }
+}
+
+.post-op .boardhideunhide {
+    padding-left: 6px;
 }
 
 .post-button {
