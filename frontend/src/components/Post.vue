@@ -10,6 +10,14 @@
             }"
         >
             <div class="post-header">
+                <span
+                    v-if="thread && post.isOpPost"
+                    title="Скрыть доску"
+                    @click="toggleHideBoard(thread.board.dir)"
+                    class="post-button"
+                    style="padding: 0"
+                    ><i class="fa fa-minus-square-o"></i
+                ></span>
                 <a :name="post.id" v-if="anchored"></a>
                 <span class="post-id">
                     <router-link :to="boardRoute">
@@ -631,6 +639,9 @@ export default {
         onOpenedAttachment(isOpen) {
             this.openedAttachments += isOpen ? 1 : -1;
         },
+        toggleHideBoard(dir) {
+            Storage.setHiddenBoard(dir);
+        },
     },
     created() {
         this.isHidden = Storage.isHiddenPost(this.post.id);
@@ -828,6 +839,10 @@ export default {
             }
         }
     }
+}
+
+.post-op .post-header {
+    padding-left: 6px;
 }
 
 .post-button {
