@@ -106,11 +106,7 @@
             <div
                 v-for="thread in threads"
                 style="margin-top: 20px"
-                :style="{
-                    display: storage.isBoardHidden(thread.thread.board.dir)
-                        ? 'none'
-                        : 'block',
-                }"
+                v-if="!storage.isBoardHidden(thread.thread.board.dir)"
             >
                 <BoardThreadPreview :thread="thread" />
                 <div class="separator thread-separator"></div>
