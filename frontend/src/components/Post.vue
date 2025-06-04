@@ -9,9 +9,15 @@
                 'post-highlighted': isHighlighted,
             }"
         >
-            <div class="post-header">
+            <div
+                class="post-header"
+                :class="{
+                    'boardhideunhide':
+                        thread && post.isOpPost && isOverboard,
+                }"
+            >
                 <span
-                    v-if="thread && post.isOpPost"
+                    v-if="thread && post.isOpPost && isOverboard"
                     title="Скрыть доску"
                     @click="toggleHideBoard(thread.board.dir)"
                     class="post-button"
@@ -685,6 +691,9 @@ export default {
                 this.post.attachments.length === 1
             );
         },
+        isOverboard() {
+            return !["board", "thread"].includes(this.$route.name);
+        },
     },
 };
 </script>
@@ -841,7 +850,7 @@ export default {
     }
 }
 
-.post-op .post-header {
+.post-op .boardhideunhide {
     padding-left: 6px;
 }
 

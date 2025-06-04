@@ -430,6 +430,15 @@ export default {
             left: 0;
         }
     }
+
+    .boardhideunhide {
+        position: absolute;
+        left: 0;
+        @media (min-width: $screen-sm-min) {
+            opacity: 0;
+            transition: opacity 0.2s, color 0.2s !important;
+        }
+    }
 }
 
 @media (max-width: $screen-xs-max) {
