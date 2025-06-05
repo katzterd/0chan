@@ -19,11 +19,20 @@
                 <property name="customCss" type="String" size="100000" required="false" />
 
                 <property name="favouriteBoards" type="FavouriteBoard" relation="OneToMany" />
+                <property name="watchedThreads" type="WatchedThread" relation="OneToMany" />
                 <property name="posts" type="Post" relation="OneToMany" />
                 <property name="bans" type="Ban" relation="OneToMany" />
                 <property name="identities" type="UserIdentity" relation="OneToMany" />
                 <property name="invites" type="Invite" relation="OneToMany" />
-                <property name="watchedThreads" type="Thread" relation="ManyToMany" />
+            </properties>
+            <pattern name="StraightMapping"/>
+        </class>
+        
+        <class name="WatchedThread">
+            <properties>
+                <identifier />
+                <property name="user" type="User" relation="OneToOne" fetch="lazy" required="true" />
+                <property name="thread" type="Thread" relation="OneToOne" fetch="lazy" required="true" />
             </properties>
             <pattern name="StraightMapping"/>
         </class>

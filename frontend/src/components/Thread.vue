@@ -51,21 +51,21 @@
                     <span class="btn-caption hidden-xs">Ответить</span>
                 </button>
                 <button
-                    class="btn btn-default"
-                    @click="toggleWatch()"
                     v-if="auth"
+                    class="btn btn-default"
                     type="button"
+                    @click="toggleWatch()"
                 >
                     <i
-                        :class="{ hide: thread.isWatched !== null }"
+                        :hidden="thread.isWatched !== null"
                         class="fa fa-fw fa-spinner fa-spin fa-fw"
                     ></i>
                     <i
-                        :class="{ hide: thread.isWatched !== false }"
+                        :hidden="thread.isWatched !== false"
                         class="fa fa-fw fa-star-o"
                     ></i>
                     <i
-                        :class="{ hide: thread.isWatched !== true }"
+                        :hidden="thread.isWatched !== true"
                         class="fa fa-fw fa-star"
                         style="color: #dab750"
                     ></i>

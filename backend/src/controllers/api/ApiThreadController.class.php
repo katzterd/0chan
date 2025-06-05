@@ -498,33 +498,28 @@ class ApiThreadController extends ApiBaseController
 
     /**
      * @Auth
-     *
      * @param Thread $thread
      * @param boolean $isWatched
      * @return array
+     * @throws ApiBadRequestException
      */
     public function watchAction(Thread $thread, $isWatched)
     {
         $isWatched = $this->getBooleanParam($isWatched);
-        $watchedThreadIds = $this->getUser()->getWatchedThreads(true)->getList();
-        $updated = false;
-        if ($isWatched && !in_array($thread->getId(), $watchedThreadIds)) {
-            $watchedThreadIds[] = $thread->getId();
-            $updated = true;
-        } else if (!$isWatched && in_array($thread->getId(), $watchedThreadIds)) {
-            $watchedThreadIds = array_filter(
-                $watchedThreadIds,
-                function ($id) use ($thread) {
-                    return $id != $thread->getId();
-                }
-            );
-            $updated = true;
-        }
 
-        if ($updated) {
-            $this->getUser()->getWatchedThreads(true)
-                ->setList($watchedThreadIds)
-                ->save();
+        $existing = Criteria::create(WatchedThread::dao())
+            ->add(Expression::eq('user', $this->getUser()))
+            ->add(Expression::eq('thread', $thread))
+            ->get();
+
+        if ($isWatched && !$existing) {
+            WatchedThread::dao()->add(
+                WatchedThread::create()
+                    ->setThread($thread)
+                    ->setUser($this->getUser())
+            );
+        } else if (!$isWatched && $existing) {
+            WatchedThread::dao()->drop($existing);
         }
 
         return [

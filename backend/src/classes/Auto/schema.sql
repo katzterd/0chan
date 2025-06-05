@@ -14,6 +14,15 @@ CREATE TABLE "user" (
 );
 
 
+CREATE SEQUENCE "watched_thread_id";
+CREATE TABLE "watched_thread" (
+    "id" BIGINT NOT NULL default nextval('watched_thread_id'),
+    "user_id" BIGINT NOT NULL REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    "thread_id" BIGINT NOT NULL REFERENCES "thread"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    PRIMARY KEY("id")
+);
+
+
 CREATE SEQUENCE "invite_id";
 CREATE TABLE "invite" (
     "id" BIGINT NOT NULL default nextval('invite_id'),
@@ -284,13 +293,6 @@ CREATE TABLE "moderator_log" (
     "old_value" CHARACTER VARYING(255) NULL,
     "new_value" CHARACTER VARYING(255) NULL,
     PRIMARY KEY("id")
-);
-
-
-CREATE TABLE "user_thread" (
-    "thread_id" BIGINT NOT NULL,
-    "user_id" BIGINT NOT NULL,
-    UNIQUE("thread_id", "user_id")
 );
 
 

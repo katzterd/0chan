@@ -81,6 +81,15 @@ class Script_CleanBoards extends ConsoleScript
                             ->getCustomList(),
                         'id'
                     );
+                    
+                    // get watched threads
+                    $watchedThreadIds = array_column(
+                        Criteria::create(WatchedThread::dao())
+                            ->add(Expression::eq('thread', $thread))
+                            ->addProjection(Projection::property('id', 'id'))
+                            ->getCustomList(),
+                        'id'
+                    );
 
                     // update bans
                     $banIds = $db->queryColumn(
@@ -121,6 +130,16 @@ class Script_CleanBoards extends ConsoleScript
                                 ->where(Expression::in('id', $postIds))
                         );
                         Post::dao()->uncacheByIds($postIds);
+                    }
+                    
+                    if ($watchedThreadIds) {
+                        // delete watched threads
+                        $this->log('-- removing watched threads');
+                        $db->query(
+                            OSQL::delete()->from(WatchedThread::dao()->getTable())
+                                ->where(Expression::in('id', $watchedThreadIds))
+                        );
+                        WatchedThread::dao()->uncacheByIds($watchedThreadIds);
                     }
 
                     // delete thread
