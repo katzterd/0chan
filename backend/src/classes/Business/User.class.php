@@ -44,18 +44,20 @@
 			}
 
 			return false;
-        }
+    }
 
-        public function isWatchingThread(Thread $thread) {
-		    if ($this->getWatchedThreads(true)->isFetched()) {
-		        return in_array($thread->getId(), $this->getWatchedThreads(true)->getList());
-            } else {
-                $criteria = Criteria::create(self::dao())
-                    ->addProjection(Projection::count('id', 'count'))
-                    ->add(Expression::eq('watchedThreads.id', $thread));
-                return $criteria->getCustom('count') > 0;
-            }
-        }
+    public function isWatchingThread(Thread $thread) {
+      /** @var WatchedThread[] $watchedThreads */
+      $watchedThreads = $this->getWatchedThreads()->getList();
+        
+      foreach ($watchedThreads as $watchedThread) {
+			  if ($watchedThread->getThreadId() == $thread->getId()) {
+				  return true;
+			  }
+		  }
+        
+		  return false;
+    }
 
         public function setPasswordHashed($rawPassword) {
             $hashedPassword = password_hash($rawPassword, PASSWORD_BCRYPT);
