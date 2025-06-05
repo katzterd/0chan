@@ -77,6 +77,7 @@ class ApiManagementController extends ApiBaseController
                 if ($this->getUser()->getRole()->is(UserRole::USER)) {
                     $countCreatedRecently = Criteria::create(ModeratorLog::dao())
                         ->add(Expression::eq('eventUser', $this->getUser()))
+                        ->add(Expression::eq('eventType', '1'))
                         ->add(Expression::gt('eventDate', Timestamp::makeNow()->modify('24 hours ago')))
                         ->addProjection(Projection::count('id', 'count'))
                         ->getCustom('count');
