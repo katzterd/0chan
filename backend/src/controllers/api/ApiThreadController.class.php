@@ -60,10 +60,6 @@ class ApiThreadController extends ApiBaseController
             'thread' => $thread->export(),
             'posts' => []
         ];
-        
-        if ($this->getUser()) {
-            $response['isWatched'] = $this->getUser()->isWatchingThread($thread);
-        }
 
         foreach ($posts as $post) {
             $response['posts'][] = $post->export();
@@ -507,7 +503,7 @@ class ApiThreadController extends ApiBaseController
      * @return array
      * @throws ApiBadRequestException
      */
-    public function watchAction(Thread $thread, $isWatched = true)
+    public function watchAction(Thread $thread, $isWatched)
     {
         $isWatched = $this->getBooleanParam($isWatched);
 

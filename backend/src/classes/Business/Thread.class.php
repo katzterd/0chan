@@ -124,11 +124,8 @@
         public function export()
         {
             $viewer = App::me()->getUser();
-            $isWatched = false;
-            if ($viewer && $viewer->isWatchingThread($this)) {
-                $isWatched = true;
-            }
-            return [
+            
+            $export = [
                 'id' => $this->getId(),
                 'board' => $this->getBoard()->export(),
                 'title' => $this->getTitle(),
@@ -139,7 +136,15 @@
                 'isLocked' => $this->isLocked(),
                 'isDeleted' => $this->isDeleted(),
                 'isBumpLimitReached' => $this->isBumpLimitReached(),
-                'isWatched' => $isWatched,
             ];
+            
+            if ($viewer) {
+                $export['isWatched'] = false;
+                if ($viewer->isWatchingThread($this)) {
+                    $export['isWatched'] = true;
+                }
+            }
+            
+            return $export;
         }
 	}
