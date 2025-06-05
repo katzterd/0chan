@@ -176,7 +176,6 @@ export default {
     },
     data() {
         return {
-            auth: Session.auth,
             storage: Storage,
             type: null,
             board: null,
@@ -192,6 +191,9 @@ export default {
         threadCount() {
             return this.board ? this.board.threads.length : 0;
         },
+        auth() {
+            return Session.auth;
+        }
     },
     created() {
         BusEvents.$bus.on("noko", (value) => {
