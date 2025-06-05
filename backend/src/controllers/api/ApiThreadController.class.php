@@ -508,7 +508,7 @@ class ApiThreadController extends ApiBaseController
      * @return array
      * @throws ApiBadRequestException
      */
-    public function watchAction(Thread $thread, $isWatched)
+    public function watchAction(Thread $thread, $isWatched = true)
     {
         $isWatched = $this->getBooleanParam($isWatched);
 
