@@ -54,17 +54,16 @@ class ApiThreadController extends ApiBaseController
 
         /** @var Post[] $posts */
         $posts = $criteria->getList();
-        
-        if ($this->getUser()) {
-          $isWatched = $this->getUser()->isWatchingThread($thread);
-        }
 
         $response = [
             'board' => $thread->getBoard()->exportExtended($this->getSession()),
             'thread' => $thread->export(),
-            'isWatched' => $isWatched,
             'posts' => []
         ];
+        
+        if ($this->getUser()) {
+            $response['isWatched'] = $this->getUser()->isWatchingThread($thread);
+        }
 
         foreach ($posts as $post) {
             $response['posts'][] = $post->export();
