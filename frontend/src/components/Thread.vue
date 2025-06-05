@@ -155,7 +155,6 @@ export default {
     },
     data() {
         return {
-            auth: Session.auth,
             thread: null,
             board: null,
             posts: [],
@@ -172,6 +171,9 @@ export default {
         opPost() {
             return this.posts[0];
         },
+        auth() {
+            return Session.auth;
+        }
     },
 
     beforeRouteUpdate(to, from, next) {
