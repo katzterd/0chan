@@ -246,6 +246,13 @@
                     ></span>
                     <span
                         class="post-button"
+                        @click="deleteAllPosts"
+                        v-if="post.isDeleted === false"
+                        title="Удалить все посты на доске по хэшу IP"
+                        ><i class="fa fa-fw fa-user-times"></i
+                    ></span>
+                    <span
+                        class="post-button"
                         @click="toggleBanForm"
                         v-if="!post.isUserBanned"
                         :class="{ active: isBanFormShown }"
@@ -452,6 +459,14 @@ export default {
         deletePost() {
             this.post.isDeleted = null;
             Moderation.deletePost(this.post.id).then((response) => {
+                if (response.data.ok) {
+                    Object.assign(this.post, response.data.post);
+                }
+            });
+        },
+        deleteAllPosts() {
+            this.post.isDeleted = null;
+            Moderation.deleteAllPosts(this.post.id).then((response) => {
                 if (response.data.ok) {
                     Object.assign(this.post, response.data.post);
                 }
