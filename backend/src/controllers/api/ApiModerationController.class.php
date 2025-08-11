@@ -588,6 +588,75 @@ class ApiModerationController extends ApiBaseController
     }
 
     /**
+     * @param Post $post
+     */
+    protected function deleteAllPosts(Post $post)
+    {
+        $ipHash = $post->getIpHash();
+        $board = $post->getThread()->getBoard();
+
+        $postsCriteria = Criteria::create(Post::dao())
+            ->add(
+                Expression::eq('ipHash', $ipHash)
+            )
+            ->add(
+                Expression::eq('thread.board', $board)
+            );
+        $posts = $postsCriteria->getList();
+
+        foreach ($posts as $p) {
+
+            $p->setDeleted(true);
+            Post::dao()->save($p);
+
+            $thread = $p->getThread();
+
+            if ($p->isOpPost()) {
+                $thread->setDeleted(true);
+                $thread->setDeletedAt(Timestamp::makeNow());
+                Thread::dao()->save($thread);
+                $modlog = ModeratorLog_Post::make($thread->getBoard(), ModeratorLogEventType::THREAD_DELETED);
+            } else {
+                $modlog = ModeratorLog_Post::make($thread->getBoard(), ModeratorLogEventType::POST_DELETED);
+            }
+            
+            $modlog->setPost($p)->add();
+        }
+    }
+
+    /**
+     * @Auth
+     *
+     * @param Post $post
+     * @return array
+     * @throws ApiForbiddenException
+     * @throws Exception
+     */
+    public function deleteAllPostsAction(Post $post)
+    {
+        if (!$post->canBeModeratedBy($this->getUser())) {
+            throw new ApiForbiddenException();
+        }
+
+        $db = DBPool::getByDao(Post::dao());
+        try {
+            $db->begin();
+            $this->deleteAllPosts($post);
+            $db->commit();
+        } catch (Exception $e) {
+            $db->rollback();
+            throw $e;
+        }
+
+        $post->getThread()->getPostCount(true);
+
+        return [
+            'ok' => true,
+            'post' => $post->export()
+        ];
+    }
+
+    /**
      * @Auth
      *
      * @param Post $post

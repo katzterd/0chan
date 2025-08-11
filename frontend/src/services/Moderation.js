@@ -14,6 +14,9 @@ export default {
     deletePost(postId) {
         return Api.get("moderation/deletePost", { params: { post: postId } });
     },
+    deleteAllPosts(postId) {
+        return Api.get("moderation/deleteAllPosts", { params: { post: postId } });
+    },
     restorePost(postId) {
         return Api.get("moderation/restorePost", { params: { post: postId } });
     },
