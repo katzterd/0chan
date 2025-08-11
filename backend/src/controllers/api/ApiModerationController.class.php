@@ -602,12 +602,13 @@ class ApiModerationController extends ApiBaseController
             ->add(
                 Expression::eq('thread.board', $board)
             );
-        $posts = $postsCriteria->getList();
-
-        foreach ($posts as $p) {
+        $postsList = $postsCriteria->getList();
+        $posts = [];
+        foreach ($postsList as $p) {
 
             $p->setDeleted(true);
             Post::dao()->save($p);
+            $posts[] = $p->getId();
 
             $thread = $p->getThread();
 
@@ -619,9 +620,10 @@ class ApiModerationController extends ApiBaseController
             } else {
                 $modlog = ModeratorLog_Post::make($thread->getBoard(), ModeratorLogEventType::POST_DELETED);
             }
-            
+
             $modlog->setPost($p)->add();
         }
+        return $posts;
     }
 
     /**
@@ -641,18 +643,16 @@ class ApiModerationController extends ApiBaseController
         $db = DBPool::getByDao(Post::dao());
         try {
             $db->begin();
-            $this->deleteAllPosts($post);
+            $posts = $this->deleteAllPosts($post);
             $db->commit();
         } catch (Exception $e) {
             $db->rollback();
             throw $e;
         }
 
-        $post->getThread()->getPostCount(true);
-
         return [
             'ok' => true,
-            'post' => $post->export()
+            'posts' => $posts
         ];
     }
 
