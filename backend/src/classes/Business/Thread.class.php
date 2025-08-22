@@ -8,7 +8,7 @@
 	class Thread extends AutoThread implements Prototyped, DAOConnected
 	{
 	    const CLEANUP_DELAY_AFTER_PURGED  = '12 hours';
-	    const CLEANUP_DELAY_AFTER_DELETED = '2 hours';
+	    const CLEANUP_DELAY_AFTER_DELETED = '12 hours';
 
 	    protected $opPost = null;
 		/**
