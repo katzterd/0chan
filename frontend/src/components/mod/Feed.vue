@@ -2,7 +2,7 @@
     <div>
         <div v-if="feed">
             <div>
-                <div v-for="item in feed" :key="item" class="feed-item">
+                <div v-for="item in Feed" :key="item" class="feed-item">
                     <div
                         class="color-grey"
                         style="font-size: 90%"
@@ -19,11 +19,19 @@
                     <a :data-post="item.postId">&gt;&gt;{{ item.postId }}</a>
                 </div>
             </div>
-            <Pagination
-                :page="pagination.page"
-                :total-pages="pagination.total"
-                @change="onPageChange"
-            ></Pagination>
+            <div class="pagination-row">
+                <Pagination
+                    :page="pagination.page"
+                    :total-pages="pagination.total"
+                    @change="onPageChange"
+                ></Pagination>
+                <div class="checkbox" style="margin-left: 24px">
+                    <label>
+                        <input type="checkbox" v-model="filterGif" />
+                        Показывать только GIF
+                    </label>
+                </div>
+            </div>
             <div v-if="popupPost" class="post-popup">
                 <transition name="fade">
                     <Post :post="popupPost"></Post>
@@ -48,8 +56,26 @@ export default {
         Pagination,
         PostAttachment,
     },
+    data() {
+        return {
+            feed: null,
+            pagination: null,
+            popupPost: null,
+            filterGif: false,
+        };
+    },
     mounted() {
         UI.setupPostPopup(this, (post) => (this.popupPost = post));
+    },
+    computed: {
+        Feed() {
+            if (!this.filterGif) return this.feed;
+            return this.feed.filter((item) => {
+                return (
+                    item.attachment.images.original.name.substr(-3) === "gif"
+                );
+            });
+        },
     },
     methods: {
         fetch() {
@@ -77,13 +103,6 @@ export default {
             );
         },
     },
-    data() {
-        return {
-            feed: null,
-            pagination: null,
-            popupPost: null,
-        };
-    },
 };
 </script>
 
@@ -96,6 +115,11 @@ export default {
     height: 240px;
     text-align: center;
     vertical-align: top;
+}
+
+.pagination-row {
+    display: flex;
+    align-items: center;
 }
 
 .post-popup {
