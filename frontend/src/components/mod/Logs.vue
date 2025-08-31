@@ -91,6 +91,11 @@
                                     <Post
                                         v-if="log.info.post"
                                         :post="log.info.post"
+                                        :thread="{
+                                            board: {
+                                                thread: log.info.thread,
+                                            },
+                                        }"
                                     ></Post>
                                     <div
                                         v-if="!log.info.post && log.info.postId"

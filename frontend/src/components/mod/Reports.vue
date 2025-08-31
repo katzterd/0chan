@@ -23,7 +23,10 @@
                         }"
                     >
                         <td width="50%">
-                            <Post :post="report.post" :thread="{ board: { likes: report.post.likes !== undefined } }" />
+                            <Post
+                                :post="report.post"
+                                :thread="{ board: { likes: report.post.likes } }"
+                            />
                         </td>
                         <td>
                             <div>
