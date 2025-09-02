@@ -39,7 +39,21 @@
                     </router-link>
                     <span v-if="post.identity">
                         &mdash;
-                        <router-link :to="imRoute" class="post-username"
+                        <router-link
+                            :to="imRoute"
+                            class="post-username"
+                            :style="{
+                                color:
+                                    post.user.isAdmin === 'true'
+                                        ? '#CD3C5C'
+                                        : post.user.isGlobalMod === 'true'
+                                        ? '#cd653cff'
+                                        : post.user.isBoardAdmin === 'true'
+                                        ? '#cd9f3cff'
+                                        : post.user.isBoardMod === 'true'
+                                        ? '#bacd3cff'
+                                        : '',
+                            }"
                             ><b
                                 ><span :title="post.identity.address"
                                     ><i>{{ post.identity.name }}</i></span
