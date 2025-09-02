@@ -93,6 +93,20 @@
                 || $board->hasModerator($this);
         }
 
+        /**  -- Строгие проверки на права: -- */
+
+        public function isGlobalModerator() {
+            return $this->roleId == UserRole::MODERATOR;
+        }
+
+        public function isBoardMod(Board $board) {
+            return $board->hasModerator($this);
+        }
+
+		public function isBoardAdmin(Board $board) {
+            return $board->getOwnerId() == $this->getId();
+        }
+
         /**
          * @return Board[]
          */

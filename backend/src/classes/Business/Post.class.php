@@ -96,6 +96,26 @@
                 $res['identity'] = $this->getIdentity()->export();
             }
 
+            if ($this->getUser()) {
+
+                $usr = $this->getUser();
+                $board = $this->getThread()->getBoard();
+                
+                if ($usr->canManageAllBoards()) {
+                    $res['user'] = ['isAdmin' => 'true'];
+                }
+                if ($usr->isGlobalModerator()) {
+                    $res['user'] = ['isGlobalMod' => 'true'];
+                }
+                if ($usr->isBoardAdmin($board) && !(($usr->canManageAllBoards()) || ($usr->isGlobalModerator()))) {
+                    $res['user'] = ['isBoardAdmin' => 'true'];
+                }
+                if ($usr->isBoardMod($board) && !(($usr->canManageAllBoards()) || ($usr->isGlobalModerator()))) {
+                    $res['user'] = ['isBoardMod' => 'true'];
+                }
+                
+            }
+
             if ($this->getThread()->getBoard()->isLikes()) {
                 $rates = Criteria::create(Rate::dao())
                     ->add(Expression::eq('post', $this));
