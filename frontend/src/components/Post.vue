@@ -44,13 +44,16 @@
                             class="post-username"
                             :style="{
                                 color:
-                                    post.user.isAdmin === 'true'
+                                    post.user && post.user.isAdmin === 'true'
                                         ? '#CD3C5C'
-                                        : post.user.isGlobalMod === 'true'
+                                        : post.user &&
+                                          post.user.isGlobalMod === 'true'
                                         ? '#cd653cff'
-                                        : post.user.isBoardAdmin === 'true'
+                                        : post.user &&
+                                          post.user.isBoardAdmin === 'true'
                                         ? '#cd9f3cff'
-                                        : post.user.isBoardMod === 'true'
+                                        : post.user &&
+                                          post.user.isBoardMod === 'true'
                                         ? '#bacd3cff'
                                         : '',
                             }"
