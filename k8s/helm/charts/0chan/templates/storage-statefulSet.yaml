@@ -1,72 +1,85 @@
+---
 apiVersion: apps/v1
-items:
-
-- apiVersion: apps/v1
-  kind: StatefulSet
-  metadata:
-    name: {{ .Release.Name }}-{{ .Values.svc.storage.name }}
-    namespace: {{ .Release.Namespace }}
-  spec:
-    replicas: {{ .Values.svc.storage.image.replicas }}
-    serviceName: "{{ .Values.svc.storage.name }}"
-    minReadySeconds: 10
-    selector:
-      matchLabels:
-        app: {{ .Values.svc.storage.name }}
-    template:
-      metadata:
-        labels:
-          app: {{ .Values.svc.storage.name }}
-      spec:
-        hostname: {{ .Values.svc.storage.name }}
-        restartPolicy: {{ .Values.restartPolicy }}
-        {{- include "ImagePullSecret" . | nindent 8 }}
-        terminationGracePeriodSeconds: 30
-        containers:
-        - name: {{ .Values.svc.storage.image.name }}
-          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.storage.image.name }}:{{ .Values.svc.storage.image.tag }}
-          imagePullPolicy: {{ .Values.svc.storage.image.pullPolicy }}
-          ports:
-          - containerPort: 81
-          env:
-          - name: HOSTNAME
-            value: "storage"
-          - name: DISCOVER
-            value: "storage"
-          - name: STORAGE_ID
-            valueFrom:
-              secretKeyRef:
-                key: STORAGE_ID
-                name: {{ include "SecretsName" . }}
-          - name: SALT
-            valueFrom:
-              secretKeyRef:
-                key: SALT
-                name: {{ include "SecretsName" . }}
-          volumeMounts:
-          - name: {{ .Values.svc.storage.name }}-pv
-            mountPath: /storage
-    volumeClaimTemplates:
-    - metadata:
-        name: {{ .Values.svc.storage.name }}-pv
-      spec:
-        accessModes: [ {{ .Values.storageClass.accessMode }} ]
-        storageClassName: {{ include "StorageClassName" . }}
-        resources:
-          requests:
-            storage: {{ include "StorageSpace" . }}
-        volumeMode: Filesystem
-
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: {{ .Values.svc.storage.name }}
-    namespace: {{ .Release.Namespace }}
-  spec:
-    selector:
-      app: {{ .Values.svc.storage.name }}
-    clusterIP: None
-
-kind: List
+kind: StatefulSet
 metadata:
-  name: "storage-list"
+  name: {{ template "0chan.storage.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.storage.replicas }}
+  serviceName: "storage"
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      name: storage
+  template:
+    metadata:
+      labels:
+        name: storage
+        {{- with .Values.storage.podLabels }}
+        {{ toYaml . }}
+        {{- end }}
+      {{- with .Values.storage.podAnnotations }}
+      annotations:
+        {{ toYaml . }}
+      {{- end }}
+    spec:
+      hostname: storage
+      restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml .Values.imagePullSecrets }}
+      {{- end }}
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: storage
+        image: {{ .Values.Registry }}/storage:{{ .Values.storage.image.tag }}
+        imagePullPolicy: {{ .Values.storage.image.pullPolicy }}
+        ports:
+        - containerPort: 81
+        {{- $secretName := .Values.secret | default "0chan-secret" }}
+        {{- with .Values.storage.env }}
+        env:
+          {{- range . }}
+          - name: {{ .name }}
+            {{- if .value }}
+            value: {{ .value | quote }}
+            {{- else if .valueFrom }}
+            valueFrom:
+              {{- $valueFrom := .valueFrom }}
+              {{- if kindIs "string" $valueFrom.secretKeyRef.name }}
+              secretKeyRef:
+                key: {{ $valueFrom.secretKeyRef.key }}
+                name: {{ $secretName | quote }}
+              {{- else }}
+                {{- toYaml $valueFrom }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+        volumeMounts:
+        - name: storage-pv
+          mountPath: /storage
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: storage-pv
+    spec:
+      accessModes: [ {{ .Values.storage.persistentVolume.storageClass.accessMode }} ]
+      resources:
+        requests:
+          storage: "{{ .Values.storage.persistentVolume.size }}"
+      storageClassName: {{ .Values.storage.persistentVolume.storageClass.name | default "" }}
+      volumeMode: Filesystem
+...
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storage
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    name: storage
+  clusterIP: None
+...
