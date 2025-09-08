@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "0chan.backend.fullname" . }}
+  name: backend
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: {{ .Values.backend.replicas }}

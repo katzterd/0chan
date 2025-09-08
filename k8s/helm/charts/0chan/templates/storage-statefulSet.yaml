@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "0chan.storage.fullname" . }}
+  name: storage
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: {{ .Values.storage.replicas }}
