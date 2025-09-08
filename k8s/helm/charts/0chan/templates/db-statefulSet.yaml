@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "0chan.db.fullname" . }}
+  name: {{ .Release.Name }}-db
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: {{ .Values.db.replicas }}
