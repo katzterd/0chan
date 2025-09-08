@@ -1,83 +1,89 @@
+---
 apiVersion: apps/v1
-items:
-
-- apiVersion: apps/v1
-  kind: StatefulSet
-  metadata:
-    name: {{ .Release.Name }}-{{ .Values.svc.db.name }}
-    namespace: {{ .Release.Namespace }}
-  spec:
-    replicas: {{ .Values.svc.db.image.replicas }}
-    serviceName: "{{ .Values.svc.db.name }}"
-    minReadySeconds: 10
-    selector:
-      matchLabels:
-        app: {{ .Values.svc.db.name }}
-    template:
-      metadata:
-        labels:
-          app: {{ .Values.svc.db.name }}
-          part-of: lb
-      spec:
-        hostname: {{ .Values.svc.db.name }}
-        restartPolicy: {{ .Values.restartPolicy }}
-        terminationGracePeriodSeconds: 30
-        securityContext:
-          runAsUser: 70
-          fsGroup: 70
-        containers:
-        - name: {{ .Values.svc.db.image.name }}
-          image: {{ .Values.svc.db.image.name }}:{{ .Values.svc.db.image.tag }}
-          imagePullPolicy: {{ .Values.svc.db.image.pullPolicy }}
-          ports:
-          - containerPort: 5432
-            protocol: TCP
-          env:
-          - name: PGDATA
-            value: "/var/lib/postgresql/data/pgdata"
-          - name: POSTGRES_DB
-            valueFrom:
-              secretKeyRef:
-                key: POSTGRES_DB
-                name: {{ include "SecretsName" . }}
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                key: POSTGRES_USER
-                name: {{ include "SecretsName" . }}
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: POSTGRES_PASSWORD
-                name: {{ include "SecretsName" . }}
-          volumeMounts:
-          - name: {{ .Values.svc.db.name }}-pv
-            mountPath: /var/lib/postgresql/data
-    volumeClaimTemplates:
-    - metadata:
-        name: {{ .Values.svc.db.name }}-pv
-      spec:
-        accessModes: [ {{ .Values.storageClass.accessMode }} ]
-        storageClassName: {{ include "StorageClassName" . }}
-        resources:
-          requests:
-            storage: {{ include "DbSpace" . }}
-        volumeMode: Filesystem
-            
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: {{ .Values.svc.db.name }}
-    namespace: {{ .Release.Namespace }}
-  spec:
-    selector:
-      app: {{ .Values.svc.db.name }}
-    ports:
-    - protocol: TCP
-      port: 5432
-      targetPort: 5432
-    clusterIP: None
-
-kind: List
+kind: StatefulSet
 metadata:
-  name: "db-list"
+  name: {{ template "0chan.db.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.db.replicas }}
+  serviceName: "db"
+  minReadySeconds: 10
+  selector:
+    matchLabels:
+      name: db
+  template:
+    metadata:
+      labels:
+        name: db
+        {{- with .Values.db.podLabels }}
+        {{ toYaml . }}
+        {{- end }}
+      {{- with .Values.db.podAnnotations }}
+      annotations:
+        {{ toYaml . }}
+      {{- end }}
+    spec:
+      hostname: db
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsUser: 70
+        fsGroup: 70
+      containers:
+      - name: postgres
+        image: postgres:{{ .Values.db.image.tag }}
+        imagePullPolicy: {{ .Values.db.image.pullPolicy }}
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        {{- $secretName := .Values.secret | default "0chan-secret" }}
+        {{- with .Values.db.env }}
+        env:
+          {{- range . }}
+          - name: {{ .name }}
+            {{- if .value }}
+            value: {{ .value | quote }}
+            {{- else if .valueFrom }}
+            valueFrom:
+              {{- $valueFrom := .valueFrom }}
+              {{- if kindIs "string" $valueFrom.secretKeyRef.name }}
+              secretKeyRef:
+                key: {{ $valueFrom.secretKeyRef.key }}
+                name: {{ $secretName | quote }}
+              {{- else }}
+                {{- toYaml $valueFrom }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+        volumeMounts:
+        - name: db-pv
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: db-pv
+    spec:
+      accessModes: [ {{ .Values.db.persistentVolume.storageClass.accessMode }} ]
+      resources:
+        requests:
+          storage: "{{ .Values.db.persistentVolume.size }}"
+      storageClassName: {{ .Values.db.persistentVolume.storageClass.name | default "" }}
+      volumeMode: Filesystem
+...
+---            
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    name: db
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  clusterIP: None
+...
