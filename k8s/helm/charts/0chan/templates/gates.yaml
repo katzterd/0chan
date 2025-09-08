@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: torgate
+  name: {{ .Release.Name }}-torgate
   namespace: {{ .Release.Namespace }}
 spec:
   strategy:
@@ -71,7 +71,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: i2pgate
+  name: {{ .Release.Name }}-i2pgate
   namespace: {{ .Release.Namespace }}
 spec:
   strategy:
@@ -139,7 +139,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: yggdrasilgate
+  name: {{ .Release.Name }}-yggdrasilgate
   namespace: {{ .Release.Namespace }}
 spec:
   strategy:

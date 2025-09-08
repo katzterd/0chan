@@ -124,7 +124,10 @@ storage:
     - name: DISCOVER
       value: storage
     - name: STORAGE_ID
-      value: s01
+      valueFrom:
+        secretKeyRef:
+          key: STORAGE_ID
+          name: "{{ .Values.secret }}"
     - name: SALT
       valueFrom:
         secretKeyRef:
