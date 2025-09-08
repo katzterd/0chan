@@ -431,13 +431,6 @@ export default {
                             );
                             break;
 
-                        case "replies_timeout":
-                            this.$bus.emit(
-                                BusEvents.ALERT_ERROR,
-                                "Обнаружен вайп! Постинг заблокирован. Через час постинг будет включен обратно"
-                            );
-                            break;
-
                         case "registerRequired":
                             this.$bus.emit(
                                 BusEvents.ALERT_ERROR,

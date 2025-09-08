@@ -331,17 +331,6 @@ class ApiThreadController extends ApiBaseController
         $timeout_cmd = null;
         $af_key = Cache::me()->get('af:' . $thread->getBoard()->getId());
 
-        $isReplyTimeoutEnabled = Cache::me()->get('repliesLimit');
-        $repliesLimitMax = intval(Cache::me()->get('repliesLimitMax'));
-
-        if (!$repliesLimitMax) {
-            $repliesLimitMax = 100;
-        }
-
-        $limit_key = Cache::me()->get('repliesLimitCounter');
-
-        $repliesLimitCmd = null;
-
         if ($isIdentityAllowed && $form->getValue('identity') && $form->getValue('identity') != 'notselected' && $this->getUser()) {
             $identity = Criteria::create(UserIdentity::dao())
                 ->add(Expression::eq('address', $form->getValue('identity')))
@@ -418,18 +407,6 @@ class ApiThreadController extends ApiBaseController
                 }
             }
 
-            if ($isReplyTimeoutEnabled) {
-                if ($limit_key && $limit_key >= $repliesLimitMax) {
-                    return ['ok' => false, "reason" => 'replies_timeout'];
-                }
-
-                if (!$limit_key) {
-                    $repliesLimitCmd = 'create';
-                } else {
-                    $repliesLimitCmd = 'increment';
-                }
-            }
-
             if ($thread->getBoard()->getTextboard()) {
                 if (!empty($imageIds)) {
                     return ["ok" => false, "reason" => "textboard"];
@@ -467,22 +444,6 @@ class ApiThreadController extends ApiBaseController
 
                 case 'increment':
                     Cache::me()->increment('af:' . $thread->getBoard()->getId(), 1);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        if ($repliesLimitCmd) {
-            switch ($repliesLimitCmd) {
-                case 'create':
-                    Cache::me()->increment('repliesLimitCounter', 1);
-                    Cache::me()->expire('repliesLimitCounter', 3600);
-                    break;
-
-                case 'increment':
-                    Cache::me()->increment('repliesLimitCounter', 1);
                     break;
 
                 default:
