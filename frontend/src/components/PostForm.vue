@@ -413,7 +413,7 @@ export default {
                         case "global_timeout":
                             this.$bus.emit(
                                 BusEvents.ALERT_ERROR,
-                                "Установлен лимит количества новых тредов в час. Ожидайте, либо запостите в уже существующий тред"
+                                "Установлен таймаут создания новых тредов. Ожидайте, либо запостите в уже существующий тред"
                             );
                             break;
 
@@ -428,13 +428,6 @@ export default {
                             this.$bus.emit(
                                 BusEvents.ALERT_ERROR,
                                 "Вы создаете треды слишком часто, сбавьте темп"
-                            );
-                            break;
-
-                        case "replies_timeout":
-                            this.$bus.emit(
-                                BusEvents.ALERT_ERROR,
-                                "Обнаружен вайп! Постинг заблокирован. Через час постинг будет включен обратно"
                             );
                             break;
 
