@@ -1,7 +1,0 @@
-/*
-!/.gitignore
-!/ingress
-!/expose-db.yaml
-!/expose-db-dev.yaml
-!/expose-frontend.yaml
-!/expose-frontend-dev.yaml
