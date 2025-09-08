@@ -5,7 +5,7 @@
 !/k8s
 !/storage
 !/torgate
-!/yggdrasil
+!/yggdrasilgate
 !/.github
 !/docker-compose.yaml
 !/README.md

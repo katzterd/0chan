@@ -1,64 +1,67 @@
 {{/*
-Registry override
+Default name
 */}}
-{{- define "ImageRegistry" -}}
-{{- if .Values.registry }}
-{{- .Values.registry }}
-{{- else }}
-{{- .Values.defaultRegistry }}
-{{- end }}
-{{- end }}
+{{- define "0chan.fullname" -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 26 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 26 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
-Default secrets name override
+Frontend default name
 */}}
-{{- define "SecretsName" -}}
-{{- if .Values.secretsName }}
-{{- .Values.secretsName }}
-{{- else }}
-{{- .Values.defaultSecretsName }}
-{{- end }}
-{{- end }}
+{{- define "0chan.frontend.fullname" -}}
+{{- printf "%s-frontend" (include "0chan.fullname" .) -}}
+{{- end -}}
 
 {{/*
-Image pull secrets
+Backend default name
 */}}
-{{- define "ImagePullSecret" -}}
-{{- if .Values.imagePullSecretName -}}
-imagePullSecrets:
-- name: {{ .Values.imagePullSecretName }}
-{{- end }}
-{{- end }}
+{{- define "0chan.backend.fullname" -}}
+{{- printf "%s-backend" (include "0chan.fullname" .) -}}
+{{- end -}}
 
 {{/*
-Default storageClass name override
+Storage default name
 */}}
-{{- define "StorageClassName" -}}
-{{- if .Values.storageClass.name }}
-{{- .Values.storageClass.name }}
-{{- else }}
-{{- .Values.storageClass.defaultName }}
-{{- end }}
-{{- end }}
+{{- define "0chan.storage.fullname" -}}
+{{- printf "%s-storage" (include "0chan.fullname" .) -}}
+{{- end -}}
 
 {{/*
-Postgres space request override
+db default name
 */}}
-{{- define "DbSpace" -}}
-{{- if .Values.dbSpace }}
-{{- .Values.dbSpace }}
-{{- else }}
-{{- .Values.storageClass.pods.db.defaultRequestSpace }}
-{{- end }}
-{{- end }}
+{{- define "0chan.db.fullname" -}}
+{{- printf "%s-db" (include "0chan.fullname" .) -}}
+{{- end -}}
 
 {{/*
-Storage space request override
+Cache default name
 */}}
-{{- define "StorageSpace" -}}
-{{- if .Values.storageSpace }}
-{{- .Values.storageSpace }}
-{{- else }}
-{{- .Values.storageClass.pods.storage.defaultRequestSpace }}
-{{- end }}
-{{- end }}
+{{- define "0chan.cache.fullname" -}}
+{{- printf "%s-cache" (include "0chan.fullname" .) -}}
+{{- end -}}
+
+{{/*
+Torgate default name
+*/}}
+{{- define "0chan.torgate.fullname" -}}
+{{- printf "%s-torgate" (include "0chan.fullname" .) -}}
+{{- end -}}
+
+{{/*
+I2Pgate default name
+*/}}
+{{- define "0chan.i2pgate.fullname" -}}
+{{- printf "%s-i2pgate" (include "0chan.fullname" .) -}}
+{{- end -}}
+
+{{/*
+Yggdrasilgate default name
+*/}}
+{{- define "0chan.yggdrasilgate.fullname" -}}
+{{- printf "%s-yggdrasilgate" (include "0chan.fullname" .) -}}
+{{- end -}}
