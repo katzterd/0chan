@@ -1,71 +1,301 @@
-defaultSecretsName: 0chan-secrets
-defaultRegistry: ghcr.io/katzterd/0chan
-    
-storageClass:
-  defaultName: "0chan-sc"
-  accessMode: "ReadWriteOnce"
-  pods:
-    storage:
-      defaultRequestSpace: 25Gi
-    db:
-      defaultRequestSpace: 10Gi
+Registry: ghcr.io/katzterd/0chan
 
-restartPolicy: Always
+imagePullSecrets: []
+# - name: "image-pull-secret"
 
-svc:
-  frontend:
-    name: frontend
-    image:
-      name: frontend
-      tag: latest
-      pullPolicy: Always
-      replicas: 1
-  backend:
-    name: backend
-    image:
-      name: backend
-      tag: latest
-      pullPolicy: Always
-      replicas: 1
-  storage:
-    name: storage
-    image:
-      name: storage
-      tag: latest
-      pullPolicy: Always
-      replicas: 1
-  torgate:
-    name: torgate
-    image:
-      name: torgate
-      tag: latest
-      pullPolicy: Always
-      replicas: 1
-  i2pgate:
-    name: i2pgate
-    image:
-      name: i2pgate
-      tag: latest
-      pullPolicy: Always
-      replicas: 1
-  yggdrasilgate:
-    name: yggdrasilgate
-    image:
-      name: yggdrasil
-      tag: latest
-      pullPolicy: Always
-      replicas: 1
-  db:
-    name: db
-    image:
-      name: postgres
-      tag: 17-alpine
-      pullPolicy: IfNotPresent
-      replicas: 1
-  cache:
-    name: cache
-    image:
-      name: redis
-      tag: 7-alpine
-      pullPolicy: IfNotPresent
-      replicas: 1
+## Main secret name
+secret: ""
+
+
+
+
+## Application configuration
+
+
+
+frontend:
+
+  ## Additional pod Labels for frontend
+  podLabels: {}
+  
+  ## podAnnotations for frontend
+  podAnnotations: {}
+
+  ## Pod Replicas
+  replicas: 1
+
+  ## Container image settings
+  image:
+    tag: latest
+    pullPolicy: Always
+
+  env:
+    - name: TORGATE_HOSTNAME
+      valueFrom:
+        secretKeyRef:
+          key: TORGATE_HOSTNAME
+          name: "{{ .Values.secret }}"
+          optional: true
+
+
+
+backend:
+
+  ## Additional pod Labels for backend
+  podLabels: {}
+  
+  ## podAnnotations for backend
+  podAnnotations: {}
+
+  ## Pod Replicas
+  replicas: 1
+
+  ## Container image settings
+  image:
+    tag: latest
+    pullPolicy: Always
+
+  env:
+    - name: LOCALGW_KEY
+      valueFrom:
+        secretKeyRef:
+          key: LOCALGW_KEY
+          name: "{{ .Values.secret }}"
+          optional: true
+    - name: ADMIN_LOGIN
+      valueFrom:
+        secretKeyRef:
+          key: ADMIN_LOGIN
+          name: "{{ .Values.secret }}"
+          optional: true
+    - name: ADMIN_PASSWD
+      valueFrom:
+        secretKeyRef:
+          key: ADMIN_PASSWD
+          name: "{{ .Values.secret }}"
+          optional: true
+    - name: SALT
+      valueFrom:
+        secretKeyRef:
+          key: SALT
+          name: "{{ .Values.secret }}"
+    - name: POSTGRES_DB
+      valueFrom:
+        secretKeyRef:
+          key: POSTGRES_DB
+          name: "{{ .Values.secret }}"
+    - name: POSTGRES_USER
+      valueFrom:
+        secretKeyRef:
+          key: POSTGRES_USER
+          name: "{{ .Values.secret }}"
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: POSTGRES_PASSWORD
+          name: "{{ .Values.secret }}"
+
+
+
+storage:
+
+  ## Additional pod Labels for storage
+  podLabels: {}
+  
+  ## podAnnotations for storage
+  podAnnotations: {}
+
+  ## Pod Replicas
+  replicas: 1
+
+  ## Container image settings
+  image:
+    tag: latest
+    pullPolicy: Always
+
+  persistentVolume:
+    storageClass:
+      accessMode: "ReadWriteOnce"
+    size: 25Gi
+
+  env:
+    - name: HOSTNAME
+      value: storage
+    - name: DISCOVER
+      value: storage
+    - name: STORAGE_ID
+      valueFrom:
+        secretKeyRef:
+          key: STORAGE_ID
+          name: "{{ .Values.secret }}"
+    - name: SALT
+      valueFrom:
+        secretKeyRef:
+          key: SALT
+          name: "{{ .Values.secret }}"
+
+
+
+
+db:
+
+  ## Additional pod Labels for db
+  podLabels: {}
+  
+  ## podAnnotations for db
+  podAnnotations: {}
+
+  ## Pod Replicas
+  replicas: 1
+
+  ## Container image settings
+  image:
+    tag: 17-alpine
+    pullPolicy: IfNotPresent
+
+  persistentVolume:
+    storageClass:
+      accessMode: "ReadWriteOnce"
+    size: 10Gi
+
+  env:
+    - name: PGDATA
+      value: "/var/lib/postgresql/data/pgdata"
+    - name: POSTGRES_DB
+      valueFrom:
+        secretKeyRef:
+          key: POSTGRES_DB
+          name: "{{ .Values.secret }}"
+    - name: POSTGRES_USER
+      valueFrom:
+        secretKeyRef:
+          key: POSTGRES_USER
+          name: "{{ .Values.secret }}"
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          key: POSTGRES_PASSWORD
+          name: "{{ .Values.secret }}"
+
+
+
+cache:
+
+  ## Additional pod Labels for cache
+  podLabels: {}
+  
+  ## podAnnotations for cache
+  podAnnotations: {}
+
+  ## Pod Replicas
+  replicas: 1
+
+  ## Container image settings
+  image:
+    tag: 7-alpine
+    pullPolicy: IfNotPresent
+
+  persistentVolume:
+    storageClass:
+      accessMode: "ReadWriteOnce"
+    size: 5Gi
+
+
+
+torgate:
+
+  ## Additional pod Labels for torgate
+  podLabels: {}
+
+  ## podAnnotations for torgate
+  podAnnotations: {}
+
+  ## Pod Replicas
+  replicas: 1
+
+  ## Container image settings
+  image:
+    tag: latest
+    pullPolicy: Always
+
+  env:
+    - name: LOCALGW_KEY
+      valueFrom:
+        secretKeyRef:
+          key: LOCALGW_KEY
+          name: "{{ .Values.secret }}"
+    - name: TORGATE_HOSTNAME
+      valueFrom:
+        secretKeyRef:
+          key: TORGATE_HOSTNAME
+          name: "{{ .Values.secret }}"
+    - name: TORGATE_PUBLIC_KEY
+      valueFrom:
+        secretKeyRef:
+          key: TORGATE_PUBLIC_KEY
+          name: "{{ .Values.secret }}"
+    - name: TORGATE_PRIVATE_KEY
+      valueFrom:
+        secretKeyRef:
+          key: TORGATE_PRIVATE_KEY
+          name: "{{ .Values.secret }}"
+
+
+
+i2pgate:
+
+  ## Additional pod Labels for i2pgate
+  podLabels: {}
+  
+  ## podAnnotations for i2pgate
+  podAnnotations: {}
+
+  ## Pod Replicas
+  replicas: 1
+
+  ## Container image settings
+  image:
+    tag: latest
+    pullPolicy: Always
+
+  env:
+    - name: LOCALGW_KEY
+      valueFrom:
+        secretKeyRef:
+          key: LOCALGW_KEY
+          name: "{{ .Values.secret }}"
+    - name: I2PGATE_PRIVATE_KEY
+      valueFrom:
+        secretKeyRef:
+          key: I2PGATE_PRIVATE_KEY
+          name: "{{ .Values.secret }}"
+
+
+
+yggdrasilgate:
+
+  ## Additional pod Labels for yggdrasilgate
+  podLabels: {}
+  
+  ## podAnnotations for yggdrasilgate
+  podAnnotations: {}
+
+  ## Pod Replicas
+  replicas: 1
+
+  ## Container image settings
+  image:
+    tag: latest
+    pullPolicy: Always
+
+  env:
+    - name: LOCALGW_KEY
+      valueFrom:
+        secretKeyRef:
+          key: LOCALGW_KEY
+          name: "{{ .Values.secret }}"
+    - name: YGGDRASILGATE_PRIVATE_KEY
+      valueFrom:
+        secretKeyRef:
+          key: YGGDRASILGATE_PRIVATE_KEY
+          name: "{{ .Values.secret }}"
