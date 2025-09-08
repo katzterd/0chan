@@ -1,0 +1,215 @@
+{{- if eq .Values.torgate.enable true }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-torgate
+  namespace: {{ .Release.Namespace }}
+spec:
+  strategy:
+    type: Recreate
+  replicas: {{ .Values.torgate.replicas }}
+  selector:
+    matchLabels:
+      name: torgate
+  template:
+    metadata:
+      labels:
+        name: torgate
+        {{- with .Values.torgate.podLabels }}
+        {{ toYaml . }}
+        {{- end }}
+      {{- with .Values.torgate.podAnnotations }}
+      annotations:
+        {{ toYaml . }}
+      {{- end }}
+    spec:
+      restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml .Values.imagePullSecrets }}
+      {{- end }}
+      initContainers:
+      - name: torgate-wait-frontend
+        image: alpine/curl
+        imagePullPolicy: IfNotPresent
+        command:
+        - sh
+        - -c
+        - |
+          until curl -s -o /dev/null http://frontend:80; do
+            sleep 1
+          done
+      containers:
+      - name: torgate
+        image: {{ .Values.Registry }}/torgate:{{ .Values.torgate.image.tag }}
+        imagePullPolicy: {{ .Values.torgate.image.pullPolicy }}
+        {{- $secretName := .Values.secret | default "0chan-secret" }}
+        {{- with .Values.torgate.env }}
+        env:
+          {{- range . }}
+          - name: {{ .name }}
+            {{- if .value }}
+            value: {{ .value | quote }}
+            {{- else if .valueFrom }}
+            valueFrom:
+              {{- $valueFrom := .valueFrom }}
+              {{- if kindIs "string" $valueFrom.secretKeyRef.name }}
+              secretKeyRef:
+                key: {{ $valueFrom.secretKeyRef.key }}
+                name: {{ $secretName | quote }}
+              {{- else }}
+                {{- toYaml $valueFrom }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+...
+{{- end }}
+{{- if eq .Values.i2pgate.enable true }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-i2pgate
+  namespace: {{ .Release.Namespace }}
+spec:
+  strategy:
+    type: Recreate
+  replicas: {{ .Values.i2pgate.replicas }}
+  selector:
+    matchLabels:
+      name: i2pgate
+  template:
+    metadata:
+      labels:
+        name: i2pgate
+        {{- with .Values.i2pgate.podLabels }}
+        {{ toYaml . }}
+        {{- end }}
+      {{- with .Values.i2pgate.podAnnotations }}
+      annotations:
+        {{ toYaml . }}
+      {{- end }}
+    spec:
+      restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml .Values.imagePullSecrets }}
+      {{- end }}
+      initContainers:
+      - name: i2pgate-wait-frontend
+        image: alpine/curl
+        imagePullPolicy: IfNotPresent
+        command:
+        - sh
+        - -c
+        - |
+          until curl -s -o /dev/null http://frontend:80; do
+            sleep 1
+          done
+      containers:
+      - name: i2pgate
+        image: {{ .Values.Registry }}/i2pgate:{{ .Values.i2pgate.image.tag }}
+        imagePullPolicy: {{ .Values.i2pgate.image.pullPolicy }}
+        {{- $secretName := .Values.secret | default "0chan-secret" }}
+        {{- with .Values.i2pgate.env }}
+        env:
+          {{- range . }}
+          - name: {{ .name }}
+            {{- if .value }}
+            value: {{ .value | quote }}
+            {{- else if .valueFrom }}
+            valueFrom:
+              {{- $valueFrom := .valueFrom }}
+              {{- if kindIs "string" $valueFrom.secretKeyRef.name }}
+              secretKeyRef:
+                key: {{ $valueFrom.secretKeyRef.key }}
+                name: {{ $secretName | quote }}
+              {{- else }}
+                {{- toYaml $valueFrom }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+...
+{{- end }}
+{{- if eq .Values.yggdrasilgate.enable true }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-yggdrasilgate
+  namespace: {{ .Release.Namespace }}
+spec:
+  strategy:
+    type: Recreate
+  replicas: {{ .Values.yggdrasilgate.replicas }}
+  selector:
+    matchLabels:
+      name: yggdrasilgate
+  template:
+    metadata:
+      labels:
+        name: yggdrasilgate
+        {{- with .Values.yggdrasilgate.podLabels }}
+        {{ toYaml . }}
+        {{- end }}
+      {{- with .Values.yggdrasilgate.podAnnotations }}
+      annotations:
+        {{ toYaml . }}
+      {{- end }}
+    spec:
+      restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml .Values.imagePullSecrets }}
+      {{- end }}
+      initContainers:
+      - name: yggdrasilgate-wait-frontend
+        image: alpine/curl
+        imagePullPolicy: IfNotPresent
+        command:
+        - sh
+        - -c
+        - |
+          until curl -s -o /dev/null http://frontend:80; do
+            sleep 1
+          done
+      containers:
+      - name: yggdrasilgate
+        image: {{ .Values.Registry }}/yggdrasilgate:{{ .Values.yggdrasilgate.image.tag }}
+        imagePullPolicy: {{ .Values.yggdrasilgate.image.pullPolicy }}
+        securityContext:
+          capabilities:
+            add: 
+            - NET_ADMIN
+        {{- $secretName := .Values.secret | default "0chan-secret" }}
+        {{- with .Values.yggdrasilgate.env }}
+        env:
+          {{- range . }}
+          - name: {{ .name }}
+            {{- if .value }}
+            value: {{ .value | quote }}
+            {{- else if .valueFrom }}
+            valueFrom:
+              {{- $valueFrom := .valueFrom }}
+              {{- if kindIs "string" $valueFrom.secretKeyRef.name }}
+              secretKeyRef:
+                key: {{ $valueFrom.secretKeyRef.key }}
+                name: {{ $secretName | quote }}
+              {{- else }}
+                {{- toYaml $valueFrom }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+        volumeMounts:
+        - mountPath: /dev/net/tun
+          name: tun
+      volumes:
+      - name: tun
+        hostPath:
+          path: /dev/net/tun
+...
+{{- end }}

@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-cache
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.cache.replicas }}
+  selector:
+    matchLabels:
+      name: cache
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: cache
+        {{- with .Values.cache.podLabels }}
+        {{ toYaml . }}
+        {{- end }}
+      {{- with .Values.cache.podAnnotations }}
+      annotations:
+        {{ toYaml . }}
+      {{- end }}
+    spec:
+      hostname: cache
+      restartPolicy: Always
+      containers:
+      - name: redis
+        image: redis:{{ .Values.cache.image.tag }}
+        imagePullPolicy: {{ .Values.cache.image.pullPolicy }}
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: cache-pv
+          mountPath: /cache
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: cache-pv
+    spec:
+      accessModes: [ {{ .Values.cache.persistentVolume.storageClass.accessMode }} ]
+      resources:
+        requests:
+          storage: "{{ .Values.cache.persistentVolume.size }}"
+      storageClassName: {{ .Values.cache.persistentVolume.storageClass.name | default "" }}
+      volumeMode: Filesystem
+...
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cache
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    name: cache
+  clusterIP: None
+...
