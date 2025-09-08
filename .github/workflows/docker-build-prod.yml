@@ -11,7 +11,7 @@ env:
   STORAGE_IMAGE_NAME: storage
   TORGATE_IMAGE_NAME: torgate
   I2PGATE_IMAGE_NAME: i2pgate
-  YGGDRASILGATE_IMAGE_NAME: yggdrasil
+  YGGDRASILGATE_IMAGE_NAME: yggdrasilgate
 
 jobs:
 
@@ -44,7 +44,7 @@ jobs:
             i2pgate:
               - 'i2pgate/**'
             yggdrasilgate:
-              - 'yggdrasil/**'
+              - 'yggdrasilgate/**'
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -134,8 +134,8 @@ jobs:
         uses: docker/build-push-action@v5
         if: steps.filter.outputs.yggdrasilgate_any_changed == 'true'
         with:
-          context: yggdrasil/.
-          file: yggdrasil/Dockerfile
+          context: yggdrasilgate/.
+          file: yggdrasilgate/Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/${{ github.repository }}-prod/${{ env.YGGDRASILGATE_IMAGE_NAME }}:latest

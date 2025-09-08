@@ -1,71 +1,89 @@
+---
 apiVersion: apps/v1
-items:
-
-- apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: {{ .Release.Name }}-{{ .Values.svc.frontend.name }}
-    namespace: {{ .Release.Namespace }}
-  spec:
-    replicas: {{ .Values.svc.frontend.image.replicas }}
-    selector:
-      matchLabels:
-        app: {{ .Values.svc.frontend.name }}
-    strategy:
-      type: RollingUpdate
-      rollingUpdate:
-        maxUnavailable: 0
-        maxSurge: 1
-    template:
-      metadata:
-        labels:
-          app: {{ .Values.svc.frontend.name }}
-          part-of: lb
-      spec:
-        hostname: {{ .Values.svc.frontend.name }}
-        restartPolicy: {{ .Values.restartPolicy }}
-        {{- include "ImagePullSecret" . | nindent 8 }}
-        initContainers:
-        - name: wait-backend-and-storage
-          image: alpine/curl
-          imagePullPolicy: IfNotPresent
-          command:
-          - sh
-          - -c
-          - |
-            until curl -o /dev/null http://{{ .Values.svc.backend.name }}:9000 2>&1 | grep -q "56" && \
-              curl -s -o /dev/null http://{{ .Values.svc.storage.name }}:81; do
-              sleep 1
-            done
-        containers:
-        - name: {{ .Values.svc.frontend.image.name }}
-          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.frontend.image.name }}:{{ .Values.svc.frontend.image.tag }}
-          imagePullPolicy: {{ .Values.svc.frontend.image.pullPolicy }}
-          ports:
-          - containerPort: 80
-            protocol: TCP
-          env:
-          - name: TORGATE_HOSTNAME
-            valueFrom:
-              secretKeyRef:
-                key: TORGATE_HOSTNAME
-                name: {{ include "SecretsName" . }}
-                optional: true
-
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: {{ .Values.svc.frontend.name }}
-    namespace: {{ .Release.Namespace }}
-  spec:
-    selector:
-      app: {{ .Values.svc.frontend.name }}
-    ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-    clusterIP: None
-
-kind: List
+kind: Deployment
 metadata:
-  name: "frontend-list"
+  name: frontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.frontend.replicas }}
+  selector:
+    matchLabels:
+      name: frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: frontend
+        {{- with .Values.frontend.podLabels }}
+        {{ toYaml . }}
+        {{- end }}
+      {{- with .Values.frontend.podAnnotations }}
+      annotations:
+        {{ toYaml . }}
+      {{- end }}
+    spec:
+      hostname: frontend
+      restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml .Values.imagePullSecrets }}
+      {{- end }}
+      initContainers:
+      - name: wait-backend-and-storage
+        image: alpine/curl
+        imagePullPolicy: IfNotPresent
+        command:
+        - sh
+        - -c
+        - |
+          until curl -o /dev/null http://backend:9000 2>&1 | grep -q "56" && \
+            curl -s -o /dev/null http://storage:81; do
+            sleep 1
+          done
+      containers:
+      - name: frontend
+        image: {{ .Values.Registry }}/frontend:{{ .Values.frontend.image.tag }}
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        {{- $secretName := .Values.secret | default "0chan-secret" }}
+        {{- with .Values.frontend.env }}
+        env:
+          {{- range . }}
+          - name: {{ .name }}
+            {{- if .value }}
+            value: {{ .value | quote }}
+            {{- else if .valueFrom }}
+            valueFrom:
+              {{- $valueFrom := .valueFrom }}
+              {{- if kindIs "string" $valueFrom.secretKeyRef.name }}
+              secretKeyRef:
+                key: {{ $valueFrom.secretKeyRef.key }}
+                name: {{ $secretName | quote }}
+              {{- else }}
+                {{- toYaml $valueFrom }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+...
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    name: frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  clusterIP: None
+...
