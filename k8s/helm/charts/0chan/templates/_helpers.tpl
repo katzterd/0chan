@@ -14,54 +14,54 @@ Default name
 Frontend default name
 */}}
 {{- define "0chan.frontend.fullname" -}}
-{{- printf "%s-frontend" (include "0chan.fullname" .) -}}
+{{- printf "%s-frontend" .Release.Name -}}
 {{- end -}}
 
 {{/*
 Backend default name
 */}}
 {{- define "0chan.backend.fullname" -}}
-{{- printf "%s-backend" (include "0chan.fullname" .) -}}
+{{- printf "%s-backend" .Release.Name -}}
 {{- end -}}
 
 {{/*
 Storage default name
 */}}
 {{- define "0chan.storage.fullname" -}}
-{{- printf "%s-storage" (include "0chan.fullname" .) -}}
+{{- printf "%s-storage" .Release.Name -}}
 {{- end -}}
 
 {{/*
 db default name
 */}}
 {{- define "0chan.db.fullname" -}}
-{{- printf "%s-db" (include "0chan.fullname" .) -}}
+{{- printf "%s-db" .Release.Name -}}
 {{- end -}}
 
 {{/*
 Cache default name
 */}}
 {{- define "0chan.cache.fullname" -}}
-{{- printf "%s-cache" (include "0chan.fullname" .) -}}
+{{- printf "%s-cache" .Release.Name -}}
 {{- end -}}
 
 {{/*
 Torgate default name
 */}}
 {{- define "0chan.torgate.fullname" -}}
-{{- printf "%s-torgate" (include "0chan.fullname" .) -}}
+{{- printf "%s-torgate" .Release.Name -}}
 {{- end -}}
 
 {{/*
 I2Pgate default name
 */}}
 {{- define "0chan.i2pgate.fullname" -}}
-{{- printf "%s-i2pgate" (include "0chan.fullname" .) -}}
+{{- printf "%s-i2pgate" .Release.Name -}}
 {{- end -}}
 
 {{/*
 Yggdrasilgate default name
 */}}
 {{- define "0chan.yggdrasilgate.fullname" -}}
-{{- printf "%s-yggdrasilgate" (include "0chan.fullname" .) -}}
+{{- printf "%s-yggdrasilgate" .Release.Name -}}
 {{- end -}}
