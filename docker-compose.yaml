@@ -117,10 +117,10 @@ services:
         delay: 2s
         monitor: 2s
         
-  yggdrasil:
-    build: ./yggdrasil
-    image: ${REGISTRY_PATH}/yggdrasil:latest
-    container_name: yggdrasil
+  yggdrasilgate:
+    build: ./yggdrasilgate
+    image: ${REGISTRY_PATH}/yggdrasilgate:latest
+    container_name: yggdrasilgate
     depends_on:
       frontend:
         condition: service_started

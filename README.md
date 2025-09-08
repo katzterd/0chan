@@ -27,13 +27,13 @@ docker compose up -d
 ```console
 docker exec -t backend /src/config/docker-entrypoint.sh createdb createadmin
 ```
-you can simply remove  `createadmin`  from this line, if you don't need admin account
+Remove `createadmin` from this line, if you don't need admin account
 
 frontend will appear on `http://localhost:80`
 
 #### (Optional) Get yggdrasil node address (if enabled)
 ```console
-docker exec -t yggdrasil /docker-entrypoint.sh getaddr
+docker exec -t yggdrasilgate /docker-entrypoint.sh getaddr
 ```
 
 ### K8S way

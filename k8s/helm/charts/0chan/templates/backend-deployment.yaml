@@ -1,96 +1,83 @@
+---
 apiVersion: apps/v1
-items:
-
-- apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: {{ .Release.Name }}-{{ .Values.svc.backend.name }}
-    namespace: {{ .Release.Namespace }}
-  spec:
-    replicas: {{ .Values.svc.backend.image.replicas }}
-    selector:
-      matchLabels:
-        app: {{ .Values.svc.backend.name }}
-    strategy:
-      type: RollingUpdate
-      rollingUpdate:
-        maxUnavailable: 0
-        maxSurge: 1
-    template:
-      metadata:
-        labels:
-          app: {{ .Values.svc.backend.name }}
-      spec:
-        hostname: {{ .Values.svc.backend.name }}
-        restartPolicy: {{ .Values.restartPolicy }}
-        {{- include "ImagePullSecret" . | nindent 8 }}
-        initContainers:
-        - name: wait-db
-          image: postgres
-          imagePullPolicy: IfNotPresent
-          command:
-          - sh
-          - -ec
-          - |
-            until pg_isready -h {{ .Values.svc.db.name }} -p 5432 -U postgres; do
-              sleep 1
-            done
-        containers:
-        - name: {{ .Values.svc.backend.image.name }}
-          image: {{ include "ImageRegistry" . }}/{{ .Values.svc.backend.image.name }}:{{ .Values.svc.backend.image.tag }}
-          imagePullPolicy: {{ .Values.svc.backend.image.pullPolicy }}
-          ports:
-          - containerPort: 9000
-          env:
-          - name: LOCALGW_KEY
-            valueFrom:
-              secretKeyRef:
-                key: LOCALGW_KEY
-                name: {{ include "SecretsName" . }}
-                optional: true
-          - name: ADMIN_LOGIN
-            valueFrom:
-              secretKeyRef:
-                key: ADMIN_LOGIN
-                name: {{ include "SecretsName" . }}
-                optional: true
-          - name: ADMIN_PASSWD
-            valueFrom:
-              secretKeyRef:
-                key: ADMIN_PASSWD
-                name: {{ include "SecretsName" . }}
-                optional: true
-          - name: SALT
-            valueFrom:
-              secretKeyRef:
-                key: SALT
-                name: {{ include "SecretsName" . }}
-          - name: POSTGRES_DB
-            valueFrom:
-              secretKeyRef:
-                key: POSTGRES_DB
-                name: {{ include "SecretsName" . }}
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                key: POSTGRES_USER
-                name: {{ include "SecretsName" . }}
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                key: POSTGRES_PASSWORD
-                name: {{ include "SecretsName" . }}
-              
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: {{ .Values.svc.backend.name }}
-    namespace: {{ .Release.Namespace }}
-  spec:
-    selector:
-      app: {{ .Values.svc.backend.name }}
-    clusterIP: None
-
-kind: List
+kind: Deployment
 metadata:
-  name: "backend-list"
+  name: {{ .Release.Name }}-backend
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      name: backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: backend
+        {{- with .Values.backend.podLabels }}
+        {{ toYaml . }}
+        {{- end }}
+      {{- with .Values.backend.podAnnotations }}
+      annotations:
+        {{ toYaml . }}
+      {{- end }}
+    spec:
+      hostname: backend
+      restartPolicy: Always
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml .Values.imagePullSecrets }}
+      {{- end }}
+      initContainers:
+      - name: wait-db
+        image: postgres
+        imagePullPolicy: IfNotPresent
+        command:
+        - sh
+        - -ec
+        - |
+          until pg_isready -h db -p 5432 -U postgres; do
+            sleep 1
+          done
+      containers:
+      - name: backend
+        image: {{ .Values.Registry }}/backend:{{ .Values.backend.image.tag }}
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        ports:
+        - containerPort: 9000
+        {{- $secretName := .Values.secret | default "0chan-secret" }}
+        {{- with .Values.backend.env }}
+        env:
+          {{- range . }}
+          - name: {{ .name }}
+            {{- if .value }}
+            value: {{ .value | quote }}
+            {{- else if .valueFrom }}
+            valueFrom:
+              {{- $valueFrom := .valueFrom }}
+              {{- if kindIs "string" $valueFrom.secretKeyRef.name }}
+              secretKeyRef:
+                key: {{ $valueFrom.secretKeyRef.key }}
+                name: {{ $secretName | quote }}
+              {{- else }}
+                {{- toYaml $valueFrom }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+        {{- end }}
+...
+---          
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    name: backend
+  clusterIP: None
+...
