@@ -99,6 +99,21 @@ class ApiThreadController extends ApiBaseController
         }
     }
 
+    public function getGlobalLastThread() 
+    {
+		$posts = Criteria::create(Post::dao()) -> add(Expression::isNull('parent'))
+			->addOrder(OrderBy::create('id')
+			->desc())
+			->setLimit(1)
+			->getList();
+
+		if (is_array($posts) || is_object($posts)) {
+			foreach($posts as $post) {
+				return $post;
+			}
+		}
+    }
+
     public function spamFilterCheck($message)
     {
         $cache = Cache::me();
@@ -248,14 +263,26 @@ class ApiThreadController extends ApiBaseController
             }
         }
 
-        if (!empty($this->getLastThreadByIP($iphash)) && (is_null($parent))) {
-            $threadIpTimeout = (int)Cache::me()->get('threadIpTimeout');
-            if (!$threadIpTimeout) {
-                $threadIpTimeout = 300;
+        if ($parent == null) {
+            if (!empty($this->getLastThreadByIP($iphash))) {
+                $threadIpTimeout = (int)Cache::me()->get('threadIpTimeout');
+                if (!$threadIpTimeout) {
+                    $threadIpTimeout = 300;
+                }
+                $now = time();
+                if ($now - $this->getLastThreadByIP($iphash)->getCreateDate()->toStamp() < $threadIpTimeout) {
+                    return ['ok' => false, 'reason' => 'thread_timeout'];
+                }
             }
-            $now = time();
-            if ($now - $this->getLastThreadByIP($iphash)->getCreateDate()->toStamp() < $threadIpTimeout) {
-                return ['ok' => false, 'reason' => 'thread_timeout'];
+            if (!empty($this->getGlobalLastThread())) {
+                $threadGlobalTimeout = (int)Cache::me()->get('threadGlobalTimeout');
+                if (!$threadGlobalTimeout) {
+                    $threadGlobalTimeout = 5;
+                }
+                $now = time();
+			    if ($now - $this->getGlobalLastThread()->getCreateDate()->toStamp() < $threadGlobalTimeout) {
+				    return ['ok' => false, 'reason' => 'global_timeout'];
+			    }
             }
         }
 
@@ -327,10 +354,6 @@ class ApiThreadController extends ApiBaseController
             $post->setParent($parent);
         }
 
-        $isTimeoutEnabled = Cache::me()->get('globalTimeout');
-        $timeout_cmd = null;
-        $af_key = Cache::me()->get('af:' . $thread->getBoard()->getId());
-
         if ($isIdentityAllowed && $form->getValue('identity') && $form->getValue('identity') != 'notselected' && $this->getUser()) {
             $identity = Criteria::create(UserIdentity::dao())
                 ->add(Expression::eq('address', $form->getValue('identity')))
@@ -393,20 +416,6 @@ class ApiThreadController extends ApiBaseController
                 }
             }
 
-            if ($isTimeoutEnabled) {
-                if ($parent == null) {
-                    if ($af_key && $af_key >= 5) {
-                        return ['ok' => false, "reason" => 'global_timeout'];
-                    }
-
-                    if (!$af_key) {
-                        $timeout_cmd = 'create';
-                    } else {
-                        $timeout_cmd = 'increment';
-                    }
-                }
-            }
-
             if ($thread->getBoard()->getTextboard()) {
                 if (!empty($imageIds)) {
                     return ["ok" => false, "reason" => "textboard"];
@@ -434,22 +443,6 @@ class ApiThreadController extends ApiBaseController
         }
 
         $thread->getPostCount(true);
-
-        if ($timeout_cmd) { // Этот костыль здесь потому что Cache не работает во время щапущенной транзакции... миша гей.
-            switch ($timeout_cmd) {
-                case 'create':
-                    Cache::me()->increment('af:' . $thread->getBoard()->getId(), 1);
-                    Cache::me()->expire('af:' . $thread->getBoard()->getId(), 3600);
-                    break;
-
-                case 'increment':
-                    Cache::me()->increment('af:' . $thread->getBoard()->getId(), 1);
-                    break;
-
-                default:
-                    break;
-            }
-        }
 
         return [
             'ok' => true,
