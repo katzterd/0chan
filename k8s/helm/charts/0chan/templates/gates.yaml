@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-torgate
+  name: {{ template "0chan.torgate.fullname" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   strategy:
@@ -71,7 +71,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-i2pgate
+  name: {{ template "0chan.i2pgate.fullname" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   strategy:
@@ -139,7 +139,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-yggdrasilgate
+  name: {{ template "0chan.yggdrasilgate.fullname" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   strategy:
