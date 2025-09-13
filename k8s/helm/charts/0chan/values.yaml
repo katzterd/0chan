@@ -6,18 +6,12 @@ imagePullSecrets: []
 ## Main secret name
 secret: ""
 
-
-
-
 ## Application configuration
 
-
-
 frontend:
-
   ## Additional pod Labels for frontend
   podLabels: {}
-  
+
   ## podAnnotations for frontend
   podAnnotations: {}
 
@@ -37,13 +31,10 @@ frontend:
           name: "{{ .Values.secret }}"
           optional: true
 
-
-
 backend:
-
   ## Additional pod Labels for backend
   podLabels: {}
-  
+
   ## podAnnotations for backend
   podAnnotations: {}
 
@@ -95,13 +86,10 @@ backend:
           key: POSTGRES_PASSWORD
           name: "{{ .Values.secret }}"
 
-
-
 storage:
-
   ## Additional pod Labels for storage
   podLabels: {}
-  
+
   ## podAnnotations for storage
   podAnnotations: {}
 
@@ -134,14 +122,10 @@ storage:
           key: SALT
           name: "{{ .Values.secret }}"
 
-
-
-
 db:
-
   ## Additional pod Labels for db
   podLabels: {}
-  
+
   ## podAnnotations for db
   podAnnotations: {}
 
@@ -177,13 +161,10 @@ db:
           key: POSTGRES_PASSWORD
           name: "{{ .Values.secret }}"
 
-
-
 cache:
-
   ## Additional pod Labels for cache
   podLabels: {}
-  
+
   ## podAnnotations for cache
   podAnnotations: {}
 
@@ -200,10 +181,7 @@ cache:
       accessMode: "ReadWriteOnce"
     size: 5Gi
 
-
-
 torgate:
-
   ## Additional pod Labels for torgate
   podLabels: {}
 
@@ -240,13 +218,10 @@ torgate:
           key: TORGATE_PRIVATE_KEY
           name: "{{ .Values.secret }}"
 
-
-
 i2pgate:
-
   ## Additional pod Labels for i2pgate
   podLabels: {}
-  
+
   ## podAnnotations for i2pgate
   podAnnotations: {}
 
@@ -270,13 +245,10 @@ i2pgate:
           key: I2PGATE_PRIVATE_KEY
           name: "{{ .Values.secret }}"
 
-
-
 yggdrasilgate:
-
   ## Additional pod Labels for yggdrasilgate
   podLabels: {}
-  
+
   ## podAnnotations for yggdrasilgate
   podAnnotations: {}
 

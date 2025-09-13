@@ -64,7 +64,6 @@ spec:
             {{- end }}
             {{- end }}
         {{- end }}
-...
 {{- end }}
 {{- if eq .Values.i2pgate.enable true }}
 ---
@@ -132,7 +131,6 @@ spec:
             {{- end }}
             {{- end }}
         {{- end }}
-...
 {{- end }}
 {{- if eq .Values.yggdrasilgate.enable true }}
 ---
@@ -211,5 +209,4 @@ spec:
       - name: tun
         hostPath:
           path: /dev/net/tun
-...
 {{- end }}
