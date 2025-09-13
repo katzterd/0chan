@@ -57,13 +57,13 @@ spec:
             {{- end }}
         {{- end }}
         volumeMounts:
-        - name: storage-pv
+        - name: {{ .Release.Name }}-storage-pv
           mountPath: /storage
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: storage-pv
+      name: {{ .Release.Name }}-storage-pv
     spec:
       accessModes: [ {{ .Values.storage.persistentVolume.storageClass.accessMode }} ]
       resources:
@@ -71,7 +71,6 @@ spec:
           storage: "{{ .Values.storage.persistentVolume.size }}"
       storageClassName: {{ .Values.storage.persistentVolume.storageClass.name | default "" }}
       volumeMode: Filesystem
-...
 ---
 apiVersion: v1
 kind: Service
@@ -82,4 +81,3 @@ spec:
   selector:
     name: storage
   clusterIP: None
-...

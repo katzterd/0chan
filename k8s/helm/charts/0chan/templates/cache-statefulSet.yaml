@@ -32,13 +32,13 @@ spec:
         ports:
         - containerPort: 6379
         volumeMounts:
-        - name: cache-pv
+        - name: {{ .Release.Name }}-cache-pv
           mountPath: /cache
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: cache-pv
+      name: {{ .Release.Name }}-cache-pv
     spec:
       accessModes: [ {{ .Values.cache.persistentVolume.storageClass.accessMode }} ]
       resources:
@@ -46,7 +46,6 @@ spec:
           storage: "{{ .Values.cache.persistentVolume.size }}"
       storageClassName: {{ .Values.cache.persistentVolume.storageClass.name | default "" }}
       volumeMode: Filesystem
-...
 ---
 apiVersion: v1
 kind: Service
@@ -57,4 +56,3 @@ spec:
   selector:
     name: cache
   clusterIP: None
-...

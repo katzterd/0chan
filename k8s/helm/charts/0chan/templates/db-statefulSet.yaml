@@ -57,13 +57,13 @@ spec:
             {{- end }}
         {{- end }}
         volumeMounts:
-        - name: db-pv
+        - name: {{ .Release.Name }}-db-pv
           mountPath: /var/lib/postgresql/data
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
     metadata:
-      name: db-pv
+      name: {{ .Release.Name }}-db-pv
     spec:
       accessModes: [ {{ .Values.db.persistentVolume.storageClass.accessMode }} ]
       resources:
@@ -71,7 +71,6 @@ spec:
           storage: "{{ .Values.db.persistentVolume.size }}"
       storageClassName: {{ .Values.db.persistentVolume.storageClass.name | default "" }}
       volumeMode: Filesystem
-...
 ---            
 apiVersion: v1
 kind: Service
@@ -86,4 +85,3 @@ spec:
     port: 5432
     targetPort: 5432
   clusterIP: None
-...
