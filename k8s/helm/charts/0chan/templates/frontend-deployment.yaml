@@ -71,7 +71,6 @@ spec:
             {{- end }}
             {{- end }}
         {{- end }}
-...
 ---
 apiVersion: v1
 kind: Service
@@ -86,4 +85,3 @@ spec:
     port: 80
     targetPort: 80
   clusterIP: None
-...

@@ -1,5 +1,4 @@
 services:
-
   frontend:
     build: ./frontend
     image: ${REGISTRY_PATH}/frontend:latest
@@ -93,7 +92,7 @@ services:
         parallelism: 1
         delay: 2s
         monitor: 2s
-        
+
   i2pgate:
     build: ./i2pgate
     image: ${REGISTRY_PATH}/i2pgate:latest
@@ -116,7 +115,7 @@ services:
         parallelism: 1
         delay: 2s
         monitor: 2s
-        
+
   yggdrasilgate:
     build: ./yggdrasilgate
     image: ${REGISTRY_PATH}/yggdrasilgate:latest
@@ -165,16 +164,19 @@ services:
   cache:
     image: redis:7-alpine
     container_name: cache
+    volumes:
+      - cache_data:/data
     networks:
       - 0chan
     deploy:
       placement:
-          constraints:
-            - node.labels.nc.role == main
-    
+        constraints:
+          - node.labels.nc.role == main
+
 networks:
   0chan:
 
 volumes:
   db_data:
+  cache_data:
   storage:
