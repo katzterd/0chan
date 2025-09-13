@@ -33,7 +33,8 @@ spec:
         - containerPort: 6379
         volumeMounts:
         - name: {{ .Release.Name }}-cache-pvc
-          mountPath: /cache
+          mountPath: /data
+          subPath: redis_data
   volumeClaimTemplates:
   - apiVersion: v1
     kind: PersistentVolumeClaim
