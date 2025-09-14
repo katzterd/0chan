@@ -65,5 +65,5 @@ kubectl create -n <namespace> secret generic <imagePullSecretName> \
 ## Get yggdrasil node address (if enabled)
 
 ```console
-kubectl exec -n <namespace> -t deployments/yggdrasilgate -- /docker-entrypoint.sh getaddr
+kubectl exec -n <namespace> -t deployments/<my-release>-yggdrasilgate -- /docker-entrypoint.sh getaddr
 ```
