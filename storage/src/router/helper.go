@@ -32,9 +32,16 @@ func processImage(img image.Image, name, format string) map[int]map[string]any {
 			imaging.Encode(&buf, procImg, imaging.JPEG)
 		} else {
 			procImg = img
-			if format == "png" {
+
+			switch format {
+			case "png":
 				imaging.Encode(&buf, procImg, imaging.PNG)
+			case "jpeg":
+				imaging.Encode(&buf, procImg, imaging.JPEG)
+			case "jpg":
+				imaging.Encode(&buf, procImg, imaging.JPEG)
 			}
+
 		}
 
 		fullname := name
