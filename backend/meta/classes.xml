@@ -227,7 +227,6 @@
                 <identifier />
                 <property name="role" type="AttachmentImageRole" relation="OneToOne" fetch="lazy" />
                 <property name="attachment" type="Attachment" relation="OneToOne" fetch="lazy" required="true" />
-                <property name="server" type="String" size="64" required="false" />
                 <property name="filename" type="String" size="64" required="true" />
                 <property name="fileSize" type="Integer" required="true" />
                 <property name="md5" type="String" size="32" required="true" />
@@ -240,7 +239,6 @@
         <class name="StorageTrash">
             <properties>
                 <identifier />
-                <property name="server" type="String" size="64" required="true" />
                 <property name="filename" type="String" size="64" required="true" />
             </properties>
             <pattern name="StraightMapping"/>

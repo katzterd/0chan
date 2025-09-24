@@ -17,7 +17,7 @@
                 'blockRu'       => 'Без РФ',
                 'threadLimit'   => 'Тред лимит',
                 'bumpLimit'     => 'Бамп лимит',
-                'imrequired'    => 'Изображения',
+                'imrequired'    => 'Медиа',
                 'sage'          => 'Сажа',
                 'identity'      => 'Личности',
                 'likes'         => 'Рейтинг',

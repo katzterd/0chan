@@ -45,26 +45,20 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
     public function getWebPath()
     {
         $fullFilename = $this->getFullFilename();
-        if ($this->getServer()) {
-            $baseHost = App::me()->getRequestHost();
-            $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
-            $prefix = '//' . $this->getServer() . '.' . $baseHost . '/';
-        } else {
-            $prefix = '//' . App::me()->getRequestHost() . '/';
-        }
+
+        $baseHost = App::me()->getRequestHost();
+        $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
+        $prefix = '//' . MEDIA_SUBDOMAIN . '.' . $baseHost . '/';
+
         $url = $prefix . $fullFilename;
         return $url;
     }
 
-    public static function secureWebPath($server, $path, $ip)
+    public static function secureWebPath($path, $ip)
     {
-        if ($server) {
-            $baseHost = App::me()->getRequestHost();
-            $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
-            $host = '//' . $server . '.' . $baseHost . '/';
-        } else {
-            $host = '//' . App::me()->getRequestHost() . '/';
-        }
+        $baseHost = App::me()->getRequestHost();
+        $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
+        $host = '//' . MEDIA_SUBDOMAIN . '.' . $baseHost . '/';
 
         $interval = 3600 * 2; // update expiration every 2 hours
         $expire = (ceil(time() / $interval) + 1) * $interval;
@@ -77,9 +71,6 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
     {
         $name = $this->getFilename();
         $path = '';
-        if (!$this->getServer()) {
-            $path = 'images/';
-        }
         $path .= substr($name, 0, 2) . '/';
         $path .= substr($name, 2, 2) . '/';
         $path .= substr($name, 4, 2) . '/';
@@ -92,7 +83,6 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
         return [
             'id'      => $this->getId(),
             'name'    => $this->getFilename(),
-            'server'  => $this->getServer(),
             'path'    => $this->getFullFilename(),
             'url'     => $this->getWebPath(),
             'md5'     => $this->getMd5(),
@@ -104,9 +94,6 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
 
     public function writeFile($content)
     {
-        if ($this->getServer()) {
-            throw new WrongStateException('the file is not local: ' . $this->getFilename());
-        }
         $path = $this->getStoragePath();
         file_put_contents($path, $content);
         return $this;
@@ -114,19 +101,10 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
 
     public function removeFile()
     {
-        if ($this->getServer()) {
-            StorageTrash::dao()->add(
-                StorageTrash::create()
-                    ->setServer($this->getServer())
-                    ->setFilename($this->getFilename())
-            );
-        } else {
-            try {
-                @unlink($this->getStoragePath());
-            } catch (Exception $e) {
-                // ignore
-            }
-        }
+        StorageTrash::dao()->add(
+            StorageTrash::create()
+                ->setFilename($this->getFilename())
+        );
 
         return $this;
     }

@@ -185,7 +185,6 @@ CREATE TABLE "attachment_image" (
     "id" BIGINT NOT NULL default nextval('attachment_image_id'),
     "role_id" BIGINT NULL,
     "attachment_id" BIGINT NOT NULL REFERENCES "attachment"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    "server" CHARACTER VARYING(64) NULL,
     "filename" CHARACTER VARYING(64) NOT NULL,
     "file_size" INTEGER NOT NULL,
     "md5" CHARACTER VARYING(32) NOT NULL,
@@ -198,7 +197,6 @@ CREATE TABLE "attachment_image" (
 CREATE SEQUENCE "storage_trash_id";
 CREATE TABLE "storage_trash" (
     "id" BIGINT NOT NULL default nextval('storage_trash_id'),
-    "server" CHARACTER VARYING(64) NOT NULL,
     "filename" CHARACTER VARYING(64) NOT NULL,
     PRIMARY KEY("id")
 );

@@ -1,7 +1,7 @@
 apiVersion: v2
 name: 0chan
-version: 1.2.2
-appVersion: "2.0.0"
+version: 1.2.3
+appVersion: "2.1.0"
 description: 0chan k8s helm chart.
 home: https://github.com/katzterd/0chan
 icon: https://raw.githubusercontent.com/katzterd/0chan/refs/heads/main/frontend/static/favicon.ico
