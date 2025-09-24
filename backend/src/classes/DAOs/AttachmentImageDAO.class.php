@@ -28,7 +28,6 @@
 
                 $images []= AttachmentImage::create()
                     ->setRole($role)
-                    ->setServer($storage->getNameExt())
                     ->setFilename($item['name'])
                     ->setFileSize($item['size'])
                     ->setMd5($item['md5'])

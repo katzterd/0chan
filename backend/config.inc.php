@@ -31,6 +31,7 @@ if (PRODUCTION) {
 }
 
 define('LOCALGW_KEY', getenv('LOCALGW_KEY'));
+define('MEDIA_SUBDOMAIN', getenv('MEDIA_SUBDOMAIN'));
 
 // shared classes
 define('PATH_CLASSES', 		  PATH_SOURCE.'classes'.DIRECTORY_SEPARATOR);

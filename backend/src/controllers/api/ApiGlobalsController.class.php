@@ -7,7 +7,7 @@ class ApiGlobalsController extends ApiBaseController
         'inviteRequired' => ['title' => 'Инвайты', 'description' => 'Регистрация возможна только при наличии инвайта'],
         'torgateRegisterRequired' => ['title' => 'Постинг после регистрации (Darknet)', 'description' => 'Постинг через Tor/I2P/Yggdrasil возможен только после регистрации'],
         'disableTorPosting' => ['title' => 'Постинг через зеркала Darknet', 'description' => 'Отключить постинг для пользователей Tor/I2P/Yggdrasil'],
-        'sameImageLimit' => ['title' => 'Лимит на одинаковые изображения', 'description' => 'Фильтр одинаковых изображений - не более 1-го одинакового изображения в N минут', 'type' => 'int', 'default' => 0],
+        'sameMediaLimit' => ['title' => 'Лимит на одинаковые медиа', 'description' => 'Фильтр одинаковых медиа - не более 1-го одинакового медиа в N минут', 'type' => 'int', 'default' => 0],
         'postIpTimeout' => ['title' => 'Лимит на создание постов', 'description' => 'Таймаут на создание постов с одного ip-адреса - не более 1-го поста в N секунд', 'type' => 'int', 'default' => 5],
         'threadIpTimeout' => ['title' => 'Лимит на создание тредов', 'description' => 'Таймаут на создание тредов с одного ip-адреса - не более 1-го треда в N секунд', 'type' => 'int', 'default' => 300],
         'threadGlobalTimeout' => ['title' => 'Глобальный лимит тредов', 'description' => 'Глобальный таймаут на создание тредов - не более 1-го треда в N секунд', 'type' => 'int', 'default' => 5],

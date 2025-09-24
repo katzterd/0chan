@@ -47,6 +47,11 @@ backend:
     pullPolicy: Always
 
   env:
+    - name: MEDIA_SUBDOMAIN
+      valueFrom:
+        secretKeyRef:
+          key: MEDIA_SUBDOMAIN
+          name: "{{ .Values.secret }}"
     - name: LOCALGW_KEY
       valueFrom:
         secretKeyRef:
@@ -107,15 +112,6 @@ storage:
     size: 25Gi
 
   env:
-    - name: HOSTNAME
-      value: storage
-    - name: DISCOVER
-      value: storage
-    - name: STORAGE_ID
-      valueFrom:
-        secretKeyRef:
-          key: STORAGE_ID
-          name: "{{ .Values.secret }}"
     - name: SALT
       valueFrom:
         secretKeyRef:

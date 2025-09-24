@@ -412,7 +412,7 @@ class ApiThreadController extends ApiBaseController
 
             if ($thread->getBoard()->getImrequired()) {
                 if ($parent == null && empty($imageIds)) {
-                    return ["ok" => false, "reason" => "gimme_image"];
+                    return ["ok" => false, "reason" => "gimme_media"];
                 }
             }
 

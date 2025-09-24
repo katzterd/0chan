@@ -117,7 +117,7 @@
                     type="file"
                     hidden
                     multiple="multiple"
-                    accept="image/*"
+                    accept="image/*,video/mp4,video/webm"
                 />
                 <button
                     class="btn btn-xs btn-default"
@@ -396,7 +396,7 @@ export default {
                             );
                             break;
 
-                        case "gimme_image":
+                        case "gimme_media":
                             this.$bus.emit(
                                 BusEvents.ALERT_ERROR,
                                 "На этой доске нельзя создавать треды без прикреплённого медиа"
@@ -406,7 +406,7 @@ export default {
                         case "textboard":
                             this.$bus.emit(
                                 BusEvents.ALERT_ERROR,
-                                "На этой доске нельзя использовать изображения"
+                                "На этой доске нельзя использовать медиа"
                             );
                             break;
 

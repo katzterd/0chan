@@ -12,8 +12,14 @@
                 v-if="showNsfwLabel"
                 >NSFW</span
             >
-            <span class="post-img-label post-img-gif-label" v-if="isGif"
+            <span class="post-img-label post-img-animated-label" v-if="isGif"
                 >GIF</span
+            >
+            <span class="post-img-label post-img-animated-label" v-if="isMp4"
+                >MP4</span
+            >
+            <span class="post-img-label post-img-animated-label" v-if="isWebm"
+                >WEBM</span
             >
             <span
                 class="post-img-label post-img-deleted-label"
@@ -21,7 +27,12 @@
                 >DELETED</span
             >
         </div>
-        <div class="post-img-buttons">
+
+        <span class="post-play-icon" v-if="thumbnail && (isMp4 || isWebm)">
+            <i class="fa fa-play"></i>
+        </span>
+
+        <div class="post-img-buttons" v-if="thumbnail">
             <span
                 v-if="moderatable"
                 class="post-img-button"
@@ -50,7 +61,7 @@
         </div>
 
         <span v-if="!attachment.embed">
-            <figcaption>
+            <figcaption v-if="thumbnail">
                 <span class="pull-left">
                     {{ attachment.images.original.width }}&times;{{
                         attachment.images.original.height
@@ -58,20 +69,46 @@
                 </span>
             </figcaption>
             <a :href="attachment.images.original.url" target="_blank">
-                <img
-                    @click.prevent="onThumbnailClick"
-                    :src="actualImage.url"
-                    :srcset="retinaThumb"
-                    :class="{
-                        'post-img-thumbnail': thumbnail,
-                        'post-img-full': !thumbnail,
-                    }"
-                    :style="{
-                        width: actualImage.width + 'px',
-                        height: actualImage.height + 'px',
-                    }"
-                    ref="image"
-                />
+                <span v-if="isMp4 || isWebm">
+                    <img
+                        v-if="thumbnail"
+                        @click.prevent="onThumbnailClick"
+                        :src="actualVideo.url"
+                        class="post-img-thumbnail"
+                        :style="{
+                            width: actualVideo.width + 'px',
+                            height: actualVideo.height + 'px',
+                        }"
+                    />
+                    <video
+                        v-else
+                        :src="actualVideo.url"
+                        controls
+                        autoplay
+                        class="post-img-full"
+                        :style="{
+                            width: actualVideo.width + 'px',
+                            height: actualVideo.height + 'px',
+                        }"
+                        preload="none"
+                    ></video>
+                </span>
+                <span v-else>
+                    <img
+                        @click.prevent="onThumbnailClick"
+                        :src="actualImage.url"
+                        :srcset="retinaThumb"
+                        :class="{
+                            'post-img-thumbnail': thumbnail,
+                            'post-img-full': !thumbnail,
+                        }"
+                        :style="{
+                            width: actualImage.width + 'px',
+                            height: actualImage.height + 'px',
+                        }"
+                        ref="image"
+                    />
+                </span>
             </a>
         </span>
 
@@ -154,6 +191,11 @@ export default {
                 this.thumbnail ? "thumb_200px" : "original"
             ];
         },
+        actualVideo() {
+            return this.attachment.images[
+                this.thumbnail ? "thumb_200px" : "original"
+            ];
+        },
         retinaThumb() {
             return this.thumbnail
                 ? this.attachment.images["thumb_400px"].url + " 2x"
@@ -173,40 +215,62 @@ export default {
         isGif() {
             return this.attachment.images.original.name.substr(-3) == "gif";
         },
+        isMp4() {
+            return this.attachment.images.original.name.substr(-3) == "mp4";
+        },
+        isWebm() {
+            return this.attachment.images.original.name.substr(-4) == "webm";
+        },
     },
     methods: {
         onThumbnailClick(event, isThumbnail) {
             this.thumbnail = !this.thumbnail;
             this.$nextTick(() => {
-                const $img = $(this.$refs.image);
+                const mediaEl =
+                    this.$refs.image || this.$el.querySelector("video");
 
-                if (!isThumbnail && !this.attachment.embed) {
-                    const maxSize = {
-                        width: window.innerWidth - $img.offset().left - 40,
-                        height: window.innerHeight - 20,
-                    };
+                if (!this.thumbnail && !this.attachment.embed && mediaEl) {
+                    const $media = $(mediaEl);
 
-                    const imgSize = {
-                        width: this.actualImage.width,
-                        height: this.actualImage.height,
-                    };
+                    if ($media.length && $media.offset()) {
+                        const maxSize = {
+                            width:
+                                window.innerWidth - $media.offset().left - 40,
+                            height: window.innerHeight - 20,
+                        };
 
-                    const factor = Math.min(
-                        maxSize.height / imgSize.height,
-                        maxSize.width / imgSize.width
-                    );
+                        const mediaSize =
+                            this.isMp4 || this.isWebm
+                                ? {
+                                      width: this.actualVideo.width,
+                                      height: this.actualVideo.height,
+                                  }
+                                : {
+                                      width: this.actualImage.width,
+                                      height: this.actualImage.height,
+                                  };
 
-                    if (factor < 1) {
-                        $img.width(imgSize.width * factor);
-                        $img.height(imgSize.height * factor);
-                    } else {
-                        $img.width(imgSize.width);
-                        $img.height(imgSize.height);
+                        const factor = Math.min(
+                            maxSize.height / mediaSize.height,
+                            maxSize.width / mediaSize.width
+                        );
+
+                        if (factor < 1) {
+                            $media.width(mediaSize.width * factor);
+                            $media.height(mediaSize.height * factor);
+                        } else {
+                            $media.width(mediaSize.width);
+                            $media.height(mediaSize.height);
+                        }
                     }
                 }
-                if (!this.noScroll) {
-                    UI.scrollTo($img, -30);
+                if (!this.noScroll && mediaEl) {
+                    const $media = $(mediaEl);
+                    if ($media.length && $media.offset()) {
+                        UI.scrollTo($media, -30);
+                    }
                 }
+
                 this.$emit("opened", !this.thumbnail);
             });
         },
@@ -287,7 +351,7 @@ export default {
 
 .post-img {
     /*float: left;*/
-    display: inline-block;
+    display: inline-grid;
     margin-right: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
@@ -391,7 +455,7 @@ export default {
             color: $color-red;
             border: 1px solid $color-red;
         }
-        .post-img-gif-label {
+        .post-img-animated-label {
             color: $color-green;
             border: 1px solid $color-green;
         }
@@ -399,6 +463,11 @@ export default {
 
     &.post-img-nsfw {
         .post-img-thumbnail {
+            opacity: 0.2;
+            filter: blur(4px) grayscale(50%);
+        }
+
+        .post-video-thumbnail {
             opacity: 0.2;
             filter: blur(4px) grayscale(50%);
         }
@@ -413,6 +482,22 @@ export default {
         .post-img-thumbnail {
             opacity: 0.3;
         }
+
+        .post-video-thumbnail {
+            opacity: 0.3;
+        }
+    }
+
+    .post-play-icon {
+        pointer-events: none;
+        position: absolute;
+        align-self: center;
+        justify-self: center;
+        background: transparent !important;
+        border: none !important;
+        color: #16a085;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+        font-size: 34px;
     }
 }
 </style>

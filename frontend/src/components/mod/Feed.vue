@@ -27,8 +27,8 @@
                 ></Pagination>
                 <div class="checkbox" style="margin-left: 24px">
                     <label>
-                        <input type="checkbox" v-model="filterGif" />
-                        Показывать только GIF
+                        <input type="checkbox" v-model="filterAnimated" />
+                        Показывать только GIF/MP4/WEBM
                     </label>
                 </div>
             </div>
@@ -61,7 +61,7 @@ export default {
             feed: null,
             pagination: null,
             popupPost: null,
-            filterGif: false,
+            filterAnimated: false,
         };
     },
     mounted() {
@@ -69,10 +69,12 @@ export default {
     },
     computed: {
         Feed() {
-            if (!this.filterGif) return this.feed;
+            if (!this.filterAnimated) return this.feed;
             return this.feed.filter((item) => {
                 return (
-                    item.attachment.images.original.name.substr(-3) === "gif"
+                    item.attachment.images.original.name.substr(-3) === "gif" ||
+                    item.attachment.images.original.name.substr(-3) === "mp4" ||
+                    item.attachment.images.original.name.substr(-4) === "webm"
                 );
             });
         },

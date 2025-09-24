@@ -50,8 +50,6 @@ services:
         published: 359
         protocol: tcp
         mode: host
-    environment:
-      - "DISCOVER=storage"
     volumes:
       - storage:/storage
     env_file:

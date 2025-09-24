@@ -166,11 +166,11 @@ class ApiAttachmentController extends ApiBaseController
      */
     protected function addAttachment(array $images = [], AttachmentEmbed $embed = null)
     {
-        $sameImageLimit = (int)Cache::me()->get('sameImageLimit');
-        if (!$sameImageLimit) {
-            $sameImageLimit = 0;
+        $sameMediaLimit = (int)Cache::me()->get('sameMediaLimit');
+        if (!$sameMediaLimit) {
+            $sameMediaLimit = 0;
         }
-        $rejectionTime = Timestamp::makeNow()->modify("-{$sameImageLimit} minutes");
+        $rejectionTime = Timestamp::makeNow()->modify("-{$sameMediaLimit} minutes");
 
         $attachment = Attachment::create()
             ->setCreateDate(Timestamp::makeNow())
@@ -195,7 +195,7 @@ class ApiAttachmentController extends ApiBaseController
                     $sameImageCreateTime = $sameImage->getAttachment()->getCreateDate();
 
                     if ($sameImageCreateTime > $rejectionTime) {
-                        return ['ok' => false, 'reason' => 'Вы пытаетесь отправить уже загруженное до этого изображение'];
+                        return ['ok' => false, 'reason' => 'Вы пытаетесь отправить уже загруженное до этого медиа'];
                     }
                 }
 
