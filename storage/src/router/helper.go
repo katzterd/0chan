@@ -27,7 +27,7 @@ func processImage(img image.Image, name, format string) map[int]map[string]any {
 		)
 
 		if size > 0 {
-			procImg = imaging.Resize(img, size, 0, imaging.Lanczos)
+			procImg = imaging.Fit(img, size, size, imaging.Lanczos)
 			procImg = imaging.Overlay(imaging.New(procImg.Bounds().Dx(), procImg.Bounds().Dy(), color.White), procImg, image.Point{0, 0}, 1.0)
 			imaging.Encode(&buf, procImg, imaging.JPEG)
 		} else {
@@ -82,7 +82,7 @@ func processGif(gifData *gif.GIF, name string) map[int]map[string]any {
 		)
 
 		if size > 0 {
-			thumb = imaging.Resize(gifData.Image[0], size, 0, imaging.Lanczos)
+			thumb = imaging.Fit(gifData.Image[0], size, size, imaging.Lanczos)
 			thumb = imaging.Overlay(imaging.New(thumb.Bounds().Dx(), thumb.Bounds().Dy(), color.White), thumb, image.Point{0, 0}, 1.0)
 			imaging.Encode(&buf, thumb, imaging.JPEG)
 		} else {
@@ -138,7 +138,7 @@ func processVideo(video []byte, tmp *os.File, name, format string, width, height
 			tmpThumb, _ := os.CreateTemp("", "thumb-*.jpg")
 			tmpThumb.Close()
 
-			args := []string{"-i", tmp.Name(), "-ss", "00:00:01", "-vframes", "1", "-vf", fmt.Sprintf("scale=%d:%d", size, int(float64(height)*float64(size)/float64(width))), "-y", tmpThumb.Name()}
+			args := []string{"-i", tmp.Name(), "-ss", "00:01", "-vframes", "1", "-filter:v", fmt.Sprintf("scale=%d:%d:force_original_aspect_ratio=1", size, size), "-y", tmpThumb.Name()}
 
 			exec.Command("ffmpeg", args...).Run()
 

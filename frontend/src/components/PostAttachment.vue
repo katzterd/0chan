@@ -28,11 +28,11 @@
             >
         </div>
 
-        <span class="post-play-icon" v-if="thumbnail && (isMp4 || isWebm)">
+        <span v-if="thumbnail && (isMp4 || isWebm)" class="post-play-icon">
             <i class="fa fa-play"></i>
         </span>
 
-        <div class="post-img-buttons" v-if="thumbnail">
+        <div class="post-img-buttons">
             <span
                 v-if="moderatable"
                 class="post-img-button"
@@ -52,7 +52,7 @@
             </span>
 
             <span
-                v-if="attachment.embed && !thumbnail"
+                v-if="(attachment.embed || isMp4 || isWebm) && !thumbnail"
                 class="post-img-button"
                 @click.stop="onThumbnailClick"
             >
@@ -226,49 +226,42 @@ export default {
         onThumbnailClick(event, isThumbnail) {
             this.thumbnail = !this.thumbnail;
             this.$nextTick(() => {
-                const mediaEl =
-                    this.$refs.image || this.$el.querySelector("video");
+                const $media = $(
+                    this.$refs.image || this.$el.querySelector("video")
+                );
 
-                if (!this.thumbnail && !this.attachment.embed && mediaEl) {
-                    const $media = $(mediaEl);
+                if (!this.thumbnail && !this.attachment.embed) {
+                    const maxSize = {
+                        width: window.innerWidth - $media.offset().left - 40,
+                        height: window.innerHeight - 20,
+                    };
 
-                    if ($media.length && $media.offset()) {
-                        const maxSize = {
-                            width:
-                                window.innerWidth - $media.offset().left - 40,
-                            height: window.innerHeight - 20,
-                        };
+                    const mediaSize =
+                        this.isMp4 || this.isWebm
+                            ? {
+                                  width: this.actualVideo.width,
+                                  height: this.actualVideo.height,
+                              }
+                            : {
+                                  width: this.actualImage.width,
+                                  height: this.actualImage.height,
+                              };
 
-                        const mediaSize =
-                            this.isMp4 || this.isWebm
-                                ? {
-                                      width: this.actualVideo.width,
-                                      height: this.actualVideo.height,
-                                  }
-                                : {
-                                      width: this.actualImage.width,
-                                      height: this.actualImage.height,
-                                  };
+                    const factor = Math.min(
+                        maxSize.height / mediaSize.height,
+                        maxSize.width / mediaSize.width
+                    );
 
-                        const factor = Math.min(
-                            maxSize.height / mediaSize.height,
-                            maxSize.width / mediaSize.width
-                        );
-
-                        if (factor < 1) {
-                            $media.width(mediaSize.width * factor);
-                            $media.height(mediaSize.height * factor);
-                        } else {
-                            $media.width(mediaSize.width);
-                            $media.height(mediaSize.height);
-                        }
+                    if (factor < 1) {
+                        $media.width(mediaSize.width * factor);
+                        $media.height(mediaSize.height * factor);
+                    } else {
+                        $media.width(mediaSize.width);
+                        $media.height(mediaSize.height);
                     }
                 }
-                if (!this.noScroll && mediaEl) {
-                    const $media = $(mediaEl);
-                    if ($media.length && $media.offset()) {
-                        UI.scrollTo($media, -30);
-                    }
+                if (!this.noScroll) {
+                    UI.scrollTo($media, -30);
                 }
 
                 this.$emit("opened", !this.thumbnail);
@@ -467,11 +460,6 @@ export default {
             filter: blur(4px) grayscale(50%);
         }
 
-        .post-video-thumbnail {
-            opacity: 0.2;
-            filter: blur(4px) grayscale(50%);
-        }
-
         .post-embed-overlay {
             // dont cross NSFW badge
             padding-top: 1.5em;
@@ -482,22 +470,21 @@ export default {
         .post-img-thumbnail {
             opacity: 0.3;
         }
+    }
 
-        .post-video-thumbnail {
-            opacity: 0.3;
-        }
+    .post-img-full {
+        z-index: 0;
     }
 
     .post-play-icon {
-        pointer-events: none;
         position: absolute;
         align-self: center;
         justify-self: center;
-        background: transparent !important;
-        border: none !important;
-        color: #16a085;
+        color: #66bdac;
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
         font-size: 34px;
+        z-index: 5;
+        pointer-events: none;
     }
 }
 </style>
