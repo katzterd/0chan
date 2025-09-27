@@ -67,6 +67,15 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
         return $host . $path . '?hash=' . $hash . '&exp=' . $expire;
     }
 
+    public static function webPath($path, $ip)
+    {
+        $baseHost = App::me()->getRequestHost();
+        $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
+        $host = '//' . MEDIA_SUBDOMAIN . '.' . $baseHost . '/';
+
+        return $host . $path;
+    }
+
     protected function getFullFilename()
     {
         $name = $this->getFilename();
