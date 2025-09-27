@@ -8,7 +8,7 @@ class Script_CleanUnpublished extends ConsoleScript {
         /** @var Attachment[] $unpublisheds */
         $unpublisheds = Criteria::create(Attachment::dao())
             ->add(Expression::isFalse('published'))
-            ->add(Expression::lt('createDate', Timestamp::makeNow()->modify('1 hour ago')))
+            ->add(Expression::lt('createDate', Timestamp::makeNow()->modify('10 minutes ago')))
             ->addOrder(OrderBy::create('id')->asc())
             ->getList();
 
