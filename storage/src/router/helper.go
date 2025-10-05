@@ -15,33 +15,32 @@ import (
 	"github.com/disintegration/imaging"
 )
 
-func processImage(img image.Image, name, format string) map[int]map[string]any {
+func processImage(srcImg image.Image, name, format string) map[int]map[string]any {
 
 	result := map[int]map[string]any{}
 
 	for _, size := range Sizes {
 
 		var (
-			buf     bytes.Buffer
-			procImg image.Image
+			buf    bytes.Buffer
+			dstImg image.Image
 		)
 
 		if size > 0 {
-			procImg = imaging.Fit(img, size, size, imaging.Lanczos)
-			procImg = imaging.Overlay(imaging.New(procImg.Bounds().Dx(), procImg.Bounds().Dy(), color.White), procImg, image.Point{0, 0}, 1.0)
-			imaging.Encode(&buf, procImg, imaging.JPEG)
+			dstImg = imaging.Fit(srcImg, size, size, imaging.Lanczos)
+			dstImg = imaging.Overlay(imaging.New(dstImg.Bounds().Dx(), dstImg.Bounds().Dy(), color.White), dstImg, image.Point{0, 0}, 1.0)
+			imaging.Encode(&buf, dstImg, imaging.JPEG)
+			buf.Write(fmt.Appendf(nil, "%d", size))
 		} else {
-			procImg = img
-
+			dstImg = srcImg
 			switch format {
 			case "png":
-				imaging.Encode(&buf, procImg, imaging.PNG)
+				imaging.Encode(&buf, dstImg, imaging.PNG)
 			case "jpeg":
-				imaging.Encode(&buf, procImg, imaging.JPEG)
+				imaging.Encode(&buf, dstImg, imaging.JPEG)
 			case "jpg":
-				imaging.Encode(&buf, procImg, imaging.JPEG)
+				imaging.Encode(&buf, dstImg, imaging.JPEG)
 			}
-
 		}
 
 		fullname := name
@@ -59,8 +58,8 @@ func processImage(img image.Image, name, format string) map[int]map[string]any {
 
 		result[size] = map[string]any{
 			"name":   fullname,
-			"width":  procImg.Bounds().Dx(),
-			"height": procImg.Bounds().Dy(),
+			"width":  dstImg.Bounds().Dx(),
+			"height": dstImg.Bounds().Dy(),
 			"md5":    hex.EncodeToString(md5[:]),
 			"size":   buf.Len(),
 		}
