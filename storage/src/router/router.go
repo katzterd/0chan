@@ -63,8 +63,6 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	isVideo := mime == "video/mp4" || mime == "video/webm"
 	isGif := mime == "image/gif"
 
-	name := util.MakeFilename()
-
 	var result map[int]map[string]any
 
 	switch {
@@ -80,7 +78,7 @@ func upload(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": fmt.Sprintf("Слишком большой размер, макс.: %d", MaxDimensionSize)})
 			return
 		}
-		result = processImage(img, name, format)
+		result = processImage(img, util.MakeFilename(), format)
 
 	case isGif:
 
@@ -93,7 +91,7 @@ func upload(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": fmt.Sprintf("Слишком большой размер, макс.: %d", MaxDimensionSize)})
 			return
 		}
-		result = processGif(gif, name)
+		result = processGif(gif, util.MakeFilename())
 
 	case isVideo:
 
@@ -132,7 +130,7 @@ func upload(w http.ResponseWriter, r *http.Request) {
 			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": fmt.Sprintf("Слишком большой размер, макс.: %d", MaxDimensionSize)})
 			return
 		}
-		result = processVideo(buf, tmp, name, format, width, height)
+		result = processVideo(buf, tmp, util.MakeFilename(), format, width, height)
 
 	default:
 
