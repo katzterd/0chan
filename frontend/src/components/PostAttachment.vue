@@ -344,7 +344,7 @@ export default {
 
 .post-img {
     /*float: left;*/
-    display: inline-grid;
+    display: inline-block;
     margin-right: 5px;
     margin-bottom: 5px;
     margin-top: 5px;
@@ -478,10 +478,11 @@ export default {
 
     .post-play-icon {
         position: absolute;
-        align-self: center;
-        justify-self: center;
+        bottom: 0;
+        right: 0;
+        padding-right: 4px;
         color: #66bdac;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+        text-shadow: 2px 2px 4px rgb(62, 62, 62);
         font-size: 34px;
         z-index: 5;
         pointer-events: none;
