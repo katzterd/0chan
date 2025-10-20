@@ -59,7 +59,7 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	buf, _ := io.ReadAll(f)
 	mime := http.DetectContentType(buf)
 
-	isImage := mime == "image/jpeg" || mime == "image/png"
+	isImage := mime == "image/jpeg" || mime == "image/png" || mime == "image/webp"
 	isVideo := mime == "video/mp4" || mime == "video/webm"
 	isGif := mime == "image/gif"
 
