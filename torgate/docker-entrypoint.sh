@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ash
 
 mkdir -p /var/lib/tor/hidden_service
 

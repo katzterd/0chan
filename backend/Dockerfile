@@ -13,9 +13,9 @@ RUN mkdir -p /var/www/logs
 WORKDIR /src
 
 ADD ./composer.json composer.json
-ADD ./config/get-composer.sh config/get-composer.sh
+ADD ./deploy/get-composer.sh deploy/get-composer.sh
 
-RUN sh config/get-composer.sh
+RUN sh deploy/get-composer.sh
 RUN php composer.phar install --no-autoloader
 
 COPY . ./
@@ -25,4 +25,4 @@ RUN php composer.phar install --optimize-autoloader --apcu-autoloader
 RUN mkdir /images
 RUN chmod 777 /images
 
-ENTRYPOINT [ "/bin/bash", "-c", "/src/config/docker-entrypoint.sh" ]
+ENTRYPOINT [ "bash", "/src/deploy/docker-entrypoint.sh" ]

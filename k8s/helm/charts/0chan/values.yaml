@@ -111,13 +111,6 @@ storage:
       accessMode: "ReadWriteOnce"
     size: 25Gi
 
-  env:
-    - name: SALT
-      valueFrom:
-        secretKeyRef:
-          key: SALT
-          name: "{{ .Values.secret }}"
-
 db:
   ## Additional pod Labels for db
   podLabels: {}

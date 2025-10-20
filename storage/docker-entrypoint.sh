@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ash
 chown -R 33:33 /storage
-sed -i 's/__SALT__/'"${SALT}"'/' /app/config/nginx.conf
-supervisord -c /app/config/supervisord.conf
+supervisord -c /app/deploy/supervisord.conf
