@@ -12,5 +12,5 @@
         php daemon.php
         sleep 60
         done & \
-        php-fpm7.4 -O -F --fpm-config /src/config/php-fpm.conf 
+        php-fpm7.4 -O -F --fpm-config /src/deploy/php-fpm.conf 
   fi

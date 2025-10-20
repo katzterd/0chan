@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ash
 
 if [ -z "${LOCALGW_KEY}" ]; then
     echo "LOCALGW_KEY environment var is undefined, i2pgate will be disabled";

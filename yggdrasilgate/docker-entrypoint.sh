@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ash
 
 for ARGS in $@; do
 	    case $ARGS in    
@@ -20,14 +20,14 @@ if [[ -z $@ ]]; then
         echo "YGGDRASILGATE_PRIVATE_KEY environment var is undefined, yggdrasilgate will be disabled";
         exit 0;
     else
-        sed -i 's/__YGGDRASILGATE_PRIVATE_KEY__/'"PrivateKey: ${YGGDRASILGATE_PRIVATE_KEY}"'/' ./yggdrasil.conf
+        sed -i 's/__YGGDRASILGATE_PRIVATE_KEY__/'"PrivateKey: ${YGGDRASILGATE_PRIVATE_KEY}"'/' /yggdrasil.conf
     fi
     
 printf "Updating peers...\n\n"
-./peers_updater -c ./yggdrasil.conf -n 5 -u
+/peers_updater -c /yggdrasil.conf -n 5 -u
 
 printf "yggdrasilgate started\n\n"
 
-supervisord -c ./supervisord.conf
+supervisord -c /supervisord.conf
 
 fi

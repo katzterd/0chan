@@ -24,19 +24,18 @@ ADD ./src                          ./src
 RUN npm run build
 
 
-FROM ubuntu:22.04
+FROM alpine:3.22.1
 
-ARG DEBIAN_FRONTEND=noninteractive
+RUN apk --no-cache add supervisor \
+                       nginx \
+                       socat
 
-RUN apt-get update -y && \
-    apt-get install -y nginx nginx-extras supervisor socat
+WORKDIR /app
 
-ADD ./deploy/docker-entrypoint.sh   /docker-entrypoint.sh
-ADD ./deploy/supervisord.conf       /supervisord.conf
-ADD ./deploy/nginx.conf             /nginx.conf
+ADD ./deploy    ./deploy
 
-COPY --from=builder /builder/dist /dist
+COPY --from=builder /builder/dist ./dist
 
 EXPOSE 80
 
-CMD [ "bash", "/docker-entrypoint.sh" ]
+CMD [ "ash", "/app/deploy/docker-entrypoint.sh" ]
