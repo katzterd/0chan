@@ -484,7 +484,13 @@ export default {
             this.post.isDeleted = null;
             Moderation.deleteAllPosts(this.post.id).then((response) => {
                 if (response.data.ok) {
-                    this.$bus.emit("post-deleted", response.data.posts);
+                    const posts = response.data.posts;
+                    posts.forEach(posts => {
+                        const p = this.posts.find(post => post.id === posts.id);
+                        if (p) {
+                            Object.assign(p, posts);
+                        }
+                    });
                 }
             });
         },
@@ -685,12 +691,6 @@ export default {
     },
     mounted() {
         UI.setupPostPopup(this, (post) => (this.popupPost = post));
-
-        this.$bus.on("post-deleted", (ids) => {
-            if (ids.includes(this.post.id)) {
-                this.post.isDeleted = true;
-            }
-        });
     },
     computed: {
         boardRoute() {

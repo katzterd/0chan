@@ -18,12 +18,7 @@
                 <span v-if="thread.skippedPosts > 0">
                     &vert;
                     <a @click="expandThread"
-                        >Развернуть
-                        {{
-                            thread.skippedPosts > numExpandPosts
-                                ? `(${numExpandPosts})`
-                                : ``
-                        }}</a
+                        >Развернуть</a
                     >
                 </span>
                 <span v-if="!(threadExpanded || threadReplied)">

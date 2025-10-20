@@ -100,18 +100,20 @@
 
                 $usr = $this->getUser();
                 $board = $this->getThread()->getBoard();
-                
-                if ($usr->canManageAllBoards()) {
-                    $res['user'] = ['isAdmin' => 'true'];
-                }
-                if ($usr->isGlobalModerator()) {
-                    $res['user'] = ['isGlobalMod' => 'true'];
-                }
-                if ($usr->isBoardAdmin($board) && !(($usr->canManageAllBoards()) || ($usr->isGlobalModerator()))) {
-                    $res['user'] = ['isBoardAdmin' => 'true'];
-                }
-                if ($usr->isBoardMod($board) && !(($usr->canManageAllBoards()) || ($usr->isGlobalModerator()))) {
-                    $res['user'] = ['isBoardMod' => 'true'];
+
+                if ($board->getIdentity()) {
+                    if ($usr->canManageAllBoards()) {
+                        $res['user'] = ['isAdmin' => 'true'];
+                    }
+                    if ($usr->isGlobalModerator()) {
+                        $res['user'] = ['isGlobalMod' => 'true'];
+                    }
+                    if ($usr->isBoardAdmin($board) && !(($usr->canManageAllBoards()) || ($usr->isGlobalModerator()))) {
+                        $res['user'] = ['isBoardAdmin' => 'true'];
+                    }
+                    if ($usr->isBoardMod($board) && !(($usr->canManageAllBoards()) || ($usr->isGlobalModerator()))) {
+                        $res['user'] = ['isBoardMod' => 'true'];
+                    }
                 }
                 
             }

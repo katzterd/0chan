@@ -602,26 +602,27 @@ class ApiModerationController extends ApiBaseController
             ->add(
                 Expression::eq('thread.board', $board)
             );
-        $postsList = $postsCriteria->getList();
-        $posts = [];
-        foreach ($postsList as $p) {
+        $posts = $postsCriteria->getList();
 
-            $p->setDeleted(true);
-            Post::dao()->save($p);
-            $posts[] = $p->getId();
+        foreach ($posts as $p) {
+            if (!($p->isDeleted())) {
 
-            $thread = $p->getThread();
+                $p->setDeleted(true);
+                Post::dao()->save($p);
 
-            if ($p->isOpPost()) {
-                $thread->setDeleted(true);
-                $thread->setDeletedAt(Timestamp::makeNow());
-                Thread::dao()->save($thread);
-                $modlog = ModeratorLog_Post::make($thread->getBoard(), ModeratorLogEventType::THREAD_DELETED);
-            } else {
-                $modlog = ModeratorLog_Post::make($thread->getBoard(), ModeratorLogEventType::POST_DELETED);
+                $thread = $p->getThread();
+
+                if ($p->isOpPost()) {
+                    $thread->setDeleted(true);
+                    $thread->setDeletedAt(Timestamp::makeNow());
+                    Thread::dao()->save($thread);
+                    $modlog = ModeratorLog_Post::make($thread->getBoard(), ModeratorLogEventType::THREAD_DELETED);
+                } else {
+                    $modlog = ModeratorLog_Post::make($thread->getBoard(), ModeratorLogEventType::POST_DELETED);
+                }
+
+                $modlog->setPost($p)->add();
             }
-
-            $modlog->setPost($p)->add();
         }
         return $posts;
     }
@@ -650,9 +651,15 @@ class ApiModerationController extends ApiBaseController
             throw $e;
         }
 
+        $res = [];
+        foreach ($posts as $post) {
+            $post->getThread()->getPostCount(true);
+            $res[] = $post->export();
+        }
+
         return [
             'ok' => true,
-            'posts' => $posts
+            'posts' => $res
         ];
     }
 
