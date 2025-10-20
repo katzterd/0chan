@@ -1,17 +1,15 @@
-FROM ubuntu:22.04
+FROM alpine:3.22.1
 
-ARG DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && \
-    apt-get install -y  supervisor \
-                        socat \
+RUN apk --no-cache add  supervisor \
                         nginx \ 
-                        tor \
-                        curl
+                        socat \
+                        curl \
+                        tor
+
 
 ADD ./docker-entrypoint.sh  /docker-entrypoint.sh
 ADD ./nginx.conf            /nginx.conf
 ADD ./torrc.conf            /etc/tor/torrc
 ADD ./supervisord.conf      /supervisord.conf
 
-CMD [ "bash", "/docker-entrypoint.sh" ]
+CMD [ "ash", "/docker-entrypoint.sh" ]

@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/HugoSmits86/nativewebp"
 	"github.com/disintegration/imaging"
 )
 
@@ -40,6 +41,8 @@ func processImage(srcImg image.Image, name, format string) map[int]map[string]an
 				imaging.Encode(&buf, dstImg, imaging.JPEG)
 			case "jpg":
 				imaging.Encode(&buf, dstImg, imaging.JPEG)
+			case "webp":
+				nativewebp.Encode(&buf, dstImg, &nativewebp.Options{UseExtendedFormat: true})
 			}
 		}
 

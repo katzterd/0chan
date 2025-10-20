@@ -17,11 +17,9 @@ type DiskInfo struct {
 	Total     uint64
 }
 
-var disk *DiskManager
+var disk DiskManager
 
 func Init() {
-
-	disk = &DiskManager{}
 
 	Check()
 

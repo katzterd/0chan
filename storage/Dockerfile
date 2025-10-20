@@ -19,7 +19,7 @@ RUN apk --no-cache add tzdata nginx supervisor ffmpeg
 
 WORKDIR /app
 
-ADD ./config  ./config
+ADD ./deploy  ./deploy
 ADD ./docker-entrypoint.sh ./docker-entrypoint.sh
 
 COPY --from=builder /app/storage .
