@@ -47,7 +47,6 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
         $fullFilename = $this->getFullFilename();
 
         $baseHost = App::me()->getRequestHost();
-        $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
         $prefix = '//' . $baseHost . '/';
 
         $url = $prefix . $fullFilename;
@@ -57,7 +56,6 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
     public static function secureWebPath($path, $ip)
     {
         $baseHost = App::me()->getRequestHost();
-        $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
         $host = '//' . $baseHost . '/' . 'res' . '/';
 
         $interval = 3600 * 2; // update expiration every 2 hours
@@ -70,7 +68,6 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
     public static function webPath($path)
     {
         $baseHost = App::me()->getRequestHost();
-        $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
         $host = '//' . $baseHost . '/' . 'res' . '/';
 
         return $host . $path;
