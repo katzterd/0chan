@@ -255,7 +255,7 @@ class ApiThreadController extends ApiBaseController
         if (!empty($this->getLastPostByIP($iphash))) {
             $postIpTimeout = (int)Cache::me()->get('postIpTimeout');
             if (!$postIpTimeout) {
-                $postIpTimeout = 5;
+                $postIpTimeout = 0;
             }
             $now = time();
             if ($now - $this->getLastPostByIP($iphash)->getCreateDate()->toStamp() < $postIpTimeout) {
@@ -267,7 +267,7 @@ class ApiThreadController extends ApiBaseController
             if (!empty($this->getLastThreadByIP($iphash))) {
                 $threadIpTimeout = (int)Cache::me()->get('threadIpTimeout');
                 if (!$threadIpTimeout) {
-                    $threadIpTimeout = 300;
+                    $threadIpTimeout = 0;
                 }
                 $now = time();
                 if ($now - $this->getLastThreadByIP($iphash)->getCreateDate()->toStamp() < $threadIpTimeout) {
@@ -277,7 +277,7 @@ class ApiThreadController extends ApiBaseController
             if (!empty($this->getGlobalLastThread())) {
                 $threadGlobalTimeout = (int)Cache::me()->get('threadGlobalTimeout');
                 if (!$threadGlobalTimeout) {
-                    $threadGlobalTimeout = 5;
+                    $threadGlobalTimeout = 0;
                 }
                 $now = time();
 			    if ($now - $this->getGlobalLastThread()->getCreateDate()->toStamp() < $threadGlobalTimeout) {

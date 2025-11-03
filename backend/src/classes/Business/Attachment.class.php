@@ -64,9 +64,10 @@
             }
 
             if (count($images)) {
-                $viewerIp = RequestUtils::getRealIp(App::me()->getRequest(), false);
+                //$viewerIp = RequestUtils::getRealIp(App::me()->getRequest(), false);
                 foreach ($images as $i => $image) {
-                    $image['url'] = AttachmentImage::webPath($image['path'], $viewerIp);
+                    //$image['url'] = AttachmentImage::secureWebPath($image['path'], $viewerIp);
+                    $image['url'] = AttachmentImage::webPath($image['path']);
                     $images[$i] = $image;
                 }
             }
