@@ -48,7 +48,7 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
 
         $baseHost = App::me()->getRequestHost();
         $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
-        $prefix = '//' . MEDIA_SUBDOMAIN . '.' . $baseHost . '/';
+        $prefix = '//' . $baseHost . '/';
 
         $url = $prefix . $fullFilename;
         return $url;
@@ -58,7 +58,7 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
     {
         $baseHost = App::me()->getRequestHost();
         $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
-        $host = '//' . MEDIA_SUBDOMAIN . '.' . $baseHost . '/';
+        $host = '//' . $baseHost . '/' . 'res' . '/';
 
         $interval = 3600 * 2; // update expiration every 2 hours
         $expire = (ceil(time() / $interval) + 1) * $interval;
@@ -67,11 +67,11 @@ class AttachmentImage extends AutoAttachmentImage implements Prototyped, DAOConn
         return $host . $path . '?hash=' . $hash . '&exp=' . $expire;
     }
 
-    public static function webPath($path, $ip)
+    public static function webPath($path)
     {
         $baseHost = App::me()->getRequestHost();
         $baseHost = implode('.', array_slice(explode('.', $baseHost), -2));
-        $host = '//' . MEDIA_SUBDOMAIN . '.' . $baseHost . '/';
+        $host = '//' . $baseHost . '/' . 'res' . '/';
 
         return $host . $path;
     }
