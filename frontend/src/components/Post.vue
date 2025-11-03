@@ -863,7 +863,6 @@ export default {
     .post-inline-attachment {
         .post-attachments {
             display: inline-block;
-            float: left;
             padding-right: 10px;
         }
         .post-body-message {
