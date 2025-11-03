@@ -8,6 +8,7 @@ export default {
     REFRESH_CONTENT:    'refreshContent',
     REFRESH_CONTENT_DONE:'refreshContentDone',
     REFRESH_SIDEBAR:    'refreshSidebar',
+    REFRESH_POSTS:      'refreshPosts',
     TOGGLE_SIDEBAR:     'toggleSidebar',
     SET_BLUR:           'blur',
     REQUEST_CAPTCHA:    'requestCaptcha',
