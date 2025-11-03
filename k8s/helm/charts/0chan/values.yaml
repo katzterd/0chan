@@ -47,11 +47,6 @@ backend:
     pullPolicy: Always
 
   env:
-    - name: MEDIA_SUBDOMAIN
-      valueFrom:
-        secretKeyRef:
-          key: MEDIA_SUBDOMAIN
-          name: "{{ .Values.secret }}"
     - name: LOCALGW_KEY
       valueFrom:
         secretKeyRef:

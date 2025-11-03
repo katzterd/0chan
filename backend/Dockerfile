@@ -22,7 +22,4 @@ COPY . ./
 
 RUN php composer.phar install --optimize-autoloader --apcu-autoloader
 
-RUN mkdir /images
-RUN chmod 777 /images
-
 ENTRYPOINT [ "bash", "/src/deploy/docker-entrypoint.sh" ]
