@@ -8,7 +8,7 @@
 	class Attachment extends AutoAttachment implements Prototyped, DAOConnected
 	{
         const CLEANUP_DELAY_AFTER_DELETED = '2 sec';
-        const MAX_FILE_SIZE = 10485760; // 10 Mb
+        const MAX_FILE_SIZE = 20971520; // 20 Mb
 
         /**
 		 * @return Attachment
