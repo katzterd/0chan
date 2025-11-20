@@ -90,7 +90,6 @@
                             width: actualVideo.width + 'px',
                             height: actualVideo.height + 'px',
                         }"
-                        preload="none"
                     ></video>
                 </span>
                 <span v-else>
