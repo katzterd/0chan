@@ -28,6 +28,6 @@ printf "Updating peers...\n\n"
 
 printf "yggdrasilgate started\n\n"
 
-supervisord -c /supervisord.conf
+exec supervisord -c /supervisord.conf
 
 fi

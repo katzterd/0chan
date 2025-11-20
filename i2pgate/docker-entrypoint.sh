@@ -16,4 +16,4 @@ fi
 
 printf "i2pgate started\n\n"
 
-supervisord -c ./supervisord.conf
+exec supervisord -c ./supervisord.conf

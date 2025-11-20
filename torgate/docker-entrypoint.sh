@@ -33,4 +33,4 @@ fi
 chmod -R 600 /var/lib/tor/hidden_service
 echo "Torgate started: ${TORGATE_HOSTNAME} -> frontend:80"
 
-supervisord -c ./supervisord.conf
+exec supervisord -c ./supervisord.conf
