@@ -140,7 +140,7 @@ func processVideo(video []byte, tmp *os.File, name, format string, width, height
 			tmpThumb, _ := os.CreateTemp("", "thumb-*.jpg")
 			tmpThumb.Close()
 
-			args := []string{"-i", tmp.Name(), "-ss", "00:01", "-vframes", "1", "-filter:v", fmt.Sprintf("scale=%d:%d:force_original_aspect_ratio=1", size, size), "-y", tmpThumb.Name()}
+			args := []string{"-i", tmp.Name(), "-ss", "0", "-vframes", "1", "-filter:v", fmt.Sprintf("scale=%d:%d:force_original_aspect_ratio=1", size, size), "-y", tmpThumb.Name()}
 
 			exec.Command("ffmpeg", args...).Run()
 
