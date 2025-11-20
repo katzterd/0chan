@@ -1,15 +1,11 @@
 package router
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"image"
-	"image/gif"
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"storage/pkg/disk"
 	"storage/pkg/util"
@@ -56,86 +52,45 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	f, _, _ := r.FormFile("file")
 	defer f.Close()
 
-	buf, _ := io.ReadAll(f)
-	mime := http.DetectContentType(buf)
+	b, _ := io.ReadAll(f)
+	mime := http.DetectContentType(b)
 
 	isImage := mime == "image/jpeg" || mime == "image/png" || mime == "image/webp"
 	isVideo := mime == "video/mp4" || mime == "video/webm"
 	isGif := mime == "image/gif"
 
 	var result map[int]map[string]any
+	var err error
 
 	switch {
-
+	default:
+		json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": fmt.Sprintf("Формат не поддерживается: %s", mime)})
+		return
 	case isImage:
-
-		img, format, _ := image.Decode(bytes.NewReader(buf))
-
-		r := img.Bounds()
-
-		if r.Dx() > MaxDimensionSize || r.Dy() > MaxDimensionSize {
-
-			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": fmt.Sprintf("Слишком большой размер, макс.: %d", MaxDimensionSize)})
+		result, err = processImage(b, util.MakeFilename())
+		if err != nil {
+			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": err.Error()})
 			return
 		}
-		result = processImage(img, util.MakeFilename(), format)
-
 	case isGif:
-
-		gif, _ := gif.DecodeAll(bytes.NewReader(buf))
-
-		r := gif.Image[0].Bounds()
-
-		if r.Dx() > MaxDimensionSize || r.Dy() > MaxDimensionSize {
-
-			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": fmt.Sprintf("Слишком большой размер, макс.: %d", MaxDimensionSize)})
+		result, err = processGif(b, util.MakeFilename())
+		if err != nil {
+			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": err.Error()})
 			return
 		}
-		result = processGif(gif, util.MakeFilename())
-
 	case isVideo:
-
 		var format string
-
 		switch mime {
 		case "video/webm":
 			format = "webm"
 		case "video/mp4":
 			format = "mp4"
 		}
-
-		tmp, _ := os.CreateTemp("", "*")
-		defer os.Remove(tmp.Name())
-
-		tmp.Write(buf)
-		tmp.Close()
-
-		cmd := exec.Command("ffprobe", "-v", "error", "-select_streams", "v:0",
-			"-show_entries", "stream=width,height", "-of", "json", tmp.Name())
-		out, _ := cmd.Output()
-
-		var data struct {
-			Streams []struct {
-				Width  int `json:"width"`
-				Height int `json:"height"`
-			} `json:"streams"`
-		}
-		json.Unmarshal(out, &data)
-
-		width := data.Streams[0].Width
-		height := data.Streams[0].Height
-
-		if width > MaxDimensionSize || height > MaxDimensionSize {
-
-			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": fmt.Sprintf("Слишком большой размер, макс.: %d", MaxDimensionSize)})
+		result, err = processVideo(b, util.MakeFilename(), format)
+		if err != nil {
+			json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": err.Error()})
 			return
 		}
-		result = processVideo(buf, tmp, util.MakeFilename(), format, width, height)
-
-	default:
-
-		json.NewEncoder(w).Encode(map[string]any{"ok": false, "error": fmt.Sprintf("Формат не поддерживается: %s", mime)})
-		return
 	}
 
 	json.NewEncoder(w).Encode(map[string]any{"ok": true, "result": result})

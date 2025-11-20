@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"image"
 	"image/color"
@@ -16,9 +17,15 @@ import (
 	"github.com/disintegration/imaging"
 )
 
-func processImage(srcImg image.Image, name, format string) map[int]map[string]any {
+func processImage(b []byte, name string) (map[int]map[string]any, error) {
 
 	result := map[int]map[string]any{}
+
+	img, format, _ := image.Decode(bytes.NewReader(b))
+
+	if img.Bounds().Dx() > MaxDimensionSize || img.Bounds().Dy() > MaxDimensionSize {
+		return nil, fmt.Errorf("слишком большой размер, макс.: %d", MaxDimensionSize)
+	}
 
 	for _, size := range Sizes {
 
@@ -28,12 +35,12 @@ func processImage(srcImg image.Image, name, format string) map[int]map[string]an
 		)
 
 		if size > 0 {
-			dstImg = imaging.Fit(srcImg, size, size, imaging.Lanczos)
+			dstImg = imaging.Fit(img, size, size, imaging.Lanczos)
 			dstImg = imaging.Overlay(imaging.New(dstImg.Bounds().Dx(), dstImg.Bounds().Dy(), color.White), dstImg, image.Point{0, 0}, 1.0)
 			imaging.Encode(&buf, dstImg, imaging.JPEG)
 			buf.Write(fmt.Appendf(nil, "%d", size))
 		} else {
-			dstImg = srcImg
+			dstImg = img
 			switch format {
 			case "png":
 				imaging.Encode(&buf, dstImg, imaging.PNG)
@@ -68,13 +75,19 @@ func processImage(srcImg image.Image, name, format string) map[int]map[string]an
 		}
 
 	}
-	return result
+	return result, nil
 
 }
 
-func processGif(gifData *gif.GIF, name string) map[int]map[string]any {
+func processGif(b []byte, name string) (map[int]map[string]any, error) {
 
 	result := map[int]map[string]any{}
+
+	g, _ := gif.DecodeAll(bytes.NewReader(b))
+
+	if g.Image[0].Bounds().Dx() > MaxDimensionSize || g.Image[0].Bounds().Dy() > MaxDimensionSize {
+		return nil, fmt.Errorf("слишком большой размер, макс.: %d", MaxDimensionSize)
+	}
 
 	for _, size := range Sizes {
 
@@ -84,11 +97,11 @@ func processGif(gifData *gif.GIF, name string) map[int]map[string]any {
 		)
 
 		if size > 0 {
-			thumb = imaging.Fit(gifData.Image[0], size, size, imaging.Lanczos)
+			thumb = imaging.Fit(g.Image[0], size, size, imaging.Lanczos)
 			thumb = imaging.Overlay(imaging.New(thumb.Bounds().Dx(), thumb.Bounds().Dy(), color.White), thumb, image.Point{0, 0}, 1.0)
 			imaging.Encode(&buf, thumb, imaging.JPEG)
 		} else {
-			gif.EncodeAll(&buf, gifData)
+			gif.EncodeAll(&buf, g)
 		}
 
 		fullname := name
@@ -115,21 +128,43 @@ func processGif(gifData *gif.GIF, name string) map[int]map[string]any {
 		} else {
 			result[0] = map[string]any{
 				"name":   fullname,
-				"width":  gifData.Config.Width,
-				"height": gifData.Config.Height,
+				"width":  g.Config.Width,
+				"height": g.Config.Height,
 				"md5":    hex.EncodeToString(md5[:]),
 				"size":   buf.Len(),
 			}
 		}
 
 	}
-	return result
+	return result, nil
 
 }
 
-func processVideo(video []byte, tmp *os.File, name, format string, width, height int) map[int]map[string]any {
+func processVideo(video []byte, name, format string) (map[int]map[string]any, error) {
 
 	result := map[int]map[string]any{}
+
+	tmp, _ := os.CreateTemp("", "*")
+	defer os.Remove(tmp.Name())
+
+	tmp.Write(video)
+	tmp.Close()
+
+	cmd := exec.Command("ffprobe", "-v", "error", "-select_streams", "v:0",
+		"-show_entries", "stream=width,height", "-of", "json", tmp.Name())
+	out, _ := cmd.Output()
+
+	var data struct {
+		Streams []struct {
+			Width  int `json:"width"`
+			Height int `json:"height"`
+		} `json:"streams"`
+	}
+	json.Unmarshal(out, &data)
+
+	if data.Streams[0].Width > MaxDimensionSize || data.Streams[0].Height > MaxDimensionSize {
+		return nil, fmt.Errorf("слишком большой размер, макс.: %d", MaxDimensionSize)
+	}
 
 	for _, size := range Sizes {
 
@@ -180,12 +215,12 @@ func processVideo(video []byte, tmp *os.File, name, format string, width, height
 
 			result[0] = map[string]any{
 				"name":   fullname,
-				"width":  width,
-				"height": height,
+				"width":  data.Streams[0].Width,
+				"height": data.Streams[0].Height,
 				"md5":    hex.EncodeToString(md5[:]),
 				"size":   len(video),
 			}
 		}
 	}
-	return result
+	return result, nil
 }
