@@ -7,4 +7,4 @@ else
     sed -i 's/__TORGATE_HEADER__/'"add_header Onion-Location http:\/\/${TORGATE_HOSTNAME}\$request_uri;"'/' /app/deploy/nginx.conf
 fi
 
-supervisord -c /app/deploy/supervisord.conf
+exec supervisord -c /app/deploy/supervisord.conf
