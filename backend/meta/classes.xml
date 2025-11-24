@@ -16,6 +16,7 @@
                 <property name="showNsfw" type="Boolean" required="true" default="false" />
                 <property name="treeView" type="Boolean" required="true" default="false" />
                 <property name="viewDeleted" type="Boolean" required="true" default="false" />
+                <property name="viewHidden" type="Boolean" required="true" default="true" />
                 <property name="customCss" type="String" size="100000" required="false" />
 
                 <property name="favouriteBoards" type="FavouriteBoard" relation="OneToMany" />

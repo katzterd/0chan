@@ -9,6 +9,7 @@ CREATE TABLE "user" (
     "show_nsfw" BOOLEAN NOT NULL DEFAULT FALSE,
     "tree_view" BOOLEAN NOT NULL DEFAULT FALSE,
     "view_deleted" BOOLEAN NOT NULL DEFAULT FALSE,
+    "view_hidden" BOOLEAN NOT NULL DEFAULT TRUE,
     "custom_css" CHARACTER VARYING(100000) NULL,
     PRIMARY KEY("id")
 );
