@@ -9,7 +9,7 @@
   if [[ -z $@ ]]; then
         cd /src/console/
         while true; do 
-        exec php daemon.php
+        php daemon.php
         sleep 60
         done & \
         exec php-fpm7.4 -O -F --fpm-config /src/deploy/php-fpm.conf 
