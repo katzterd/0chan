@@ -14,9 +14,27 @@
 
         <div v-else class="sidebar-logo">
             <content-link :to="{ name: 'home' }">
-                <img src="../assets/images/logo-full.png" class="hidden-xs" />
+                <img
+                    v-if="isNy"
+                    src="../assets/images/logo-ny.png"
+                    class="hidden-xs"
+                />
+                <img
+                    v-else
+                    src="../assets/images/logo-full.png"
+                    class="hidden-xs"
+                />
                 <div class="hidden visible-xs" style="margin-top: 12px">
                     <img
+                        v-if="isNy"
+                        src="../assets/images/logo-mob-ny.png"
+                        :srcset="
+                            require('../assets/images/logo-mob-ny@2x.png') +
+                            ' 2x'
+                        "
+                    />
+                    <img
+                        v-else
                         src="../assets/images/logo-mob.png"
                         :srcset="
                             require('../assets/images/logo-mob@2x.png') + ' 2x'
@@ -129,6 +147,7 @@ import Session from "../services/Session";
 import Board from "../services/Board";
 import Storage from "../services/Storage";
 import ContentLink from "./ContentLink.vue";
+import moment from "moment";
 
 export default {
     components: {
@@ -271,6 +290,12 @@ export default {
                       { title: "Выход", click: this.logout, icon: "sign-out" },
                   ]
                 : [{ title: "Вход", url: { name: "login" }, icon: "sign-in" }];
+        },
+        isNy() {
+            return moment().isBetween(
+                moment().endOf("year").subtract(15, "days"),
+                moment().startOf("year").add(1, "year").add(15, "days")
+            );
         },
     },
 };
