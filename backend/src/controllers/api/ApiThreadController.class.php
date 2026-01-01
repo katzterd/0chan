@@ -331,7 +331,7 @@ class ApiThreadController extends ApiBaseController
 
         $post = Post::create()
             ->setCreateDate(Timestamp::makeNow())
-            ->setMessage(join('', array_reverse(mb_str_split($message))));
+            ->setMessage($message);
 
         if (null !== $this->getSession()->isLocalGateway()) {
             $post->setLocalGw($this->getSession()->isLocalGateway());
