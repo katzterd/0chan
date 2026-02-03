@@ -43,6 +43,10 @@ spec:
       containers:
       - name: torgate
         image: {{ .Values.Registry }}/torgate:{{ .Values.torgate.image.tag }}
+        {{- with .Values.torgate.resources }}
+        resources:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         imagePullPolicy: {{ .Values.torgate.image.pullPolicy }}
         {{- $secretName := .Values.secret | default "0chan-secret" }}
         {{- with .Values.torgate.env }}
@@ -110,6 +114,10 @@ spec:
       containers:
       - name: i2pgate
         image: {{ .Values.Registry }}/i2pgate:{{ .Values.i2pgate.image.tag }}
+        {{- with .Values.i2pgate.resources }}
+        resources:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         imagePullPolicy: {{ .Values.i2pgate.image.pullPolicy }}
         {{- $secretName := .Values.secret | default "0chan-secret" }}
         {{- with .Values.i2pgate.env }}
@@ -177,6 +185,10 @@ spec:
       containers:
       - name: yggdrasilgate
         image: {{ .Values.Registry }}/yggdrasilgate:{{ .Values.yggdrasilgate.image.tag }}
+        {{- with .Values.yggdrasilgate.resources }}
+        resources:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         imagePullPolicy: {{ .Values.yggdrasilgate.image.pullPolicy }}
         securityContext:
           capabilities:

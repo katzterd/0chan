@@ -9,10 +9,16 @@ secret: ""
 ## Application configuration
 
 frontend:
-  ## Additional pod Labels for frontend
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
+
   podLabels: {}
 
-  ## podAnnotations for frontend
   podAnnotations: {}
 
   ## Pod Replicas
@@ -32,10 +38,16 @@ frontend:
           optional: true
 
 backend:
-  ## Additional pod Labels for backend
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
+
   podLabels: {}
 
-  ## podAnnotations for backend
   podAnnotations: {}
 
   ## Pod Replicas
@@ -87,10 +99,16 @@ backend:
           name: "{{ .Values.secret }}"
 
 storage:
-  ## Additional pod Labels for storage
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
+
   podLabels: {}
 
-  ## podAnnotations for storage
   podAnnotations: {}
 
   ## Pod Replicas
@@ -107,10 +125,16 @@ storage:
     size: 25Gi
 
 db:
-  ## Additional pod Labels for db
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
+
   podLabels: {}
 
-  ## podAnnotations for db
   podAnnotations: {}
 
   ## Pod Replicas
@@ -146,10 +170,16 @@ db:
           name: "{{ .Values.secret }}"
 
 cache:
-  ## Additional pod Labels for cache
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
+
   podLabels: {}
 
-  ## podAnnotations for cache
   podAnnotations: {}
 
   ## Pod Replicas
@@ -166,6 +196,14 @@ cache:
     size: 5Gi
 
 torgate:
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
+
   ## Additional pod Labels for torgate
   podLabels: {}
 
@@ -203,10 +241,16 @@ torgate:
           name: "{{ .Values.secret }}"
 
 i2pgate:
-  ## Additional pod Labels for i2pgate
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
+
   podLabels: {}
 
-  ## podAnnotations for i2pgate
   podAnnotations: {}
 
   ## Pod Replicas
@@ -230,10 +274,16 @@ i2pgate:
           name: "{{ .Values.secret }}"
 
 yggdrasilgate:
-  ## Additional pod Labels for yggdrasilgate
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 128Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 128Mi
+
   podLabels: {}
 
-  ## podAnnotations for yggdrasilgate
   podAnnotations: {}
 
   ## Pod Replicas
