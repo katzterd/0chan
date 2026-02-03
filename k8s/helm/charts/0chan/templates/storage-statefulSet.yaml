@@ -33,6 +33,10 @@ spec:
       containers:
       - name: storage
         image: {{ .Values.Registry }}/storage:{{ .Values.storage.image.tag }}
+        {{- with .Values.storage.resources }}
+        resources:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         imagePullPolicy: {{ .Values.storage.image.pullPolicy }}
         ports:
         - containerPort: 81

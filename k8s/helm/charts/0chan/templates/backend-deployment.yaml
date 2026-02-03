@@ -46,6 +46,10 @@ spec:
       containers:
       - name: backend
         image: {{ .Values.Registry }}/backend:{{ .Values.backend.image.tag }}
+        {{- with .Values.backend.resources }}
+        resources:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
         ports:
         - containerPort: 9000
