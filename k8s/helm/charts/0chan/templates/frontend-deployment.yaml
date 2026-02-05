@@ -47,6 +47,10 @@ spec:
       containers:
       - name: frontend
         image: {{ .Values.Registry }}/frontend:{{ .Values.frontend.image.tag }}
+        {{- with .Values.frontend.resources }}
+        resources:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
         ports:
         - containerPort: 80

@@ -28,6 +28,10 @@ spec:
       containers:
       - name: redis
         image: redis:{{ .Values.cache.image.tag }}
+        {{- with .Values.cache.resources }}
+        resources:
+        {{- toYaml . | nindent 10 }}
+        {{- end }}
         imagePullPolicy: {{ .Values.cache.image.pullPolicy }}
         ports:
         - containerPort: 6379
