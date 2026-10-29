@@ -24,7 +24,7 @@ ADD ./src                          ./src
 RUN npm run build
 
 
-FROM alpine:3.22.1
+FROM alpine:3.24.3
 
 RUN apk --no-cache add supervisor \
                        nginx \
