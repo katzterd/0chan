@@ -12,6 +12,13 @@
         "guzzlehttp/guzzle": "^6.2",
         "sentry/sentry": "^1.6"
     },
+    "config": {
+        "policy": {
+            "advisories": {
+                "block": false
+            }
+        }
+    },
     "autoload": {
         "classmap": ["src/classes", "src/controllers"]
     }

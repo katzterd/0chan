@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y software-properties-common
 
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php -y
 
-RUN apt-get install -y wget git php7.4-fpm php7.4-memcache php7.4-pgsql php7.4-redis php7.4-gd php7.4-mbstring php7.4-dom php7.4-imagick php7.4-curl php7.4-apcu
+RUN apt-get install -y wget git php7.4-fpm php7.4-memcache php7.4-pgsql php7.4-redis php7.4-gd php7.4-mbstring php7.4-dom php7.4-imagick php7.4-curl php7.4-apcu php7.4-zip zip unzip
 
 RUN mkdir -p /var/www/logs
 
